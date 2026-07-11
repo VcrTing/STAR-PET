@@ -12,11 +12,13 @@ config_version=5
 
 config/name="GAME_StarPet"
 run/main_scene="uid://bc135nl5gdeb0"
-config/features=PackedStringArray("4.7", "Mobile")
+config/features=PackedStringArray("4.7", "C#", "Mobile")
 config/icon="res://icon.svg"
 
 [display]
 
+window/size/viewport_width=1366
+window/size/viewport_height=768
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
