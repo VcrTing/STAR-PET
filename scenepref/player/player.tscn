@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://ctoql7cblspxi" path="res://scenepref/player/Player.cs" id="1_yt7ct"]
 [ext_resource type="Script" uid="uid://bf05ls02jcnih" path="res://scenepref/player/PlayerMove.cs" id="2_lgvq2"]
 [ext_resource type="Script" uid="uid://dkorkes6npx17" path="res://scenepref/player/PlayerInputControl.cs" id="4_8npkt"]
+[ext_resource type="Script" uid="uid://dgyheet8l8ukl" path="res://scenepref/player/PlayerUxPetBall.cs" id="5_32lo1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yt7ct"]
 atlas = ExtResource("1_gsm43")
@@ -44,7 +45,7 @@ height = 78.0
 script = ExtResource("1_yt7ct")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=300987018]
-collision_layer = 513
+collision_layer = 512
 collision_mask = 255
 script = ExtResource("2_lgvq2")
 
@@ -67,3 +68,8 @@ shape = SubResource("CapsuleShape2D_to2jg")
 
 [node name="PlayerInputControl" type="Node2D" parent="Control" unique_id=793804789]
 script = ExtResource("4_8npkt")
+
+[node name="Ux" type="Node2D" parent="." unique_id=2109656881]
+
+[node name="PlayerUxPetBall" type="Node2D" parent="Ux" unique_id=2106367699]
+script = ExtResource("5_32lo1")

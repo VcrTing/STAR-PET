@@ -105,38 +105,40 @@ public partial class PlayerMove : CharacterBody2D, IPlayerMoveImpl
 
 	public virtual void OnMoveUp()
 	{
-		GD.Print("PlayerMove 按下了 W");
 	}
 
 	public virtual void OnMoveDown()
 	{
-		GD.Print("PlayerMove 按下了 S");
 	}
 
 	public virtual void OnMoveLeft()
 	{
-		GD.Print("PlayerMove 按下了 A");
 		_direction = -1;
 	}
 
 	public virtual void OnMoveRight()
 	{
-		GD.Print("PlayerMove 按下了 D");
 		_direction = 1;
 	}
 
 	public virtual void OnMoveLeftRelease()
 	{
-		GD.Print("PlayerMove 松开了 A");
 		_direction = 0;
 		_currentHSpeed = 0;
 	}
 
 	public virtual void OnMoveRightRelease()
 	{
-		GD.Print("PlayerMove 松开了 D");
 		_direction = 0;
 		_currentHSpeed = 0;
+	}
+
+	/// <summary>
+	/// 获取当前水平朝向（-1=左，1=右，0=无方向）
+	/// </summary>
+	public int GetDirection()
+	{
+		return (int)_direction;
 	}
 
 	public virtual void OnSprint()
@@ -156,6 +158,6 @@ public partial class PlayerMove : CharacterBody2D, IPlayerMoveImpl
 		velocity.Y = actualJumpVelocity;
 		Velocity = velocity;
 		_jumpCount--;
-		GD.Print($"PlayerMove 按下了 Space 跳跃，速度: {actualJumpVelocity:F1}，剩余连跳次数: {_jumpCount}");
+		// GD.Print($"PlayerMove 按下了 Space 跳跃，速度: {actualJumpVelocity:F1}，剩余连跳次数: {_jumpCount}");
 	}
 }

@@ -2,6 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://bbnb7gx6hw6xe" path="res://IMG/Land.png" id="1_8poof"]
 [ext_resource type="PackedScene" uid="uid://dsljdxgffwx6f" path="res://scenepref/player/player.tscn" id="2_8h1al"]
+[ext_resource type="PackedScene" uid="uid://b7sbo6wa8g3xf" path="res://scenepref/petball/pet_ball.tscn" id="3_mtltt"]
+[ext_resource type="PackedScene" uid="uid://cim7jrerhrn7e" path="res://scenepet/origin/pet_origin.tscn" id="4_gd3n2"]
+[ext_resource type="PackedScene" uid="uid://cvv0wrd7lehea" path="res://scenesys/instance/instance_manager.tscn" id="5_q2cfq"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_cplhs"]
 
@@ -27,8 +30,8 @@ texture_region_size = Vector2i(128, 128)
 
 [sub_resource type="TileSet" id="TileSet_cplhs"]
 tile_size = Vector2i(128, 128)
-physics_layer_0/collision_layer = 9
-physics_layer_0/collision_mask = 3841
+physics_layer_0/collision_layer = 8
+physics_layer_0/collision_mask = 3840
 physics_layer_0/physics_material = SubResource("PhysicsMaterial_cplhs")
 sources/3 = SubResource("TileSetAtlasSource_8h1al")
 
@@ -51,3 +54,18 @@ physics_quadrant_size = 128
 
 [node name="Player" parent="." unique_id=1603626354 instance=ExtResource("2_8h1al")]
 position = Vector2(-341, -122)
+
+[node name="PROPS" type="Node2D" parent="." unique_id=1231454184]
+
+[node name="PetBall" parent="PROPS" unique_id=2041157917 instance=ExtResource("3_mtltt")]
+visible = false
+position = Vector2(-81, -161)
+
+[node name="PET" type="Node2D" parent="." unique_id=352751338]
+
+[node name="PetOrigin" parent="PET" unique_id=1157424476 instance=ExtResource("4_gd3n2")]
+position = Vector2(-153, -129)
+
+[node name="DATA" type="Node2D" parent="." unique_id=226309364]
+
+[node name="InstanceManager" parent="DATA" unique_id=1948949026 instance=ExtResource("5_q2cfq")]

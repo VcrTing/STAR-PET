@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://b7sbo6wa8g3xf"]
+
+[ext_resource type="Texture2D" uid="uid://bk32ui26vnq14" path="res://IMG/prop/petball/petball_normal.png" id="1_pi12l"]
+[ext_resource type="Script" uid="uid://cguhbepejctfl" path="res://scenepref/petball/PetBallBody.cs" id="1_rutfm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rutfm"]
+atlas = ExtResource("1_pi12l")
+region = Rect2(0, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_88dxt"]
+atlas = ExtResource("1_pi12l")
+region = Rect2(256, 0, 256, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cplhs"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rutfm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_88dxt")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cplhs"]
+radius = 18.0
+
+[node name="PetBall" type="Node2D" unique_id=2041157917]
+
+[node name="PetBallBody" type="RigidBody2D" parent="." unique_id=307065453]
+collision_layer = 65536
+collision_mask = 520
+script = ExtResource("1_rutfm")
+
+[node name="View" type="Node2D" parent="PetBallBody" unique_id=1069702390]
+scale = Vector2(0.24, 0.24)
+
+[node name="ViewNormal" type="AnimatedSprite2D" parent="PetBallBody/View" unique_id=1133782068]
+position = Vector2(2, -26)
+sprite_frames = SubResource("SpriteFrames_cplhs")
+autoplay = "default"
+frame = 1
+frame_progress = 0.9637925
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PetBallBody" unique_id=896000851]
+shape = SubResource("CircleShape2D_cplhs")

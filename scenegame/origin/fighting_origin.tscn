@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://80mi1ngpmp8c"]
+
+[ext_resource type="PackedScene" uid="uid://cvv0wrd7lehea" path="res://scenesys/instance/instance_manager.tscn" id="1_ppfa1"]
+
+[node name="FightingOrigin" type="Node2D" unique_id=1362864298]
+
+[node name="System" type="Node2D" parent="." unique_id=487844836]
+
+[node name="Camera2D" type="Camera2D" parent="System" unique_id=1006151096]
+
+[node name="DATA" type="Node2D" parent="." unique_id=357362854]
+
+[node name="InstanceManager" parent="DATA" unique_id=1948949026 instance=ExtResource("1_ppfa1")]

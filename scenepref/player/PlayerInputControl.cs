@@ -50,7 +50,23 @@ public partial class PlayerInputControl : Node2D
 				case Key.D:
 					if (!keyEvent.Pressed) PlayerMove.Instance.OnMoveRightRelease();
 					break;
+				case Key.C:
+					if (keyEvent.Pressed) OnThrowPetBall();
+					break;
 			}
 		}
+	}
+
+	private void OnThrowPetBall()
+	{
+		GD.Print("PlayerInputControl 按下了 C");
+		// 朝玩家当前朝向扔出精灵球
+		int dir = PlayerMove.Instance.GetDirection();
+		Vector2 direction = new Vector2(dir, 0);
+		if (direction == Vector2.Zero)
+		{
+			direction = Vector2.Right;
+		}
+		PlayerUxPetBall.Instance.ThrowPetBall(direction);
 	}
 }

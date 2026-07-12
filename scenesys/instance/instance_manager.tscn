@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cvv0wrd7lehea"]
+
+[ext_resource type="Script" uid="uid://chthcnvbgph2o" path="res://instance/InstancePackPetManager.cs" id="1_jhj6b"]
+[ext_resource type="Script" uid="uid://cd1xosy40a3k7" path="res://instance/InstancePlayerManager.cs" id="2_vhquk"]
+[ext_resource type="Script" uid="uid://dmqu0c2hidlbg" path="res://instance/InstanceWordManager.cs" id="3_wdgbr"]
+
+[node name="InstanceManager" type="Node2D" unique_id=1948949026]
+
+[node name="InstancePackPetManager" type="Node2D" parent="." unique_id=1220412044]
+script = ExtResource("1_jhj6b")
+
+[node name="InstancePlayerManager" type="Node2D" parent="." unique_id=272648364]
+script = ExtResource("2_vhquk")
+
+[node name="InstanceWordManager" type="Node2D" parent="." unique_id=1919805766]
+script = ExtResource("3_wdgbr")
