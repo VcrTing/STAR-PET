@@ -1,6 +1,13 @@
 [gd_scene format=3 uid="uid://80mi1ngpmp8c"]
 
 [ext_resource type="PackedScene" uid="uid://cvv0wrd7lehea" path="res://scenesys/instance/instance_manager.tscn" id="1_ppfa1"]
+[ext_resource type="PackedScene" uid="uid://btf86142sy52" path="res://sceneui/fight/bars/ui_fight_bottom_bar_tab.tscn" id="2_5qfyh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ppfa1"]
+size = Vector2(240, 120)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cplhs"]
+size = Vector2(600, 60)
 
 [node name="FightingOrigin" type="Node2D" unique_id=1362864298]
 
@@ -11,3 +18,45 @@
 [node name="DATA" type="Node2D" parent="." unique_id=357362854]
 
 [node name="InstanceManager" parent="DATA" unique_id=1948949026 instance=ExtResource("1_ppfa1")]
+
+[node name="FightLandMy" type="Node2D" parent="." unique_id=615089864]
+position = Vector2(0, 140)
+
+[node name="PlayerLandMyStandPlayer" type="Node2D" parent="FightLandMy" unique_id=1555606175]
+position = Vector2(-800, 0)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="FightLandMy/PlayerLandMyStandPlayer" unique_id=573683833]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FightLandMy/PlayerLandMyStandPlayer/StaticBody2D" unique_id=683969759]
+shape = SubResource("RectangleShape2D_ppfa1")
+
+[node name="FightLandMyStandPet" type="Node2D" parent="FightLandMy" unique_id=1106155340]
+position = Vector2(-300, 0)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="FightLandMy/FightLandMyStandPet" unique_id=928271281]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FightLandMy/FightLandMyStandPet/StaticBody2D" unique_id=210742130]
+shape = SubResource("RectangleShape2D_cplhs")
+
+[node name="Ux" type="Node2D" parent="FightLandMy/FightLandMyStandPet" unique_id=1056591019]
+
+[node name="FightLandNewPetPoint" type="Node2D" parent="FightLandMy/FightLandMyStandPet/Ux" unique_id=238103423]
+position = Vector2(-60, -360)
+
+[node name="PlayerUi" type="Node2D" parent="." unique_id=214073081]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="PlayerUi" unique_id=1388077817]
+
+[node name="FightUiBottom" type="Control" parent="PlayerUi/CanvasLayer" unique_id=2130826466]
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 3
+anchor_top = 0.883
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 89.85596
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="UiFightBottomBarTab" parent="PlayerUi/CanvasLayer/FightUiBottom" unique_id=1885930892 instance=ExtResource("2_5qfyh")]
+layout_mode = 0
+anchors_preset = 0
