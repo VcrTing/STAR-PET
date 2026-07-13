@@ -36,6 +36,11 @@ public class InsFightPetData
 	public Dictionary<EnumPetBaseStats, int> FinalStats = new();   // 最终个体值（基础Iv + 等级修正 + 天赋修正后 × 性格修正的最终值）
 
 	/// <summary>
+	/// 战斗中实际运作的技能列表（从 CarriedSkills 加载转换而来）
+	/// </summary>
+	public List<InsFightSkill> FightSkills { get; set; } = new();
+
+	/// <summary>
 	/// 从 InsPackPetData 转换为 InsFightPetData（深拷贝）
 	/// </summary>
 	/// <param name="packData">背包中的精灵数据</param>
@@ -45,7 +50,7 @@ public class InsFightPetData
 		if (packData == null)
 			return null;
 
-		return new InsFightPetData
+		var fightPet = new InsFightPetData
 		{
 			PetUuid = packData.PetUuid,
 			PetId = packData.PetId,
@@ -74,5 +79,18 @@ public class InsFightPetData
 			Medals = new List<EnumPetMedal>(packData.Medals),
 			FinalStats = new Dictionary<EnumPetBaseStats, int>(packData.FinalStats)
 		};
+
+		// 根据 CarriedSkills 加载战斗技能
+		if (packData.CarriedSkills != null && packData.CarriedSkills.Count > 0)
+		{
+			var skillIds = packData.CarriedSkills.ToArray();
+			var skills = DevSkillLoadTool.LoadSkills(skillIds);
+			foreach (var skill in skills)
+			{
+				fightPet.FightSkills.Add(InsFightSkill.FromInsSkill(skill));
+			}
+		}
+
+		return fightPet;
 	}
 }

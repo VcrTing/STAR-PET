@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://ciwqjwtjxj403"]
+
+[ext_resource type="Texture2D" uid="uid://c3g88h1yoq68y" path="res://IMG/skill/Normal/status/0_3_1.png" id="1_lk0dl"]
+[ext_resource type="Script" uid="uid://bgqf78mqtmnmu" path="res://sceneui/fight/skills/UiHSkillBaseButton.cs" id="1_pytts"]
+
+[node name="UiHBoxSkillBaseItem" type="HBoxContainer" unique_id=2047672180]
+custom_minimum_size = Vector2(0, 120)
+alignment = 1
+
+[node name="UiHSkillBaseButton" type="TextureButton" parent="." unique_id=1865614475]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_pytts")
+
+[node name="HBoxContainerIcon" type="HBoxContainer" parent="UiHSkillBaseButton" unique_id=1250054838]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="UiHSkillBaseButton/HBoxContainerIcon" unique_id=129392057]
+layout_mode = 2
+texture = ExtResource("1_lk0dl")
+expand_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UiHSkillBaseButton" unique_id=1436097221]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="Label" type="Label" parent="UiHSkillBaseButton/HBoxContainer" unique_id=2037319510]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "聚能"
+horizontal_alignment = 1
+vertical_alignment = 1

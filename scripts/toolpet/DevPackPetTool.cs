@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// 开发用精灵入背包工具
@@ -82,6 +83,12 @@ public static class DevPackPetTool
 			ObtainedMethod = "开发测试",
 			ObtainedLocation = "DevTool"
 		};
+
+		// CarriedSkills 为空时插入默认携带技能
+		if (packData.CarriedSkills == null || packData.CarriedSkills.Count == 0)
+		{
+			packData.CarriedSkills = new List<string> { "0_2_1", "0_1_1", "0_1_2", "0_1_3" };
+		}
 
 		InstancePackPetManager.Instance.AddPet(packData);
 		// GD.Print($"[DevPackPetTool] 已创建新背包数据: {instanceUuid}");

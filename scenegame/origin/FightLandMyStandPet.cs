@@ -29,7 +29,7 @@ public partial class FightLandMyStandPet : Node2D
 
 	public override void _Ready()
 	{
-		InitPet(Pet, PetType);
+		
 	}
 
 	public override void _Process(double delta)
@@ -63,7 +63,7 @@ public partial class FightLandMyStandPet : Node2D
 	}
 
 	/// <summary>
-	/// 切换上场精灵：移除旧精灵，根据战斗数据生成新精灵
+	/// 切换上场精灵：移除旧精灵，根据战斗数据生成新精灵，并刷新技能UI
 	/// </summary>
 	/// <param name="fightPetData">新上场的战斗精灵数据</param>
 	public void SwitchPet(InsFightPetData fightPetData)
@@ -90,6 +90,9 @@ public partial class FightLandMyStandPet : Node2D
 
 		// 根据战斗数据生成新精灵
 		DevPetLoadTool.SpawnDevPetFromFightData(FightPetData, this, spawnPos, true);
+
+		// 刷新技能UI：切换显示该精灵的技能列表
+		UiHBoxSkillsManager.Instance.SwitchSkills(FightPetData.FightSkills);
 	}
 
 	public override void _ExitTree()

@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bp6183yatlm6d"]
 
+[ext_resource type="Script" uid="uid://bl337i2phpeaq" path="res://sceneui/fight/skills/UiMSkilItemButton.cs" id="1_eywex"]
 [ext_resource type="Texture2D" uid="uid://c3wtpungnuxfb" path="res://IMG/uigame/pet_type/ui_pet_type_0.png" id="1_we11a"]
 [ext_resource type="Theme" uid="uid://c0e27qi6qb2qq" path="res://sceneui/fight/__theme/fight_item_skill_name.tres" id="2_eywex"]
 [ext_resource type="Theme" uid="uid://dxx5xc7fvyo73" path="res://sceneui/fight/__theme/fight_item_skill_msg.tres" id="3_kcjwf"]
@@ -15,6 +16,7 @@ theme_override_constants/margin_bottom = 12
 
 [node name="UiMSkilItemButton" type="TextureButton" parent="." unique_id=1855289519]
 layout_mode = 2
+script = ExtResource("1_eywex")
 
 [node name="HSkil1" type="HBoxContainer" parent="UiMSkilItemButton" unique_id=245850006]
 layout_mode = 1
@@ -39,19 +41,9 @@ alignment = 1
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
-[node name="TextureButton" type="TextureButton" parent="UiMSkilItemButton/HSkil1/HIcon/VBox/IconWrapper" unique_id=1106584397]
-layout_mode = 2
-ignore_texture_size = true
-stretch_mode = 0
-
-[node name="TextureRect" type="TextureRect" parent="UiMSkilItemButton/HSkil1/HIcon/VBox/IconWrapper/TextureButton" unique_id=1465934835]
+[node name="TextureRectSkillIcon" type="TextureRect" parent="UiMSkilItemButton/HSkil1/HIcon/VBox/IconWrapper" unique_id=1465934835]
 clip_contents = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 texture = ExtResource("1_we11a")
 expand_mode = 2
 
@@ -66,7 +58,7 @@ layout_mode = 2
 theme = ExtResource("2_eywex")
 alignment = 1
 
-[node name="Label" type="Label" parent="UiMSkilItemButton/HSkil1/VInfo/HNameWapper" unique_id=1492492076]
+[node name="LabelSkillName" type="Label" parent="UiMSkilItemButton/HSkil1/VInfo/HNameWapper" unique_id=1492492076]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "先发制人"
@@ -93,14 +85,14 @@ theme = ExtResource("3_kcjwf")
 text = "威力："
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="UiMSkilItemButton/HSkil1/VInfo/HMsgWrapper/VMsg1/HBoxContainer" unique_id=1060259976]
+[node name="LabelSkillDamage" type="Label" parent="UiMSkilItemButton/HSkil1/VInfo/HMsgWrapper/VMsg1/HBoxContainer" unique_id=1060259976]
 layout_mode = 2
 size_flags_vertical = 6
 theme = ExtResource("3_kcjwf")
 text = "100"
 vertical_alignment = 1
 
-[node name="TextureRect" type="TextureRect" parent="UiMSkilItemButton/HSkil1/VInfo/HMsgWrapper/VMsg1/HBoxContainer" unique_id=1884955081]
+[node name="TextureRectSkillType" type="TextureRect" parent="UiMSkilItemButton/HSkil1/VInfo/HMsgWrapper/VMsg1/HBoxContainer" unique_id=1884955081]
 layout_mode = 2
 texture = ExtResource("4_r15mj")
 expand_mode = 2
@@ -127,7 +119,7 @@ theme = ExtResource("5_xan5e")
 text = "能耗："
 vertical_alignment = 1
 
-[node name="Label2" type="Label" parent="UiMSkilItemButton/HSkil1/VInfo/HSubWrapper/VMsg1/HBoxContainer" unique_id=1578072314]
+[node name="LabelSkillCost" type="Label" parent="UiMSkilItemButton/HSkil1/VInfo/HSubWrapper/VMsg1/HBoxContainer" unique_id=1578072314]
 layout_mode = 2
 size_flags_vertical = 6
 theme = ExtResource("5_xan5e")

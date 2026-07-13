@@ -35,6 +35,12 @@ public partial class PlayerLandMyStandPlayer : Node2D
 	{
 		Init();
 		InitFight();
+
+		// 切换第一只精灵上场
+		if (FightPets.Count > 0)
+		{
+			FightLandMyStandPet.Instance.SwitchPet(FightPets[0]);
+		}
 	}
 
 	public override void _Process(double delta)

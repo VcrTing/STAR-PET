@@ -45,7 +45,7 @@ shape = SubResource("RectangleShape2D_cplhs")
 [node name="Ux" type="Node2D" parent="FightLandMy/FightLandMyStandPet" unique_id=1056591019]
 
 [node name="FightLandNewPetPoint" type="Node2D" parent="FightLandMy/FightLandMyStandPet/Ux" unique_id=238103423]
-position = Vector2(-60, -360)
+position = Vector2(-90, -360)
 
 [node name="PlayerUi" type="Node2D" parent="." unique_id=214073081]
 
@@ -72,3 +72,48 @@ layout_mode = 3
 anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerUi/CanvasLayer/FightUiTop" unique_id=45465948]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerUi/CanvasLayer/FightUiTop/MarginContainer" unique_id=1388858539]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxFighter1" type="VBoxContainer" parent="PlayerUi/CanvasLayer/FightUiTop/MarginContainer/HBoxContainer" unique_id=1971357074]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerUi/CanvasLayer/FightUiTop/MarginContainer/HBoxContainer/VBoxFighter1" unique_id=73616288]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxFighterTip" type="VBoxContainer" parent="PlayerUi/CanvasLayer/FightUiTop/MarginContainer/HBoxContainer" unique_id=656325141]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerUi/CanvasLayer/FightUiTop/MarginContainer/HBoxContainer/VBoxFighterTip" unique_id=1982638370]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="VBoxFighter2" type="VBoxContainer" parent="PlayerUi/CanvasLayer/FightUiTop/MarginContainer/HBoxContainer" unique_id=1564795780]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerUi/CanvasLayer/FightUiTop/MarginContainer/HBoxContainer/VBoxFighter2" unique_id=1496802743]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 2
