@@ -23,7 +23,7 @@ public static class DevPackPetTool
 		if (ResourceLoader.Exists(path))
 		{
 			var data = ResourceLoader.Load(path);
-			GD.Print($"[DevPackPetTool] 已加载精灵数据: {path}");
+			// GD.Print($"[DevPackPetTool] 已加载精灵数据: {path}");
 			return data;
 		}
 
@@ -51,7 +51,7 @@ public static class DevPackPetTool
 
 		if (packData != null)
 		{
-			GD.Print($"[DevPackPetTool] 已找到背包数据: {instanceUuid}");
+			// GD.Print($"[DevPackPetTool] 已找到背包数据: {instanceUuid}");
 			return packData;
 		}
 
@@ -84,21 +84,22 @@ public static class DevPackPetTool
 		};
 
 		InstancePackPetManager.Instance.AddPet(packData);
-		GD.Print($"[DevPackPetTool] 已创建新背包数据: {instanceUuid}");
+		// GD.Print($"[DevPackPetTool] 已创建新背包数据: {instanceUuid}");
 
 		return packData;
 	}
 
 	/// <summary>
 	/// 一站式方法：加载精灵静态数据（或创建默认数据），并同步到背包管理器
+	/// UUID 内部自动生成
 	/// </summary>
-	/// <param name="instanceUuid">精灵实例 UUID</param>
 	/// <param name="pet">精灵图鉴编号</param>
 	/// <param name="petType">精灵系别</param>
 	/// <param name="petData">输出参数：加载或创建的精灵静态数据</param>
 	/// <returns>背包中的精灵数据实例</returns>
-	public static InsPackPetData LoadAndSync(string instanceUuid, EnumPet pet, EnumPetType petType, out Resource petData)
+	public static InsPackPetData LoadAndSync(EnumPet pet, EnumPetType petType, out Resource petData)
 	{
+		string instanceUuid = Guid.NewGuid().ToString();
 		petData = LoadOrCreatePetData(pet, petType);
 		return SyncPackData(instanceUuid, pet, petType, petData);
 	}

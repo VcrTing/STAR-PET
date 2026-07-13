@@ -32,11 +32,12 @@ animations = [{
 }]
 
 [node name="DevPetWarpper" type="Node2D" unique_id=1157424476]
+z_as_relative = false
 script = ExtResource("1_y72nh")
 
 [node name="DevPetZero" type="RigidBody2D" parent="." unique_id=714148022]
-collision_layer = 2056
-collision_mask = 0
+collision_layer = 2048
+collision_mask = 9
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DevPetZero" unique_id=816202906]
 position = Vector2(0, 10)
@@ -46,6 +47,8 @@ shape = SubResource("CapsuleShape2D_cplhs")
 [node name="DevPetUx" type="Node2D" parent="DevPetZero" unique_id=2061794237]
 
 [node name="PetUxArea" type="Area2D" parent="DevPetZero/DevPetUx" unique_id=808847068]
+collision_layer = 65536
+collision_mask = 512
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DevPetZero/DevPetUx/PetUxArea" unique_id=1403117762]
 position = Vector2(0, -4)

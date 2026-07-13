@@ -2,13 +2,16 @@ using Godot;
 using System;
 
 /// <summary>
-/// 开发用精灵包装器
+/// 开发用精灵包装器（单例）
 /// 用于在场景中展示/测试精灵实例
-/// 内存储 EnumPet 信息以便加载对应的 pet_xxxx.gd 数据文件
+/// 内存储 EnumPet 信息以便加载对应的数据文件
 /// 初始化后自动与 InstancePackPetManager 同步背包数据
 /// </summary>
 public partial class DevPetWrapper : Node2D
 {
+	private static DevPetWrapper _instance;
+	public static DevPetWrapper Instance => _instance;
+
 	/// <summary>
 	/// 精灵图鉴编号，对应 res://datapet/ 下的数据文件
 	/// </summary>
@@ -38,18 +41,65 @@ public partial class DevPetWrapper : Node2D
 	/// </summary>
 	public InsPackPetData PackData { get; private set; }
 
+	public override void _EnterTree()
+	{
+		if (_instance != null)
+		{
+			QueueFree();
+			return;
+		}
+		_instance = this;
+	}
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		// 1. 自动生成 UUID
-		if (string.IsNullOrEmpty(InstanceUuid))
-		{
-			InstanceUuid = Guid.NewGuid().ToString();
-		}
+	}
 
-		// 2. 一站式加载静态数据 + 同步背包数据
+	public override void _Process(double delta)
+	{
+	}
+
+	public override void _ExitTree()
+	{
+		if (_instance == this)
+		{
+			_instance = null;
+		}
+	}
+
+	/// <summary>
+	/// 水平翻转所有子节点（适用于精灵默认朝左，需翻转时调用）
+	/// 通过 Transform.X 向量取反实现，不影响 Scale
+	/// </summary>
+	public void FlipChildrenX()
+	{
+		foreach (Node child in GetChildren())
+		{
+			if (child is Node2D node2d)
+			{
+				var t = node2d.Transform;
+				t.X = new Vector2(-t.X.X, t.X.Y);
+				node2d.Transform = t;
+			}
+		}
+	}
+
+	/// <summary>
+	/// 初始化并加载精灵数据
+	/// UUID 由 DevPackPetTool.LoadAndSync 内部自动生成
+	/// </summary>
+	/// <param name="pet">精灵图鉴编号</param>
+	/// <param name="petType">精灵系别</param>
+	public void Init(EnumPet pet, EnumPetType petType)
+	{
+		Pet = pet;
+		PetType = petType;
+
+		// 一站式加载静态数据 + 同步背包数据（UUID 内部自动生成）
 		// 若 datapet/ 下的文件不存在，DevPackPetTool 会自动创建默认初始数据
-		PackData = DevPackPetTool.LoadAndSync(InstanceUuid, Pet, PetType, out var petData);
+		PackData = DevPackPetTool.LoadAndSync(Pet, PetType, out var petData);
+		InstanceUuid = PackData.PetUuid;
 		PetData = petData;
 	}
 }
