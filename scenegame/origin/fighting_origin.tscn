@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://btf86142sy52" path="res://sceneui/fight/bars/ui_fight_bottom_bar_tab.tscn" id="2_5qfyh"]
 [ext_resource type="Script" uid="uid://mtlojcms7ymw" path="res://scenegame/origin/FightLandMyStandPet.cs" id="2_7exm6"]
 [ext_resource type="Script" uid="uid://cbphxjl8stxw4" path="res://scenegame/origin/PlayerLandMyStandPlayer.cs" id="2_22ufy"]
+[ext_resource type="Script" uid="uid://bma3y3nt16idf" path="res://scenegame/origin/UiHBoxHeartWrapper.cs" id="5_wm0ne"]
+[ext_resource type="PackedScene" uid="uid://bvnck5flu1dha" path="res://scenegame/fightcenter/fight_origin_manager.tscn" id="6_xaxqx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ppfa1"]
 size = Vector2(240, 120)
@@ -98,6 +100,18 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="UiHBoxHeartWrapper" type="VBoxContainer" parent="PlayerUi/CanvasLayer/FightUiTop/MarginContainer/HBoxContainer/VBoxFighter1/HBoxContainer" unique_id=1428729653]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("5_wm0ne")
+
+[node name="LabelMyHeartV" type="Label" parent="PlayerUi/CanvasLayer/FightUiTop/MarginContainer/HBoxContainer/VBoxFighter1/HBoxContainer/UiHBoxHeartWrapper" unique_id=232812298]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 22
+text = "400"
+vertical_alignment = 1
+
 [node name="VBoxFighterTip" type="VBoxContainer" parent="PlayerUi/CanvasLayer/FightUiTop/MarginContainer/HBoxContainer" unique_id=656325141]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
@@ -117,3 +131,5 @@ alignment = 2
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 2
+
+[node name="FightOriginManager" parent="." unique_id=1944409961 instance=ExtResource("6_xaxqx")]

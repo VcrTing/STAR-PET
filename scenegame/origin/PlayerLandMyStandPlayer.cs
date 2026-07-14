@@ -33,6 +33,7 @@ public partial class PlayerLandMyStandPlayer : Node2D
 
 	public override void _Ready()
 	{
+		/*
 		Init();
 		InitFight();
 
@@ -41,6 +42,7 @@ public partial class PlayerLandMyStandPlayer : Node2D
 		{
 			FightLandMyStandPet.Instance.SwitchPet(FightPets[0]);
 		}
+		*/
 	}
 
 	public override void _Process(double delta)

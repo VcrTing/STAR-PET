@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bvnck5flu1dha"]
+
+[ext_resource type="Script" uid="uid://ccyh3q5th2w7e" path="res://scenegame/fightcenter/FightGameInit.cs" id="1_6n7ul"]
+[ext_resource type="Script" uid="uid://xl4ofcfukogv" path="res://scenegame/fightcenter/FightCenterManger.cs" id="1_l1bul"]
+
+[node name="FightOriginManager" type="Node2D" unique_id=1944409961]
+script = ExtResource("1_6n7ul")
+
+[node name="FightCenterManger" type="Node2D" parent="." unique_id=1631301816]
+script = ExtResource("1_l1bul")
