@@ -61,6 +61,9 @@ public partial class FightCenterManger : Node2D
 	/// <summary>当前战斗阶段（状态机当前所在状态）</summary>
 	private FightState _currentState = FightState.None;
 
+	/// <summary>标记 StartBattle 是否已执行过，防止重复调用</summary>
+	private bool _battleStarted = false;
+
 	/// <summary>当前是第几回合（从 1 开始计数）</summary>
 	private int _turnNumber = 0;
 
@@ -150,7 +153,11 @@ public partial class FightCenterManger : Node2D
 	/// </summary>
 	public void StartBattle()
 	{
+		if (_battleStarted) return;
+		_battleStarted = true;
+
 		GD.Print("\n═══════════════════════════════════════\n  🎮 战斗开始！\n═══════════════════════════════════════");
+		LabelGameStatus.SetText("🎮 战斗开始！");
 		ClearAllQueues();
 		_currentState = FightState.BattleStart;
 		EmitSignal(SignalFightStateChanged, (int)_currentState);
@@ -294,6 +301,7 @@ public partial class FightCenterManger : Node2D
 		string info = pet != null ? $"{pet.PetName} (HP={pet.Hp}/{pet.MaxHp})" : "无精灵";
 		GD.Print($"━━━ 第 {_turnNumber} 回合 · 玩家回合 · {info} ━━━");
 		GD.Print("  ▶ 请选择: PlayerSelectSkill(id) 或 PlayerSelectSwitch(idx)");
+		LabelGameStatus.SetText($"🧑 第 {_turnNumber} 回合 · 请选择行动\n{info}");
 	}
 
 	/// <summary>
@@ -303,6 +311,7 @@ public partial class FightCenterManger : Node2D
 	private void HandleEnemyTurn()
 	{
 		GD.Print($"  └─ [敌方] AI思考...");
+		LabelGameStatus.SetText($"👹 敌方行动中...");
 		EnemyTurnActs[4] = new TurnAction(TurnActionType.None, "enemy");
 		_enemyActedThisTurn = true;
 		TryExecute();
@@ -314,6 +323,7 @@ public partial class FightCenterManger : Node2D
 	private void HandleExecuteTurn()
 	{
 		GD.Print($"─────────────────\n  ⚔️ 第 {_turnNumber} 回合执行\n─────────────────");
+		LabelGameStatus.SetText($"⚔️ 第 {_turnNumber} 回合执行中...");
 		FightCenterUtil.PrintQueueStatus(MyTurnActs, "我方");
 		FightCenterUtil.PrintQueueStatus(EnemyTurnActs, "敌方");
 
@@ -340,10 +350,10 @@ public partial class FightCenterManger : Node2D
 			if (p.Hp > 0) alive++;
 
 		// 胜负判定优先级：全灭 > 单只濒死
-		if (alive == 0) { GD.Print("  ❌ 我方全灭！战败！"); TransitionTo(FightState.BattleEnd); return; }
-		if (enemyDead) { GD.Print("  ✅ 敌方全灭！胜利！"); TransitionTo(FightState.BattleEnd); return; }
-		if (playerDead) { EmitSignal(SignalPetFainted, "player", FightCenterUtil.GetCurrentPlayerPetIndex()); TransitionTo(FightState.PlayerSwitch); return; }
-		if (enemyDead) { EmitSignal(SignalPetFainted, "enemy", 0); TransitionTo(FightState.EnemySwitch); return; }
+		if (alive == 0) { GD.Print("  ❌ 我方全灭！战败！"); LabelGameStatus.SetText("❌ 我方全灭！战败！"); TransitionTo(FightState.BattleEnd); return; }
+		if (enemyDead) { GD.Print("  ✅ 敌方全灭！胜利！"); LabelGameStatus.SetText("✅ 敌方全灭！胜利！"); TransitionTo(FightState.BattleEnd); return; }
+		if (playerDead) { LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场"); EmitSignal(SignalPetFainted, "player", FightCenterUtil.GetCurrentPlayerPetIndex()); TransitionTo(FightState.PlayerSwitch); return; }
+		if (enemyDead) { LabelGameStatus.SetText("💀 敌方精灵濒死，敌方准备换宠..."); EmitSignal(SignalPetFainted, "enemy", 0); TransitionTo(FightState.EnemySwitch); return; }
 
 		// 都活着 → 下一回合
 		NextTurn();
@@ -352,12 +362,21 @@ public partial class FightCenterManger : Node2D
 	/// <summary>
 	/// 🔄 玩家换宠：提示玩家用 PlayerSwitchAfterFaint(idx) 选择
 	/// </summary>
-	private void HandlePlayerSwitch() => GD.Print("  ▶ 请调用 PlayerSwitchAfterFaint(idx)");
+	private void HandlePlayerSwitch()
+	{
+		GD.Print("  ▶ 请调用 PlayerSwitchAfterFaint(idx)");
+		LabelGameStatus.SetText("🔄 请选择替补精灵上场\nPlayerSwitchAfterFaint(idx)");
+	}
 
 	/// <summary>
 	/// 🔄 敌方换宠：AI 换完后直接进入下一回合
 	/// </summary>
-	private void HandleEnemySwitch() { GD.Print("  └─ [敌方] 换宠完毕"); NextTurn(); }
+	private void HandleEnemySwitch()
+	{
+		GD.Print("  └─ [敌方] 换宠完毕");
+		LabelGameStatus.SetText("🔄 敌方换宠完毕");
+		NextTurn();
+	}
 
 	/// <summary>
 	/// 🏁 战斗结束：发送胜负信号，打印总结
@@ -367,6 +386,7 @@ public partial class FightCenterManger : Node2D
 		bool win = FightCenterUtil.GetEnemyActivePet()?.Hp <= 0;
 		EmitSignal(SignalBattleEnd, win);
 		GD.Print($"\n═══════════════════════════════════════\n  🏆 战斗结束! 玩家{(win ? "胜利🎉" : "战败💀")}!\n  ⏱ 共 {_turnNumber} 回合\n═══════════════════════════════════════");
+		LabelGameStatus.SetText($"🏁 战斗结束! 玩家{(win ? "胜利 🎉" : "战败 💀")}\n共 {_turnNumber} 回合");
 	}
 
 	// ════════════════════════════════════════════════════════════════
@@ -403,6 +423,7 @@ public partial class FightCenterManger : Node2D
 			GD.Print($"║      {info,-28} ║");
 			GD.Print($"║      ⏳ 战场准备中...                ║");
 			GD.Print($"╚══════════════════════════════════════╝");
+			LabelGameStatus.SetText("🌅 战场准备中...");
 			// TODO: 开场系统逻辑
 			// 例如：重置状态、加载场地效果、触发开场事件等
 			GD.Print($"  └─ [系统初始化] 第 0 回合初始化完成，进入第 1 回合");
@@ -416,6 +437,7 @@ public partial class FightCenterManger : Node2D
 			GD.Print($"║      第 {_turnNumber,2} 回合   🌅 回合开始      ║");
 			GD.Print($"║      {info,-28} ║");
 			GD.Print($"╚══════════════════════════════════════╝");
+			LabelGameStatus.SetText($"🌅 第 {_turnNumber} 回合开始\n{info}");
 		}
 
 		TransitionTo(FightState.PlayerTurn);

@@ -1,0 +1,172 @@
+[gd_scene format=3 uid="uid://btbms5rgup6yp"]
+
+[ext_resource type="Script" uid="uid://1k4n4buqlvst" path="res://sceneui/fight/pack/PanFightPlayerPack.cs" id="1_hck4m"]
+[ext_resource type="Script" uid="uid://d3i53cpd5xkf6" path="res://sceneui/fight/pack/VBoxFightPlayerPetsPack.cs" id="2_hck4m"]
+[ext_resource type="Script" path="res://sceneui/fight/pack/ScrollPetsContent.cs" id="3_hck4m"]
+[ext_resource type="Script" uid="uid://btjby1aginqih" path="res://sceneui/fight/pack/VBoxPetMsgContent.cs" id="4_hck4m"]
+[ext_resource type="Theme" uid="uid://cnosdvdh3h7sj" path="res://sceneui/__theme/theme_button_def.tres" id="5_547r2"]
+[ext_resource type="Script" uid="uid://dchpd48aliwr4" path="res://sceneui/__common/BtnClosePan.cs" id="6_ajoen"]
+
+[node name="PanFightPlayerPack" type="PanelContainer" unique_id=1813670500]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hck4m")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=2083893325]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=991255460]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxFightPlayerPetsPack" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=849728080]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+alignment = 1
+script = ExtResource("2_hck4m")
+
+[node name="HBoxPetsHeader" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPlayerPetsPack" unique_id=621978309]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="ScrollPetsContent" type="ScrollContainer" parent="MarginContainer/HBoxContainer/VBoxFightPlayerPetsPack" unique_id=936958723]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("3_hck4m")
+
+[node name="VBoxPetsContent" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPlayerPetsPack/ScrollPetsContent" unique_id=2080178509]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxPetsSub" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPlayerPetsPack" unique_id=245426819]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="VBoxFightPetReadyPan" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=2089421767]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="HBoxPetMsgHeader" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan" unique_id=2116650620]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan" unique_id=1398899996]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer" unique_id=507281513]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxPetMsgContent" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer" unique_id=344377087]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+script = ExtResource("4_hck4m")
+
+[node name="HBoxPetMsgHeader" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent" unique_id=368833193]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent" unique_id=1846689746]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer" unique_id=759144984]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer" unique_id=1861126462]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="HBoxPetMsg" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer" unique_id=1511124236]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LabelPetMsgName" type="Label" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxPetMsg" unique_id=1069994879]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer" unique_id=676200816]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxPetMsgSub" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent" unique_id=359154338]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+alignment = 1
+
+[node name="BtnSureGoFight" type="TextureButton" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/HBoxPetMsgSub" unique_id=1194219237]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+theme = ExtResource("5_547r2")
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/HBoxPetMsgSub/BtnSureGoFight" unique_id=86860295]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "确定上场"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxPetMsgSub" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan" unique_id=1651305674]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+alignment = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/HBoxPetMsgSub" unique_id=1405886425]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/HBoxPetMsgSub/MarginContainer" unique_id=1224357862]
+layout_mode = 2
+alignment = 2
+
+[node name="BtnClosePan" type="TextureButton" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/HBoxPetMsgSub/MarginContainer/HBoxContainer" unique_id=1953383841]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+theme = ExtResource("5_547r2")
+script = ExtResource("6_ajoen")
+PanName = 1
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/HBoxPetMsgSub/MarginContainer/HBoxContainer/BtnClosePan" unique_id=1279049864]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "关闭"
+horizontal_alignment = 1
+vertical_alignment = 1

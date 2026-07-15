@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://bmfpf3v72qa6o"]
+
+[ext_resource type="Script" uid="uid://dkfxhx8e5sbqe" path="res://sceneui/fight/pets/BtnPackPetItem.cs" id="1_rxpvv"]
+[ext_resource type="Texture2D" uid="uid://d8dltmavolkt" path="res://icon.svg" id="1_v88ig"]
+
+[node name="BtnPackPetItem" type="TextureButton" unique_id=389201264]
+custom_minimum_size = Vector2(0, 90)
+script = ExtResource("1_rxpvv")
+
+[node name="HBoxPetsContent" type="HBoxContainer" parent="." unique_id=2087893773]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="VBoxPetAvatar" type="VBoxContainer" parent="HBoxPetsContent" unique_id=1426558767]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRectPetAvatar" type="TextureRect" parent="HBoxPetsContent/VBoxPetAvatar" unique_id=1782427044]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("1_v88ig")
+expand_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxPetsContent" unique_id=716952742]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 0
+
+[node name="VBoxPetMsg" type="VBoxContainer" parent="HBoxPetsContent/MarginContainer" unique_id=319088302]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="HBoxPetName" type="HBoxContainer" parent="HBoxPetsContent/MarginContainer/VBoxPetMsg" unique_id=885821080]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+alignment = 1
+
+[node name="LabelPetName" type="Label" parent="HBoxPetsContent/MarginContainer/VBoxPetMsg/HBoxPetName" unique_id=2011491741]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Zero"
+vertical_alignment = 1
+
+[node name="HBoxPetHeart" type="HBoxContainer" parent="HBoxPetsContent/MarginContainer/VBoxPetMsg" unique_id=944927672]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+
+[node name="LabelPetHeartNow" type="Label" parent="HBoxPetsContent/MarginContainer/VBoxPetMsg/HBoxPetHeart" unique_id=1261219996]
+layout_mode = 2
+text = "100"
+vertical_alignment = 1
+
+[node name="LabelSplite" type="Label" parent="HBoxPetsContent/MarginContainer/VBoxPetMsg/HBoxPetHeart" unique_id=1253939324]
+layout_mode = 2
+text = "/"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LabelPetHeartAll" type="Label" parent="HBoxPetsContent/MarginContainer/VBoxPetMsg/HBoxPetHeart" unique_id=2001019581]
+layout_mode = 2
+text = "100"
+vertical_alignment = 1

@@ -2,6 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://ciwqjwtjxj403" path="res://sceneui/fight/skills/ui_h_box_skill_base_item.tscn" id="1_env38"]
 [ext_resource type="Script" uid="uid://c4vixgh430g5g" path="res://sceneui/fight/bars/UiHBoxSkillsManager.cs" id="1_p3khl"]
+[ext_resource type="Theme" uid="uid://cnosdvdh3h7sj" path="res://sceneui/__theme/theme_button_def.tres" id="3_env38"]
+[ext_resource type="Script" uid="uid://yn11wyrnrr6p" path="res://sceneui/__common/BtnOpenPan.cs" id="4_ni562"]
 
 [node name="UiFightBottomBarTab" type="TabContainer" unique_id=1885930892]
 anchors_preset = 15
@@ -44,3 +46,30 @@ theme_override_constants/margin_left = 6
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UiHSkillsTabContent/UiVBoxSwitch/MarginContainer" unique_id=80767555]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UiHSkillsTabContent/UiVBoxSwitch/MarginContainer/VBoxContainer" unique_id=1578918893]
+layout_mode = 2
+alignment = 1
+
+[node name="BtnOpenPan" type="TextureButton" parent="UiHSkillsTabContent/UiVBoxSwitch/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1149538789]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("3_env38")
+script = ExtResource("4_ni562")
+PanName = 1
+
+[node name="Label" type="Label" parent="UiHSkillsTabContent/UiVBoxSwitch/MarginContainer/VBoxContainer/HBoxContainer/BtnOpenPan" unique_id=190933266]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "切换精灵"
+horizontal_alignment = 1
+vertical_alignment = 1
