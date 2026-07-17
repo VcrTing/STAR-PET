@@ -9,7 +9,7 @@ public partial class PanFightPlayerPack : PanelContainer
 	public override void _Ready()
 	{
 		Instance = this;
-		// Visible = false;
+		Visible = false;
 	}
 
 	public override void _ExitTree()
@@ -25,6 +25,12 @@ public partial class PanFightPlayerPack : PanelContainer
 	public void Open()
 	{
 		Visible = true;
+
+		var pets = PlayerLandMyStandPlayer.Instance?.FightPets;
+		if (pets != null && pets.Count > 0)
+		{
+			ScrollPetsContent.Instance?.RefreshPetItems(pets.ToArray());
+		}
 	}
 
 	public void Close()

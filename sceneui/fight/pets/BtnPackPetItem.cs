@@ -13,10 +13,7 @@ public partial class BtnPackPetItem : TextureButton
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		_avatar = FindChild("TextureRectPetAvatar", true, false) as TextureRect;
-		_labelName = FindChild("LabelPetName", true, false) as Label;
-		_labelHpNow = FindChild("LabelPetHeartNow", true, false) as Label;
-		_labelHpAll = FindChild("LabelPetHeartAll", true, false) as Label;
+		ResolveRefs();
 
 		if (_avatar == null) GD.PrintErr("  ⚠ BtnPackPetItem 未找到 TextureRectPetAvatar");
 		if (_labelName == null) GD.PrintErr("  ⚠ BtnPackPetItem 未找到 LabelPetName");
@@ -50,17 +47,33 @@ public partial class BtnPackPetItem : TextureButton
 
 		_cachedPetData = petData;
 
-		// 如果 _Ready 已执行过（字段已赋值），立刻刷新 UI
+		// 若 _Ready 尚未执行导致字段为空，在此重新获取
+		ResolveRefs();
+
+		GD.Print($"  🐾 SetPetData: {petData.PetName}, Hp={petData.Hp}/{petData.MaxHp}");
+
 		if (_labelName != null)
-		{
 			_labelName.Text = petData.PetName;
-			_labelHpNow.Text = petData.Hp.ToString();
-			_labelHpAll.Text = petData.MaxHp.ToString();
-		}
 		else
-		{
 			GD.PrintErr("  ⚠ BtnPackPetItem 未找到 LabelPetName");
-		}
+
+		if (_labelHpNow != null)
+			_labelHpNow.Text = petData.Hp.ToString();
+
+		if (_labelHpAll != null)
+			_labelHpAll.Text = petData.MaxHp.ToString();
+	}
+
+	private void ResolveRefs()
+	{
+		if (_avatar == null)
+			_avatar = GodotTool.FindChildByName(this, "TextureRectPetAvatar") as TextureRect;
+		if (_labelName == null)
+			_labelName = GodotTool.FindChildByName(this, "LabelPetName") as Label;
+		if (_labelHpNow == null)
+			_labelHpNow = GodotTool.FindChildByName(this, "LabelPetHeartNow") as Label;
+		if (_labelHpAll == null)
+			_labelHpAll = GodotTool.FindChildByName(this, "LabelPetHeartAll") as Label;
 	}
 
 	private void ApplyCachedData()

@@ -31,7 +31,14 @@ public static class DevPackPetGeneraTool
 
 		// 2. 加载 stone 客制化配置文件
 		string stonePath = $"res://datapet/{typeFolder}/stone/stone_pet_{petId}.gd";
-		Resource stoneData = ResourceLoader.Exists(stonePath) ? ResourceLoader.Load(stonePath) : null;
+		Resource stoneData = null;
+		if (ResourceLoader.Exists(stonePath))
+		{
+			var stoneScript = GD.Load<GDScript>(stonePath);
+			if (stoneScript != null)
+				stoneData = stoneScript.New().AsGodotObject() as Resource;
+		}
+		GD.Print($"stonePath: {stonePath}");
 
 		// 3. 从基础静态数据中提取信息
 		string petName = petData?.Get("pet_name").AsString() ?? "???";
@@ -49,27 +56,37 @@ public static class DevPackPetGeneraTool
 		int petFlyType = petData?.Get("pet_fly_type").AsInt32() ?? (int)EnumPetFly.Walk;
 		bool isLocked = stoneData?.Get("is_locked").AsBool() ?? true;
 		bool isSpecial = stoneData?.Get("is_special").AsBool() ?? true;
-		int talentType = stoneData?.Get("talent_type").AsInt32() ?? (int)EnumPetTalent.Excellent;
+		int talentType = stoneData?.Get("talent_type").AsInt32() ?? (int)EnumPetTalent.Normal;
 		string obtainedMethod = stoneData?.Get("obtained_method").AsString() ?? "初始精灵";
 		string obtainedLocation = stoneData?.Get("obtained_location").AsString() ?? "启程之森";
 
-		// 6. 生成天赋值字典
+		// 6. 生成天赋值字典（存入原始点数，战斗时由 CalculateFinalStats3 按等级缩放）
 		var talentFixedStatsArray = stoneData?.Get("talent_fixed_stats").AsGodotArray();
-		Dictionary<EnumPetBaseStats, int> evDict;
+		// GD.Print($"talentType: {talentType}, talent_fixed_stats: {talentFixedStatsArray}");
+		var talentPointsDict = new Dictionary<EnumPetBaseStats, int>();
+		foreach (EnumPetBaseStats stat in Enum.GetValues(typeof(EnumPetBaseStats)))
+		{
+			talentPointsDict[stat] = 0;
+		}
 		if (talentFixedStatsArray != null && talentFixedStatsArray.Count > 0)
 		{
-			var fixedStats = new List<EnumPetBaseStats>();
+			int points = PetTalentDesign.RollTalentValue(talentType);
 			foreach (var item in talentFixedStatsArray)
 			{
 				int statId = (int)item;
-				fixedStats.Add((EnumPetBaseStats)statId);
+				talentPointsDict[(EnumPetBaseStats)statId] = points;
 			}
-			evDict = PetTalentDesign.GenerateTalentDictByStatsAndType(fixedStats, talentType);
 		}
 		else
 		{
-			evDict = PetTalentDesign.GenerateAllTalentDict(talentType);
+			// 未指定则全属性使用 RollTalentValue
+			foreach (EnumPetBaseStats stat in Enum.GetValues(typeof(EnumPetBaseStats)))
+			{
+				talentPointsDict[stat] = PetTalentDesign.RollTalentValue(talentType);
+			}
 		}
+		var evDict = talentPointsDict;
+		// GD.Print(string.Join(", ", evDict));
 
 		// 7. 根据 female_ratio 决定性别（0=全雄性，>0=按概率随机）
 		EnumPetGender gender = femaleRatio > 0f && RandomTool.Range(0, 100) < femaleRatio
@@ -89,7 +106,7 @@ public static class DevPackPetGeneraTool
 		packData.IsSpecial = isSpecial;
 		packData.PetFly = (EnumPetFly)petFlyType;
 		packData.PetBig = (EnumPetBig)defaultBig;
-		packData.PetAbility = DevAbilityConf.GetAbility(petId);
+		packData.PetAbility = DevAbilityConf.GetAbility(pet);
 		packData.Intimacy = initialIntimacy;
 		packData.Iv = ivDict;
 		packData.Talent = evDict;
@@ -101,7 +118,8 @@ public static class DevPackPetGeneraTool
 		FillPetTypes(packData, petData, petType);
 
 		// 计算最终个体值 FinalStats
-		DevPetIvTool.Update(packData);
+		var growth = DevPetIvTool.GetGrowth2(packData.Level, packData.Intimacy);
+		packData.FinalStats = DevPetIvTool.Update(packData, packData.Level, growth);
 
 		return packData;
 	}

@@ -31,9 +31,9 @@ public partial class ScrollPetsContent : ScrollContainer
 	}
 
 	/// <summary>
-	/// 加载/刷新宠物列表：清空 VBox 并重新从 pets 数组生成所有项
+	/// 初始化宠物列表：清空 VBox 并重新从 pets 数组生成所有项
 	/// </summary>
-	public void LoadPetItems(InsFightPetData[] pets)
+	public void InitPetItems(InsFightPetData[] pets)
 	{
 		if (_itemScene == null) return;
 
@@ -52,10 +52,35 @@ public partial class ScrollPetsContent : ScrollContainer
 	}
 
 	/// <summary>
-	/// 实时刷新：清空并重新加载，用于外部传入最新 InsFightPetData[] 后更新 UI
+	/// 异步刷新宠物列表：不销毁子节点，直接调用每个 BtnPackPetItem.SetPetData 刷新视图
+	/// 数组长度必须与现有子节点数量一致
+	/// </summary>
+	public void AsyncPetItems(InsFightPetData[] pets)
+	{
+		if (pets == null) return;
+
+		var children = _vBoxPetsContent.GetChildren();
+		int count = Mathf.Min(children.Count, pets.Length);
+		for (int i = 0; i < count; i++)
+		{
+			if (children[i] is BtnPackPetItem item)
+			{
+				item.SetPetData(pets[i]);
+			}
+		}
+	}
+
+	/// <summary>
+	/// 刷新宠物列表：
+	/// 子节点为空或宠物数量与子节点数量不一致时调用 InitPetItems 重新创建，
+	/// 否则调用 AsyncPetItems 直接刷新数据
 	/// </summary>
 	public void RefreshPetItems(InsFightPetData[] pets)
 	{
-		LoadPetItems(pets);
+		var children = _vBoxPetsContent.GetChildren();
+		if (children.Count == 0 || children.Count != pets.Length)
+			InitPetItems(pets);
+		else
+			AsyncPetItems(pets);
 	}
 }

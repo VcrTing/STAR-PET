@@ -51,7 +51,7 @@ public partial class PlayerLandMyStandPlayer : Node2D
 
 	/// <summary>
 	/// 初始化上阵精灵列表（从背包数据中选择）
-	/// 若列表为空，则自动加载零号精灵（EnumPet.Zero / EnumPetType.Gold）作为默认精灵
+	/// 若列表为空，则调用 DefPackPet.testModePackPets() 加载默认精灵
 	/// </summary>
 	/// <param name="pets">玩家上阵的精灵背包数据列表（可为 null 或空）</param>
 	public void Init(List<InsPackPetData> pets = null)
@@ -62,40 +62,19 @@ public partial class PlayerLandMyStandPlayer : Node2D
 			return;
 		}
 
-		// 列表为空，加载零号精灵作为默认上阵精灵
-		var packData = DevPackPetTool.LoadAndSync(EnumPet.Zero, EnumPetType.Gold, out _);
-		StandPets = new List<InsPackPetData> { packData };
-		// GD.Print("[PlayerLandMyStandPlayer] 上阵精灵列表为空，已自动加载零号精灵作为默认上阵精灵");
+		// 列表为空，使用测试模式默认精灵列表
+		StandPets = DefPackPet.testModePackPets();
+		// GD.Print("[PlayerLandMyStandPlayer] 上阵精灵列表为空，已加载测试模式默认精灵");
 	}
 
 	/// <summary>
 	/// 战斗开始：将 StandPets 中的背包数据深拷贝为战斗数据 FightPets
 	/// </summary>
-	public void InitFight()
+	/// <param name="isPvp">是否为 PVP 模式</param>
+	/// <param name="fightLevel">战斗等级（PVP 时统一为 60，否则用背包等级）</param>
+	public void InitFight(bool isPvp, int fightLevel)
 	{
-		FightPets.Clear();
-		foreach (var packPet in StandPets)
-		{
-			FightPets.Add(InsFightPetData.FromPackData(packPet));
-		}
-
-		// 打印上阵精灵名字
-		if (StandPets.Count == 0)
-		{
-			GD.Print("[PlayerLandMyStandPlayer] 上阵精灵列表为空");
-			return;
-		}
-
-		var namesList = new List<string>();
-		foreach (var p in StandPets)
-		{
-			var name = p.PetName;
-			if (string.IsNullOrEmpty(name))
-				name = $"ID:{p.PetId}";
-			namesList.Add(name);
-			GD.Print($"  - 精灵: {name}, PetUuid={p.PetUuid}, PetId={p.PetId}");
-		}
-		GD.Print($"[PlayerLandMyStandPlayer] 上阵精灵: {string.Join(", ", namesList)}");
+		FightPets = DevFightPackPetTool.InitPackPetsToFight(StandPets, fightLevel, isPvp);
 	}
 
 	public override void _ExitTree()

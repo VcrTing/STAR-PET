@@ -5,11 +5,12 @@ using System.Collections.Generic;
 /// <summary>
 /// 精灵天赋配置
 /// 天赋值范围 0-10
-/// 天赋类型：普通天赋(0-3)、一般般天赋(4-6)、好天赋(7-9)、极品天赋(10)
+/// 天赋类型：零天赋(固定0)、普通天赋(0-3)、一般般天赋(4-6)、好天赋(7-9)、极品天赋(10)
 /// </summary>
 public static class PetTalentDesign
 {
 	// const int 常量已提取到 EnumPetTalent 枚举，见 scripts/design/pet/enum/EnumPetTalent.cs
+	public const int Zero = (int)EnumPetTalent.Zero;             // 零天赋
 	public const int Normal = (int)EnumPetTalent.Normal;         // 普通天赋
 	public const int NormalPlus = (int)EnumPetTalent.NormalPlus; // 一般般天赋
 	public const int Good = (int)EnumPetTalent.Good;             // 好天赋
@@ -23,7 +24,8 @@ public static class PetTalentDesign
 		if (value >= 10) return Excellent;
 		if (value >= 7) return Good;
 		if (value >= 4) return NormalPlus;
-		return Normal;
+		if (value > 0) return Normal;
+		return Zero;
 	}
 
 	/// <summary>
@@ -33,6 +35,7 @@ public static class PetTalentDesign
 	{
 		return talentType switch
 		{
+			(int)EnumPetTalent.Zero => "零天赋",
 			(int)EnumPetTalent.Normal => "普通天赋",
 			(int)EnumPetTalent.NormalPlus => "一般般天赋",
 			(int)EnumPetTalent.Good => "好天赋",
@@ -52,12 +55,13 @@ public static class PetTalentDesign
 	/// <summary>
 	/// 根据天赋类型随机生成天赋值
 	/// </summary>
-	/// <param name="talentType">天赋类型（0=普通，1=一般般，2=好，4=极品）</param>
-	/// <returns>天赋值：普通 0-3，一般般 4-6，好 7-9，极品 10</returns>
+	/// <param name="talentType">天赋类型（0=零，1=普通，2=一般般，3=好，4=极品）</param>
+	/// <returns>天赋值：零 0，普通 0-3，一般般 4-6，好 7-9，极品 10</returns>
 	public static int RollTalentValue(int talentType)
 	{
 		return talentType switch
 		{
+			(int)EnumPetTalent.Zero => 0,
 			(int)EnumPetTalent.NormalPlus => RandomTool.Range(4, 6),
 			(int)EnumPetTalent.Good => RandomTool.Range(7, 9),
 			(int)EnumPetTalent.Excellent => 10,
@@ -115,7 +119,7 @@ public static class PetTalentDesign
 	/// 传入指定天赋类型 + 随机生成个体项
 	/// 从 6 个属性中随机选出 3 个，全部赋予指定的天赋类型
 	/// </summary>
-	/// <param name="talentType">指定的天赋类型（0=普通，1=一般般，2=好，4=极品）</param>
+	/// <param name="talentType">指定的天赋类型</param>
 	/// <returns>天赋值字典，3 个随机属性使用指定天赋类型</returns>
 	public static Dictionary<EnumPetBaseStats, int> GenerateTalentDictByType(int talentType)
 	{
@@ -171,6 +175,7 @@ public static class PetTalentDesign
 	/// <summary>
 	/// 随机生成天赋类型
 	/// 概率分布：Normal 25%, NormalPlus 30%, Good 25%, Excellent 20%
+	/// 不包含 Zero，Zero 为手动指定
 	/// </summary>
 	private static int RollRandomTalentType()
 	{

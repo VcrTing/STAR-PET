@@ -36,6 +36,26 @@ public static class GodotTool
 	}
 
 	/// <summary>
+	/// 递归遍历所有子节点，根据节点名称匹配并返回第一个匹配的节点
+	/// </summary>
+	/// <param name="parent">父节点</param>
+	/// <param name="nodeName">要查找的节点名称</param>
+	/// <returns>匹配的节点，未找到返回 null</returns>
+	public static Node FindChildByName(Node parent, string nodeName)
+	{
+		foreach (Node child in parent.GetChildren())
+		{
+			if (child.Name == nodeName)
+				return child;
+
+			Node found = FindChildByName(child, nodeName);
+			if (found != null)
+				return found;
+		}
+		return null;
+	}
+
+	/// <summary>
 	/// 获取项目默认重力值 physics/2d/default_gravity
 	/// </summary>
 	public static float GetDefaultGravity()

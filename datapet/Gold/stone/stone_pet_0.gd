@@ -9,7 +9,7 @@ extends Resource
 # ---- 基础信息客制化 ----
 var initial_level := 5               # 初始等级
 var initial_nature := 11             # 初始性格（11=胆小，对应 EnumPetNature.Timid，加速减生命）
-var initial_intimacy := 30           # 初始亲密度
+var initial_intimacy := 100           # 初始亲密度
 
 # ---- 特殊标识 ----
 var is_locked := true                # 是否锁定（锁定后不可放生/交易）

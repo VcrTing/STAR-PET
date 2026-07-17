@@ -18,7 +18,15 @@ public static class PetAbilityDesign
 	};
 
 	/// <summary>
-	/// 获取指定宠物编号的特性（委托 DevAbilityConf）
+	/// 获取指定精灵的特性（委托 DevAbilityConf）
+	/// </summary>
+	public static EnumPetAbility GetAbility(EnumPet pet)
+	{
+		return DevAbilityConf.GetAbility(pet);
+	}
+
+	/// <summary>
+	/// 获取指定宠物编号的特性（委托 DevAbilityConf，兼容 int 调用）
 	/// </summary>
 	public static EnumPetAbility GetAbility(int petId)
 	{

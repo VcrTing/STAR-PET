@@ -21,19 +21,39 @@ public static class DevPackPetTool
 		string typeFolder = PetTypeDesign.GetDataFolderPath(petType);
 		string path = $"res://datapet/{typeFolder}/pet_{petId}.gd";
 
-		if (ResourceLoader.Exists(path))
+		// 文件不存在，创建默认初始 Resource
+		if (!ResourceLoader.Exists(path))
 		{
-			var data = ResourceLoader.Load(path);
-			// GD.Print($"[DevPackPetTool] 已加载精灵数据: {path}");
-			return data;
+			GD.PrintErr($"[DevPackPetTool] 精灵数据文件不存在，使用默认数据: {path}");
+			var fallback = new Resource();
+			fallback.Set("pet_id", petId);
+			fallback.Set("pet_name", "???");
+			return fallback;
 		}
 
-		// 文件不存在，创建默认初始 Resource
-		GD.PrintErr($"[DevPackPetTool] 精灵数据文件不存在，使用默认数据: {path}");
-		var fallback = new Resource();
-		fallback.Set("pet_id", petId);
-		fallback.Set("pet_name", "???");
-		return fallback;
+		// 加载 GDScript 并实例化为 Resource
+		var gdScript = GD.Load<GDScript>(path);
+		if (gdScript == null)
+		{
+			GD.PrintErr($"[DevPackPetTool] 无法加载精灵脚本: {path}");
+			var fallback = new Resource();
+			fallback.Set("pet_id", petId);
+			fallback.Set("pet_name", "???");
+			return fallback;
+		}
+
+		var instance = gdScript.New().AsGodotObject() as Resource;
+		if (instance == null)
+		{
+			GD.PrintErr($"[DevPackPetTool] 无法实例化精灵数据: {path}");
+			var fallback = new Resource();
+			fallback.Set("pet_id", petId);
+			fallback.Set("pet_name", "???");
+			return fallback;
+		}
+
+		// GD.Print($"[DevPackPetTool] 已加载精灵数据: {path}");
+		return instance;
 	}
 
 	/// <summary>
@@ -57,13 +77,17 @@ public static class DevPackPetTool
 		}
 
 		// 未找到则创建基础数据实例并添加到背包
-		// 开发者可在此处改为调用 DevPackPetGeneraTool 的三个专用方法之一：
-		//   DevPackPetGeneraTool.InitSpecialStonePet(pet, petType)
-		//   DevPackPetGeneraTool.InitEggPet(pet, petType, fatherUuid, motherUuid)
-		//   DevPackPetGeneraTool.InitCapturePet(pet, petType, level, location, ballType)
+		return CreateDefaultPackData(instanceUuid, pet, petType, petData);
+	}
+
+	/// <summary>
+	/// 创建默认基础背包数据实例并添加到背包管理器
+	/// </summary>
+	private static InsPackPetData CreateDefaultPackData(string instanceUuid, EnumPet pet, EnumPetType petType, Resource petData)
+	{
 		int petId = (int)pet;
 
-		packData = new InsPackPetData
+		var packData = new InsPackPetData
 		{
 			PetUuid = instanceUuid,
 			PetId = petId.ToString(),

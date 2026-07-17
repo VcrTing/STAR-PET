@@ -31,6 +31,15 @@ public partial class FightGameInit : Node2D
 	/// <summary>标记全部初始化是否已完成，防止 _Process 重复调用 StartBattle</summary>
 	private bool _initComplete = false;
 
+	/// <summary>是否为 PVP 模式（默认 true）</summary>
+	public bool IsPvp { get; set; } = true;
+
+	/// <summary>我方战斗等级（PVP 时双方等级都取 60）</summary>
+	public int MyFightLevel { get; set; } = 60;
+
+	/// <summary>对方战斗等级（PVP 时双方等级都取 60）</summary>
+	public int EnemyFightLevel { get; set; } = 60;
+
 	private const int STEP_GAME_DATA = 0;
 	private const int STEP_SCENE    = 1;
 	private const int STEP_PLAYER   = 2;
@@ -87,7 +96,7 @@ public partial class FightGameInit : Node2D
 		GD.Print("  ── [1/4] 加载游戏数据...");
 
 		PlayerLandMyStandPlayer.Instance?.Init();
-		PlayerLandMyStandPlayer.Instance?.InitFight();
+		PlayerLandMyStandPlayer.Instance?.InitFight(IsPvp, MyFightLevel);
 
 		var fightPets = PlayerLandMyStandPlayer.Instance?.FightPets;
 		if (fightPets != null && fightPets.Count > 0)
