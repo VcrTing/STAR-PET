@@ -15,6 +15,9 @@ var initial_intimacy := 30           # 初始亲密度
 var is_locked := true                # 是否锁定（锁定后不可放生/交易）
 var is_special := true               # 是否特殊精灵
 
+# ---- 默认个体 ----
+var default_big := 3                 # 默认个体档位（3=大个体，对应 EnumPetBig.Large）
+
 # ---- 初始天赋 ----
 # 天赋类型：0=普通天赋(Normal)，1=一般般天赋(NormalPlus)，2=好天赋(Good)，4=极品天赋(Excellent)
 var talent_type := 4                 # 初始天赋类型（4=极品天赋，全属性天赋值=10）

@@ -45,6 +45,8 @@ public static class DevPackPetGeneraTool
 		int initialLevel = stoneData?.Get("initial_level").AsInt32() ?? 5;
 		int initialNature = stoneData?.Get("initial_nature").AsInt32() ?? (int)EnumPetNature.Timid;
 		int initialIntimacy = stoneData?.Get("initial_intimacy").AsInt32() ?? 30;
+		int defaultBig = stoneData?.Get("default_big").AsInt32() ?? (int)EnumPetBig.Normal;
+		int petFlyType = petData?.Get("pet_fly_type").AsInt32() ?? (int)EnumPetFly.Walk;
 		bool isLocked = stoneData?.Get("is_locked").AsBool() ?? true;
 		bool isSpecial = stoneData?.Get("is_special").AsBool() ?? true;
 		int talentType = stoneData?.Get("talent_type").AsInt32() ?? (int)EnumPetTalent.Excellent;
@@ -85,6 +87,9 @@ public static class DevPackPetGeneraTool
 		packData.Gender = gender;
 		packData.IsLocked = isLocked;
 		packData.IsSpecial = isSpecial;
+		packData.PetFly = (EnumPetFly)petFlyType;
+		packData.PetBig = (EnumPetBig)defaultBig;
+		packData.PetAbility = DevAbilityConf.GetAbility(petId);
 		packData.Intimacy = initialIntimacy;
 		packData.Iv = ivDict;
 		packData.Talent = evDict;

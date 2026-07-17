@@ -23,6 +23,9 @@ public class InsPackPetData
 	public EnumPetNature Nature;                                  // 性格
 	public EnumPetGender Gender;                                  // 性别
 	public int BallType;                                          // 捕获用精灵球类型
+	public EnumPetFly PetFly = EnumPetFly.Walk;                   // 移动方式（默认走路）
+	public EnumPetBig PetBig = EnumPetBig.Normal;                 // 体型档位（默认普通个体）
+	public EnumPetAbility PetAbility = EnumPetAbility.None;       // 特性（默认无特性）
 	public bool IsShiny;                                          // 是否闪光
 	public int HatchCounter;                                      // 孵化计数（0=已孵化）
 	public int Intimacy;                                          // 亲密度值
