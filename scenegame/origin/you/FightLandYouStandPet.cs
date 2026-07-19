@@ -1,10 +1,14 @@
 using Godot;
 using System;
 
-public partial class FightLandMyStandPet : Node2D
+/// <summary>
+/// 敌方场上当前精灵节点（单例）
+/// 与 FightLandMyStandPet 结构一致，是敌方版本
+/// </summary>
+public partial class FightLandYouStandPet : Node2D
 {
-	private static FightLandMyStandPet _instance;
-	public static FightLandMyStandPet Instance => _instance;
+	private static FightLandYouStandPet _instance;
+	public static FightLandYouStandPet Instance => _instance;
 
 	[Export] public EnumPet Pet { get; set; } = EnumPet.Zero;
 	[Export] public EnumPetType PetType { get; set; } = EnumPetType.Gold;
@@ -36,19 +40,12 @@ public partial class FightLandMyStandPet : Node2D
 
 		var scene = GD.Load<PackedScene>("res://scenepet/__wrapper/pet_fight_wrapper.tscn");
 		PetWrapper = scene.Instantiate<PetFightWrapper>();
-		// Node2D p = (Node2D) PetWrapper;
-		// p.Position = _spawnPosition;
-		GD.Print($"[FightLandMyStandPet] 切换精灵: {FightPetData?.PetName}, HP={FightPetData?.Hp}/{FightPetData?.MaxHp}, Level={FightPetData?.Level}");
-
+		GD.Print($"[FightLandYouStandPet] 切换精灵: {FightPetData?.PetName}, HP={FightPetData?.Hp}/{FightPetData?.MaxHp}, Level={FightPetData?.Level}");
 
 		AddChild(PetWrapper);
-		PetWrapper.Init(_spawnPosition, true, FightPetData);
+		PetWrapper.Init(_spawnPosition, false, FightPetData);
+
 		
-		// 刷新技能UI
-		if (FightPetData?.FightSkills != null)
-		{
-			UiHBoxSkillsManager.Instance?.SwitchSkills(FightPetData.FightSkills);
-		}
 	}
 
 	public override void _ExitTree()

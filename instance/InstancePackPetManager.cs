@@ -165,7 +165,7 @@ public partial class InstancePackPetManager : Node
 				["nature"] = (int)pet.Nature,
 				["gender"] = (int)pet.Gender,
 				["ball_type"] = pet.BallType,
-				["pet_fly"] = (int)pet.PetFly,
+				["pet_fly"] = EnumListToIntArray(pet.PetFly),
 				["pet_big"] = (int)pet.PetBig,
 				["pet_ability"] = (int)pet.PetAbility,
 				["is_shiny"] = pet.IsShiny,
@@ -206,7 +206,9 @@ public partial class InstancePackPetManager : Node
 				Nature = (EnumPetNature)(int)dict["nature"],
 				Gender = (EnumPetGender)(int)dict["gender"],
 				BallType = (int)dict["ball_type"],
-				PetFly = dict.ContainsKey("pet_fly") ? (EnumPetFly)(int)dict["pet_fly"] : EnumPetFly.Walk,
+				PetFly = dict.ContainsKey("pet_fly")
+					? IntArrayToEnumList<EnumPetFly>(dict["pet_fly"].AsGodotArray())
+					: new List<EnumPetFly> { EnumPetFly.Walk },
 				PetBig = dict.ContainsKey("pet_big") ? (EnumPetBig)(int)dict["pet_big"] : EnumPetBig.Normal,
 				PetAbility = dict.ContainsKey("pet_ability") ? (EnumPetAbility)(int)dict["pet_ability"] : EnumPetAbility.None,
 				IsShiny = (bool)dict["is_shiny"],

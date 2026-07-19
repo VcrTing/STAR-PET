@@ -14,19 +14,7 @@ public partial class UiMSkilItemButton : TextureButton
 
 	public override void _Ready()
 	{
-		// 点击打印技能信息
-		Pressed += () =>
-		{
-			if (FightSkill?.Skill != null)
-			{
-				var s = FightSkill.Skill;
-				GD.Print($"[UiMSkilItemButton] 点击技能: {s.SkillId} {s.SkillName}, 威力={FightSkill.ActualAttackValue}(显示={FightSkill.DisplayAttackValue}), 能耗={FightSkill.ActualPpCost}, 冻结={FightSkill.IsFrozen}, 冷却={FightSkill.CooldownTurns}");
-			}
-			else
-			{
-				GD.PrintErr("[UiMSkilItemButton] 点击技能但 FightSkill 为空");
-			}
-		};
+		Pressed += OnClick;
 
 		// 鼠标悬停：淡蓝色边框发光效果
 		var borderBox = new StyleBoxFlat();
@@ -58,6 +46,20 @@ public partial class UiMSkilItemButton : TextureButton
 
 	public override void _Process(double delta)
 	{
+	}
+
+	/// <summary>
+	/// 点击处理：判断玩家能否行动，若能则选择技能
+	/// </summary>
+	private void OnClick()
+	{
+		if (FightSkill?.Skill == null)
+			return;
+
+		if (FightCenterManger.Instance.CanPlayerAct())
+		{
+			FightCenterManger.Instance.PlayerSelectSkill(FightSkill);
+		}
 	}
 
 	/// <summary>

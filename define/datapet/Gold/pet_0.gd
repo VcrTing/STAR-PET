@@ -10,7 +10,7 @@ var pet_id := 0                    # 图鉴编号
 var pet_name := "零仔"              # 精灵名称（失忆，未知其真名）
 var pet_types := [5]               # 系别数组（第一个元素为主系别，可双属性如 [5, 9]=金+龙）
 var pet_model := ""                # 模型资源路径（后续补充）
-var pet_fly_type := 4              # 移动方式（4=走路，对应 EnumPetFly.Walk）
+var pet_fly_type := [4]            # 移动方式数组（4=走路，对应 EnumPetFly.Walk）
 var hostile_level := 0             # 对人类攻击等级（0=不攻击，对应 EnumPetHostileLevel.None）
 
 # ---- 种族值（六维） ----

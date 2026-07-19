@@ -9,7 +9,7 @@ using System.Collections.Generic;
 public class InsFightPetData
 {
 	public string PetUuid;                                        // 宠物UUID（唯一键，标识背包中每只精灵实例）
-	public string PetId;                                          // 精灵静态ID（对应 datapet/ 下的文件）
+	public string PetId;                                          // 精灵静态ID（对应 define/datapet/ 下的文件）
 	public string PetName;                                        // 真实名称（来自物种数据，如 "零仔"）
 	public List<EnumPetType> PetTypes = new();                    // 精灵系别数组（第一个元素为主系别，可双属性如金+龙）
 	public string Nickname;                                       // 昵称（玩家自定义，默认等于 PetName）
@@ -24,7 +24,7 @@ public class InsFightPetData
 	public EnumPetNature Nature;                                  // 性格
 	public EnumPetGender Gender;                                  // 性别
 	public int BallType;                                          // 捕获用精灵球类型
-	public EnumPetFly PetFly = EnumPetFly.Walk;                   // 移动方式（默认走路）
+	public List<EnumPetFly> PetFly = new() { EnumPetFly.Walk };   // 移动方式数组（默认走路）
 	public EnumPetBig PetBig = EnumPetBig.Normal;                 // 体型档位（默认普通个体）
 	public EnumPetAbility PetAbility = EnumPetAbility.None;       // 特性（默认无特性）
 	public bool IsShiny;                                          // 是否闪光

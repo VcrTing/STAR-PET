@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cu54mlxg8a7sf"]
+
+[ext_resource type="Script" uid="uid://brwiv8qrtkigl" path="res://scenepet/__wrapper/PetFightWrapper.cs" id="1_slg5a"]
+
+[node name="PetFightWrapper" type="Node2D" unique_id=855573692]
+script = ExtResource("1_slg5a")

@@ -10,4 +10,5 @@ public enum EnumPetFly
 	Float = 3,         // 漂浮
 	Walk = 4,          // 走路
 	Dive = 5,          // 潜水
+	Burrow = 6,        // 遁地
 }

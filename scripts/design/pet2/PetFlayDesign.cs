@@ -13,6 +13,7 @@ public static class PetFlayDesign
 	public const int Float = (int)EnumPetFly.Float;                 // 漂浮
 	public const int Walk = (int)EnumPetFly.Walk;                   // 走路
 	public const int Dive = (int)EnumPetFly.Dive;                   // 潜水
+	public const int Burrow = (int)EnumPetFly.Burrow;               // 遁地
 
 	/// <summary>
 	/// 移动方式中文名称映射
@@ -24,6 +25,7 @@ public static class PetFlayDesign
 		{ (int)EnumPetFly.Float, "漂浮" },
 		{ (int)EnumPetFly.Walk, "走路" },
 		{ (int)EnumPetFly.Dive, "潜水" },
+		{ (int)EnumPetFly.Burrow, "遁地" },
 	};
 
 	/// <summary>

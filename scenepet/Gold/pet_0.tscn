@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://gbw8jkduplrp"]
+
+[ext_resource type="Texture2D" uid="uid://cp3ke8xhfwmsp" path="res://IMG/pet/origin/pet_origin_1.png" id="1_2t2gy"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cplhs"]
+height = 58.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cplhs"]
+size = Vector2(40, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2t2gy"]
+atlas = ExtResource("1_2t2gy")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y72nh"]
+atlas = ExtResource("1_2t2gy")
+region = Rect2(512, 0, 512, 512)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cplhs"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2t2gy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y72nh")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="pet_0" type="RigidBody2D" unique_id=791051097]
+collision_layer = 2048
+collision_mask = 9
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1967934500]
+position = Vector2(0, 10)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_cplhs")
+
+[node name="DevPetUx" type="Node2D" parent="." unique_id=2030166435]
+
+[node name="PetUxArea" type="Area2D" parent="DevPetUx" unique_id=1305780535]
+collision_layer = 65536
+collision_mask = 512
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DevPetUx/PetUxArea" unique_id=1770266332]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_cplhs")
+
+[node name="DevPetTexture" type="Node2D" parent="." unique_id=168153382]
+scale = Vector2(0.5, 0.5)
+
+[node name="ZeroView" type="AnimatedSprite2D" parent="DevPetTexture" unique_id=1531157051]
+position = Vector2(18, -24)
+sprite_frames = SubResource("SpriteFrames_cplhs")
+autoplay = "default"

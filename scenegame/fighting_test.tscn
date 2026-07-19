@@ -1,16 +1,16 @@
-[gd_scene format=3 uid="uid://80mi1ngpmp8c"]
+[gd_scene format=3 uid="uid://c6dl7cs73ayd8"]
 
-[ext_resource type="PackedScene" uid="uid://cvv0wrd7lehea" path="res://scenesys/instance/instance_manager.tscn" id="1_ppfa1"]
-[ext_resource type="PackedScene" uid="uid://btf86142sy52" path="res://sceneui/fight/bars/ui_fight_bottom_bar_tab.tscn" id="2_5qfyh"]
-[ext_resource type="Script" uid="uid://mtlojcms7ymw" path="res://scenegame/origin/FightLandMyStandPet.cs" id="2_7exm6"]
-[ext_resource type="Script" uid="uid://de2ma5gbmw18k" path="res://scenegame/origin/you/PlayerLandYouStandPlayer.cs" id="2_8exfp"]
-[ext_resource type="Script" uid="uid://cbphxjl8stxw4" path="res://scenegame/origin/PlayerLandMyStandPlayer.cs" id="2_22ufy"]
-[ext_resource type="Script" uid="uid://d08w6mqd00s60" path="res://scenegame/origin/you/FightLandYouStandPet.cs" id="3_yl4kx"]
-[ext_resource type="Script" uid="uid://bl8r1jwep8x6f" path="res://scenegame/origin/FightCanvasLayer.cs" id="4_estgw"]
-[ext_resource type="Script" uid="uid://bma3y3nt16idf" path="res://scenegame/origin/UiHBoxHeartWrapper.cs" id="5_wm0ne"]
-[ext_resource type="Script" uid="uid://dfae6hpek38xj" path="res://scenegame/origin/LabelGameStatus.cs" id="6_estgw"]
-[ext_resource type="PackedScene" uid="uid://bvnck5flu1dha" path="res://scenegame/fightcenter/fight_origin_manager.tscn" id="6_xaxqx"]
-[ext_resource type="PackedScene" uid="uid://btbms5rgup6yp" path="res://sceneui/fight/pack/pan_fight_player_pack.tscn" id="8_d58k4"]
+[ext_resource type="PackedScene" uid="uid://cvv0wrd7lehea" path="res://scenesys/instance/instance_manager.tscn" id="1_n2bdn"]
+[ext_resource type="Script" uid="uid://de2ma5gbmw18k" path="res://scenegame/origin/you/PlayerLandYouStandPlayer.cs" id="2_3l0sp"]
+[ext_resource type="Script" uid="uid://d08w6mqd00s60" path="res://scenegame/origin/you/FightLandYouStandPet.cs" id="3_5yix2"]
+[ext_resource type="Script" uid="uid://cbphxjl8stxw4" path="res://scenegame/origin/PlayerLandMyStandPlayer.cs" id="4_d74j3"]
+[ext_resource type="Script" uid="uid://mtlojcms7ymw" path="res://scenegame/origin/FightLandMyStandPet.cs" id="5_oythe"]
+[ext_resource type="Script" uid="uid://bl8r1jwep8x6f" path="res://scenegame/origin/FightCanvasLayer.cs" id="6_igxn0"]
+[ext_resource type="PackedScene" uid="uid://btf86142sy52" path="res://sceneui/fight/bars/ui_fight_bottom_bar_tab.tscn" id="7_h78vf"]
+[ext_resource type="Script" uid="uid://bma3y3nt16idf" path="res://scenegame/origin/UiHBoxHeartWrapper.cs" id="8_n00ms"]
+[ext_resource type="Script" uid="uid://dfae6hpek38xj" path="res://scenegame/origin/LabelGameStatus.cs" id="9_7oi6l"]
+[ext_resource type="PackedScene" uid="uid://btbms5rgup6yp" path="res://sceneui/fight/pack/pan_fight_player_pack.tscn" id="10_nues3"]
+[ext_resource type="PackedScene" uid="uid://bvnck5flu1dha" path="res://scenegame/fightcenter/fight_origin_manager.tscn" id="11_x64ax"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ppfa1"]
 size = Vector2(240, 120)
@@ -18,7 +18,7 @@ size = Vector2(240, 120)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cplhs"]
 size = Vector2(600, 60)
 
-[node name="FightingOrigin" type="Node2D" unique_id=1362864298]
+[node name="FightingTest" type="Node2D" unique_id=1362864298]
 
 [node name="System" type="Node2D" parent="." unique_id=487844836]
 
@@ -26,14 +26,14 @@ size = Vector2(600, 60)
 
 [node name="Data" type="Node2D" parent="." unique_id=357362854]
 
-[node name="InstanceManager" parent="Data" unique_id=1948949026 instance=ExtResource("1_ppfa1")]
+[node name="InstanceManager" parent="Data" unique_id=1948949026 instance=ExtResource("1_n2bdn")]
 
 [node name="FightLandYou" type="Node2D" parent="." unique_id=327141226]
 position = Vector2(0, 140)
 
 [node name="PlayerLandYouStandPlayer" type="Node2D" parent="FightLandYou" unique_id=1485403061]
 position = Vector2(800, 0)
-script = ExtResource("2_8exfp")
+script = ExtResource("2_3l0sp")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="FightLandYou/PlayerLandYouStandPlayer" unique_id=1284950194]
 
@@ -42,7 +42,7 @@ shape = SubResource("RectangleShape2D_ppfa1")
 
 [node name="FightLandYouStandPet" type="Node2D" parent="FightLandYou" unique_id=1604821880]
 position = Vector2(300, 0)
-script = ExtResource("3_yl4kx")
+script = ExtResource("3_5yix2")
 
 [node name="FightLandNewPetPoint" type="Node2D" parent="FightLandYou/FightLandYouStandPet" unique_id=1919880563]
 position = Vector2(90, -360)
@@ -57,7 +57,7 @@ position = Vector2(0, 140)
 
 [node name="PlayerLandMyStandPlayer" type="Node2D" parent="FightLandMy" unique_id=1555606175]
 position = Vector2(-800, 0)
-script = ExtResource("2_22ufy")
+script = ExtResource("4_d74j3")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="FightLandMy/PlayerLandMyStandPlayer" unique_id=573683833]
 
@@ -66,7 +66,7 @@ shape = SubResource("RectangleShape2D_ppfa1")
 
 [node name="FightLandMyStandPet" type="Node2D" parent="FightLandMy" unique_id=1106155340]
 position = Vector2(-300, 0)
-script = ExtResource("2_7exm6")
+script = ExtResource("5_oythe")
 
 [node name="FightLandNewPetPoint" type="Node2D" parent="FightLandMy/FightLandMyStandPet" unique_id=238103423]
 position = Vector2(-90, -360)
@@ -79,7 +79,7 @@ shape = SubResource("RectangleShape2D_cplhs")
 [node name="PlayerUi" type="Node2D" parent="." unique_id=214073081]
 
 [node name="FightCanvasLayer" type="CanvasLayer" parent="PlayerUi" unique_id=1388077817]
-script = ExtResource("4_estgw")
+script = ExtResource("6_igxn0")
 
 [node name="FightUiBottom" type="Control" parent="PlayerUi/FightCanvasLayer" unique_id=2130826466]
 custom_minimum_size = Vector2(0, 180)
@@ -93,7 +93,7 @@ grow_vertical = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="UiFightBottomBarTab" parent="PlayerUi/FightCanvasLayer/FightUiBottom" unique_id=1885930892 instance=ExtResource("2_5qfyh")]
+[node name="UiFightBottomBarTab" parent="PlayerUi/FightCanvasLayer/FightUiBottom" unique_id=1885930892 instance=ExtResource("7_h78vf")]
 layout_mode = 1
 
 [node name="FightUiTop" type="Control" parent="PlayerUi/FightCanvasLayer" unique_id=730988872]
@@ -131,7 +131,7 @@ size_flags_vertical = 3
 [node name="UiHBoxHeartWrapper" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/FightUiTop/MarginContainer/HBoxContainer/VBoxFighter1/HBoxContainer" unique_id=1428729653]
 layout_mode = 2
 size_flags_horizontal = 3
-script = ExtResource("5_wm0ne")
+script = ExtResource("8_n00ms")
 
 [node name="LabelMyHeartV" type="Label" parent="PlayerUi/FightCanvasLayer/FightUiTop/MarginContainer/HBoxContainer/VBoxFighter1/HBoxContainer/UiHBoxHeartWrapper" unique_id=232812298]
 layout_mode = 2
@@ -152,7 +152,7 @@ alignment = 1
 
 [node name="LabelGameStatus" type="Label" parent="PlayerUi/FightCanvasLayer/FightUiTop/MarginContainer/HBoxContainer/VBoxFighterTip/HBoxContainer" unique_id=1267406057]
 layout_mode = 2
-script = ExtResource("6_estgw")
+script = ExtResource("9_7oi6l")
 
 [node name="VBoxFighter2" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/FightUiTop/MarginContainer/HBoxContainer" unique_id=1564795780]
 layout_mode = 2
@@ -164,8 +164,8 @@ layout_mode = 2
 size_flags_vertical = 3
 alignment = 2
 
-[node name="PanFightPlayerPack" parent="PlayerUi/FightCanvasLayer" unique_id=1813670500 instance=ExtResource("8_d58k4")]
+[node name="PanFightPlayerPack" parent="PlayerUi/FightCanvasLayer" unique_id=1813670500 instance=ExtResource("10_nues3")]
 
-[node name="FightOriginManager" parent="." unique_id=1944409961 instance=ExtResource("6_xaxqx")]
+[node name="FightOriginManager" parent="." unique_id=1944409961 instance=ExtResource("11_x64ax")]
 
 [node name="Wrapper" type="Node2D" parent="." unique_id=1649744762]

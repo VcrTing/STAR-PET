@@ -10,7 +10,7 @@ var pet_id := 1                    # 图鉴编号
 var pet_name := "铁甲虫"            # 精灵名称
 var pet_types := [3]               # 系别数组（第一个元素为主系别，可双属性如 [3, 9]=地+龙）
 var pet_model := ""                # 模型资源路径（后续补充）
-var pet_fly_type := 4              # 移动方式（4=走路，对应 EnumPetFly.Walk）
+var pet_fly_type := [4]            # 移动方式数组（4=走路，对应 EnumPetFly.Walk）
 var hostile_level := 1             # 对人类攻击等级（1=不主动攻击，对应 EnumPetHostileLevel.Passive）
 
 # ---- 种族值（六维） ----

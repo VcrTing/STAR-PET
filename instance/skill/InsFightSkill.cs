@@ -13,6 +13,11 @@ public class InsFightSkill
 	public InsSkill Skill { get; private set; }
 
 	/// <summary>
+	/// 技能槽位索引（0=第一个技能，1=第二个，依此类推）
+	/// </summary>
+	public int SlotIndex { get; set; }
+
+	/// <summary>
 	/// 实际能耗（战斗修正后的PP消耗）
 	/// </summary>
 	public int ActualPpCost { get; set; }
@@ -41,8 +46,9 @@ public class InsFightSkill
 	/// 从 InsSkill 创建战斗技能实例
 	/// </summary>
 	/// <param name="skill">技能基础数据</param>
+	/// <param name="slotIndex">技能槽位索引</param>
 	/// <returns>战斗技能实例</returns>
-	public static InsFightSkill FromInsSkill(InsSkill skill)
+	public static InsFightSkill FromInsSkill(InsSkill skill, int slotIndex = 0)
 	{
 		if (skill == null)
 			return null;
@@ -50,6 +56,7 @@ public class InsFightSkill
 		return new InsFightSkill
 		{
 			Skill = skill,
+			SlotIndex = slotIndex,
 			ActualPpCost = skill.PpCost,
 			ActualAttackValue = skill.AttackValue,
 			DisplayAttackValue = skill.AttackValue,
