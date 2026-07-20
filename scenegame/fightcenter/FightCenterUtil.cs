@@ -124,4 +124,39 @@ public static class FightCenterUtil
 		for (int i = 0; i < arr.Length; i++)
 			arr[i] = null;
 	}
+
+	// ════════════════════════════════════════════════════════════════
+	//  以下方法从 FightCenterManger 提取
+	// ════════════════════════════════════════════════════════════════
+
+	/// <summary>
+	/// 从属性字典安全读取数值，不存在返回默认值
+	/// </summary>
+	/// <param name="dict">属性字典</param>
+	/// <param name="key">属性键</param>
+	/// <param name="def">默认值</param>
+	/// <returns>属性值或默认值</returns>
+	public static int StatOrDefault(Dictionary<EnumPetBaseStats, int> dict, EnumPetBaseStats key, int def)
+	{
+		if (dict != null && dict.TryGetValue(key, out int val)) return val;
+		return def;
+	}
+
+	/// <summary>
+	/// 获取战斗状态的中文名称
+	/// </summary>
+	/// <param name="s">战斗状态枚举值</param>
+	/// <returns>中文状态名</returns>
+	public static string StateName(FightState s) => s switch
+	{
+		FightState.BattleStart => "🎬 战斗开始",
+		FightState.TurnStart => "🌅 回合开始",
+		FightState.PlayerTurn => "🧑 玩家回合",
+		FightState.EnemyTurn => "👹 敌方回合",
+		FightState.ExecuteTurn => "⚔️ 回合执行",
+		FightState.CheckFaint => "💀 濒死检查",
+		FightState.PlayerSwitch => "🔄 玩家换宠",
+		FightState.EnemySwitch => "🔄 敌方换宠",
+		_ => "❓ " + s.ToString()
+	};
 }

@@ -38,45 +38,12 @@ public static class FightTurnExecutor
 	/// 执行当前回合所有行动（主入口）
 	/// </summary>
 	/// <param name="myActs">我方当前回合行动队列（TurnAction[9]）</param>
-	/// <param name="enemyActs">敌方当前回合行动队列（TurnAction[9]）</param>
+	/// <param name="youActs">敌方当前回合行动队列（TurnAction[9]）</param>
 	/// <param name="myEnd">我方回合结束效果队列（TurnAction[4]）</param>
-	/// <param name="enemyEnd">敌方回合结束效果队列（TurnAction[4]）</param>
-	public static void ExecuteTurn(TurnAction[] myActs, TurnAction[] enemyActs, TurnAction[] myEnd, TurnAction[] enemyEnd)
+	/// <param name="youEnd">敌方回合结束效果队列（TurnAction[4]）</param>
+	public static void ExecuteTurn(TurnAction[] myActs, TurnAction[] youActs, TurnAction[] myEnd, TurnAction[] youEnd)
 	{
-		// ── 步骤1：收集所有有效行动 ──
-		var all = new List<TurnAction>();
-		void Collect(TurnAction[] arr) { foreach (var a in arr) if (a?.IsValid == true) all.Add(a); }
-		Collect(myActs);
-		Collect(enemyActs);
-
-		GD.Print($"    └─ [执行器] 共 {all.Count} 个行动");
-
-		// ── 步骤2：按优先级→速度降序排序 ──
-		//    Priority 高的先出手（技能先手值）
-		//    同 Priority 时 Speed 高的先出手
-		all.Sort((a, b) =>
-		{
-			int c = b.Priority.CompareTo(a.Priority);
-			return c != 0 ? c : b.Speed.CompareTo(a.Speed);
-		});
-
-		// ── 步骤3：依次执行每个行动 ──
-		for (int i = 0; i < all.Count; i++)
-		{
-			var a = all[i];
-			string label = a.Side == "player" ? "🧑我方" : "👹敌方";
-			GD.Print($"    └─ [执行器] #{i} ({label})...");
-			switch (a.ActionType)
-			{
-				case TurnActionType.UseSkill:   ExecSkill(a); break;   // 使用技能
-				case TurnActionType.SwitchPet:  ExecSwitch(a); break;  // 切换精灵
-			}
-		}
-
-		// ── 步骤4：处理回合结束效果（中毒、灼伤、回复等） ──
-		ProcessEnd(myEnd, "player");
-		ProcessEnd(enemyEnd, "enemy");
-		GD.Print($"    └─ [执行器] ✓");
+		
 	}
 
 	// ───────────────────────────── 技能执行 ─────────────────────────
@@ -87,32 +54,7 @@ public static class FightTurnExecutor
 	/// <param name="act">行动实例（包含攻击者方、技能 ID）</param>
 	private static void ExecSkill(TurnAction act)
 	{
-		// 安全检查
-		if (act == null || string.IsNullOrEmpty(act.SkillId)) return;
-
-		// 根据行动方确定攻击者和防御者
-		var attacker = act.Side == "player" ? FightLandMyStandPet.Instance?.FightPetData : GetEnemy();
-		var defender = act.Side == "player" ? GetEnemy() : FightLandMyStandPet.Instance?.FightPetData;
-		if (attacker == null || defender == null) return;
-
-		// 查找技能
-		var skill = FindSkill(attacker, act.SkillId);
-		if (skill == null) return;
-
-		// 计算伤害
-		int atk = StatVal(attacker.FinalStats, EnumPetBaseStats.ATK, 50);   // 攻击力
-		int def = StatVal(defender.FinalStats, EnumPetBaseStats.DEF, 50);   // 防御力
-		int baseP = skill.Skill?.AttackValue ?? 0;                          // 技能威力
-		int dmg = Math.Max(1, Mathf.RoundToInt((atk * baseP) / (float)Math.Max(def, 1) * 0.4f));
-
-		// 扣血（不低于 0）
-		defender.Hp = Math.Max(0, defender.Hp - dmg);
-
-		// 回调通知 FightCenterManger 发射信号
-		string side = act.Side == "player" ? "enemy" : "player";
-		OnDamageDealt?.Invoke(side, dmg, defender.Hp);
-
-		GD.Print($"      → [技能] {attacker.PetName} 使用【{skill.Skill?.SkillName ?? act.SkillId}】 → 造成 {dmg} 伤害! ({defender.Hp}/{defender.MaxHp})");
+		
 	}
 
 	// ───────────────────────────── 换宠执行 ─────────────────────────
@@ -123,13 +65,7 @@ public static class FightTurnExecutor
 	/// </summary>
 	private static void ExecSwitch(TurnAction act)
 	{
-		if (act.Side == "player")
-		{
-			var pets = PlayerLandMyStandPlayer.Instance.FightPets;
-			if (act.SwitchTargetIndex < 0 || act.SwitchTargetIndex >= pets.Count || pets[act.SwitchTargetIndex].Hp <= 0) return;
-			GD.Print($"      → [换宠] {pets[act.SwitchTargetIndex].PetName}");
-			FightLandMyStandPet.Instance?.SwitchPet(pets[act.SwitchTargetIndex]);
-		}
+		
 		// TODO: 敌方换宠逻辑
 	}
 
@@ -142,31 +78,6 @@ public static class FightTurnExecutor
 	/// </summary>
 	private static void ProcessEnd(TurnAction[] endActs, string side)
 	{
-		int n = 0;
-		for (int i = 0; i < endActs.Length; i++)
-		{
-			if (endActs[i]?.IsValid == true) { n++; endActs[i] = null; }
-		}
-		GD.Print($"      [{(side == "player" ? "🧑我方" : "👹敌方")}回合结束] {(n > 0 ? $"处理 {n} 个效果" : "无持续效果")}");
 	}
 
-	// ───────────────────────────── 内部工具 ─────────────────────────
-
-	/// <summary>在精灵的战斗技能列表中按 ID 查找技能</summary>
-	private static InsFightSkill FindSkill(InsFightPetData pet, string id)
-	{
-		if (pet?.FightSkills == null) return null;
-		foreach (var f in pet.FightSkills) if (f.Skill?.SkillId == id) return f;
-		return null;
-	}
-
-	/// <summary>从属性字典安全读取数值，不存在返回默认值</summary>
-	private static int StatVal(Dictionary<EnumPetBaseStats, int> dict, EnumPetBaseStats key, int def)
-	{
-		if (dict != null && dict.TryGetValue(key, out int v)) return v;
-		return def;
-	}
-
-	/// <summary>获取敌方当前上场精灵（TODO: 接入敌方管理器后实现）</summary>
-	private static InsFightPetData GetEnemy() => null;
 }

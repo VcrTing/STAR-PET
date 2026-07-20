@@ -1,49 +1,71 @@
 using Godot;
-using System;
+
+/// <summary>
+/// PVE 模式枚举
+/// </summary>
+public enum PveMode
+{
+	WildMonster,  // 野怪
+	Npc,          // NPC
+	Elite,        // 精英
+	Boss,         // BOSS
+}
 
 /// <summary>
 /// PVE 战斗执行器
 /// 非 PVP 模式下，玩家选择技能后通过此类执行 PVE 逻辑
+/// 根据模式切换使用不同的 AI 大脑
 /// </summary>
 public static class FightPveRunner
 {
+	// ─── 4 个 AI 大脑实例 ───
+	private static readonly IPveAiRunnerImpl AiBoss = new AiBoss();
+	private static readonly IPveAiRunnerImpl AiWildMonster = new AiWildMonster();
+	private static readonly IPveAiRunnerImpl AiNpc = new AiNpc();
+	private static readonly IPveAiRunnerImpl AiElite = new AiElite();
+
+	// ─── 当前模式（默认野怪） ───
+	private static PveMode _currentMode = PveMode.WildMonster;
+
 	/// <summary>
-	/// 默认 PVE 敌方行动决策
+	/// 设置当前 PVE 模式
 	/// </summary>
-	private static TurnAction DefaultEnemyAction(TurnAction playerAction)
+	public static void SetMode(PveMode mode)
 	{
-		int slotIndex = 0;
-		if (playerAction?.FightSkill != null)
-			slotIndex = playerAction.FightSkill.SlotIndex;
+		_currentMode = mode;
+		GD.Print($"  └─ [FightPveRunner] 切换为 {mode} 模式");
+	}
 
-		GD.Print($"  └─ [敌方] AI思考... 模仿玩家选择 Slot[{slotIndex}] 技能");
-
-		var enemySkills = FightLandYouStandPet.Instance?.FightPetData?.FightSkills;
-		InsFightSkill enemySkill = null;
-		if (enemySkills != null && slotIndex < enemySkills.Count)
-			enemySkill = enemySkills[slotIndex];
-
-		if (enemySkill != null)
+	/// <summary>
+	/// 根据当前模式获取对应的 AI 大脑
+	/// </summary>
+	private static IPveAiRunnerImpl GetCurrentAi()
+	{
+		return _currentMode switch
 		{
-			GD.Print($"  └─ [敌方] 选择技能: {enemySkill.Skill?.SkillName ?? "未知"} (Slot={slotIndex})");
-			return new TurnAction("enemy", enemySkill);
-		}
-
-		GD.Print($"  └─ [敌方] 无可用技能，执行无行动");
-		return new TurnAction(TurnActionType.None, "enemy");
+			PveMode.Boss => AiBoss,
+			PveMode.Npc => AiNpc,
+			PveMode.Elite => AiElite,
+			PveMode.WildMonster => AiWildMonster,
+			_ => AiWildMonster,
+		};
 	}
 
 	/// <summary>
 	/// 执行 PVE 回合逻辑
+	/// 使用当前模式对应的 AI 大脑决策
 	/// </summary>
 	public static void RunPve(TurnAction playerAction)
 	{
-		GD.Print("  └─ [FightPveRunner] 执行 PVE 回合...");
+		GD.Print($"  └─ [FightPveRunner] 执行 PVE 回合... (模式={_currentMode})");
 
 		var mgr = FightCenterManger.Instance;
 		if (mgr == null) return;
 
-		mgr.EnemyTurnActs[4] = DefaultEnemyAction(playerAction);
+		// 使用当前模式对应的 AI 大脑获取行动
+		var ai = GetCurrentAi();
+		mgr.YouTurnActs[4] = ai.GetAction(playerAction);
+
 		// PVE 结束
 		mgr.SetPveActedAndExecute();
 	}

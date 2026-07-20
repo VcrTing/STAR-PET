@@ -3,8 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://cvv0wrd7lehea" path="res://scenesys/instance/instance_manager.tscn" id="1_n2bdn"]
 [ext_resource type="Script" uid="uid://de2ma5gbmw18k" path="res://scenegame/origin/you/PlayerLandYouStandPlayer.cs" id="2_3l0sp"]
 [ext_resource type="Script" uid="uid://d08w6mqd00s60" path="res://scenegame/origin/you/FightLandYouStandPet.cs" id="3_5yix2"]
-[ext_resource type="Script" uid="uid://cbphxjl8stxw4" path="res://scenegame/origin/PlayerLandMyStandPlayer.cs" id="4_d74j3"]
-[ext_resource type="Script" uid="uid://mtlojcms7ymw" path="res://scenegame/origin/FightLandMyStandPet.cs" id="5_oythe"]
+[ext_resource type="Script" uid="uid://btj8i42x4ajcr" path="res://scenegame/origin/my/PlayerLandMyStandPlayer.cs" id="4_n2bdn"]
+[ext_resource type="Script" uid="uid://d1xutegydv2ti" path="res://scenegame/origin/my/FightLandMyStandPet.cs" id="5_3l0sp"]
 [ext_resource type="Script" uid="uid://bl8r1jwep8x6f" path="res://scenegame/origin/FightCanvasLayer.cs" id="6_igxn0"]
 [ext_resource type="PackedScene" uid="uid://btf86142sy52" path="res://sceneui/fight/bars/ui_fight_bottom_bar_tab.tscn" id="7_h78vf"]
 [ext_resource type="Script" uid="uid://bma3y3nt16idf" path="res://scenegame/origin/UiHBoxHeartWrapper.cs" id="8_n00ms"]
@@ -57,7 +57,7 @@ position = Vector2(0, 140)
 
 [node name="PlayerLandMyStandPlayer" type="Node2D" parent="FightLandMy" unique_id=1555606175]
 position = Vector2(-800, 0)
-script = ExtResource("4_d74j3")
+script = ExtResource("4_n2bdn")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="FightLandMy/PlayerLandMyStandPlayer" unique_id=573683833]
 
@@ -66,7 +66,7 @@ shape = SubResource("RectangleShape2D_ppfa1")
 
 [node name="FightLandMyStandPet" type="Node2D" parent="FightLandMy" unique_id=1106155340]
 position = Vector2(-300, 0)
-script = ExtResource("5_oythe")
+script = ExtResource("5_3l0sp")
 
 [node name="FightLandNewPetPoint" type="Node2D" parent="FightLandMy/FightLandMyStandPet" unique_id=238103423]
 position = Vector2(-90, -360)

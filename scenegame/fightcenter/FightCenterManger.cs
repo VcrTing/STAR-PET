@@ -20,11 +20,11 @@ public partial class FightCenterManger : Node2D
 	// ─── 4 个行动数组 ───
 	public TurnAction[] MyTurnActs { get; private set; } = new TurnAction[9];
 	public TurnAction[] MyEndActs { get; private set; } = new TurnAction[4];
-	public TurnAction[] EnemyTurnActs { get; private set; } = new TurnAction[9];
-	public TurnAction[] EnemyEndActs { get; private set; } = new TurnAction[4];
+	public TurnAction[] YouTurnActs { get; private set; } = new TurnAction[9];
+	public TurnAction[] YouEndActs { get; private set; } = new TurnAction[4];
 
 	private bool _playerActedThisTurn = false;
-	private bool _enemyActedThisTurn = false;
+	private bool _youActedThisTurn = false;
 
 	// ─── 信号 ───
 	public const string SignalFightStateChanged = "OnFightStateChanged";
@@ -79,7 +79,7 @@ public partial class FightCenterManger : Node2D
 		if (_currentState != FightState.PlayerTurn) { GD.Print($"  ⚠ 当前不是玩家回合"); return; }
 		if (fightSkill?.Skill == null) { GD.Print($"  ⚠ 技能数据无效"); return; }
 
-		MyTurnActs[4] = new TurnAction("player", fightSkill);
+		MyTurnActs[4] = new TurnAction("my", fightSkill);
 		_playerActedThisTurn = true;
 
 		GD.Print($"  └─ [玩家] 选择技能【{fightSkill.Skill.SkillName}】(先手={fightSkill.Skill.Priority}) → 等待敌方...");
@@ -96,8 +96,8 @@ public partial class FightCenterManger : Node2D
 		var pets = PlayerLandMyStandPlayer.Instance.FightPets;
 		if (targetIndex < 0 || targetIndex >= pets.Count || pets[targetIndex].Hp <= 0) { GD.Print($"  ⚠ 目标无效"); return; }
 
-		int speed = StatOrDefault(pets[targetIndex].FinalStats, EnumPetBaseStats.SPD, 50);
-		MyTurnActs[4] = new TurnAction("player", targetIndex, speed);
+		int speed = FightCenterUtil.StatOrDefault(pets[targetIndex].FinalStats, EnumPetBaseStats.SPD, 50);
+		MyTurnActs[4] = new TurnAction("my", targetIndex, speed);
 		_playerActedThisTurn = true;
 		GD.Print($"  └─ [玩家] 换宠 Index={targetIndex} ({pets[targetIndex].PetName}) → 等待敌方...");
 
@@ -119,7 +119,7 @@ public partial class FightCenterManger : Node2D
 
 	public void SetPveActedAndExecute()
 	{
-		_enemyActedThisTurn = true;
+		_youActedThisTurn = true;
 		TransitionTo(FightState.ExecuteTurn);
 	}
 	// Pve 执行
@@ -134,7 +134,7 @@ public partial class FightCenterManger : Node2D
 
 	private void TryExecute()
 	{
-		if (!_playerActedThisTurn || !_enemyActedThisTurn) return;
+		if (!_playerActedThisTurn || !_youActedThisTurn) return;
 		TransitionTo(FightState.ExecuteTurn);
 	}
 
@@ -145,7 +145,7 @@ public partial class FightCenterManger : Node2D
 		_currentState = newState;
 		EmitSignal(SignalFightStateChanged, (int)_currentState);
 		if (newState != FightState.BattleEnd)
-			GD.Print($"  └─ [状态机] → {StateName(newState)}");
+			GD.Print($"  └─ [状态机] → {FightCenterUtil.StateName(newState)}");
 
 		switch (newState)
 		{
@@ -167,9 +167,9 @@ public partial class FightCenterManger : Node2D
 	private void HandlePlayerTurn()
 	{
 		_playerActedThisTurn = false;
-		_enemyActedThisTurn = false;
+		_youActedThisTurn = false;
 		FightCenterUtil.ClearActionQueue(MyTurnActs);
-		FightCenterUtil.ClearActionQueue(EnemyTurnActs);
+		FightCenterUtil.ClearActionQueue(YouTurnActs);
 
 		var pet = FightLandMyStandPet.Instance?.FightPetData;
 		string info = pet != null ? $"{pet.PetName} (HP={pet.Hp}/{pet.MaxHp})" : "无精灵";
@@ -182,18 +182,20 @@ public partial class FightCenterManger : Node2D
 	{
 		GD.Print($"  └─ [敌方] AI思考...");
 		LabelGameStatus.SetText($"👹 敌方行动中...");
-		EnemyTurnActs[4] = new TurnAction(TurnActionType.None, "enemy");
-		_enemyActedThisTurn = true;
+		YouTurnActs[4] = new TurnAction(TurnActionType.Charge, "you");
+		_youActedThisTurn = true;
 		TryExecute();
 	}
 
 	private void HandleExecuteTurn()
 	{
 		GD.Print($"─────────────────\n  ⚔️ 第 {_turnNumber} 回合执行\n─────────────────");
-		LabelGameStatus.SetText($"⚔️ 第 {_turnNumber} 回合执行中...");
-		FightCenterUtil.PrintQueueStatus(MyTurnActs, "我方");
-		FightCenterUtil.PrintQueueStatus(EnemyTurnActs, "敌方");
-		FightTurnExecutor.ExecuteTurn(MyTurnActs, EnemyTurnActs, MyEndActs, EnemyEndActs);
+
+		// 执行双方行动，接收回合结束效果
+		FightExeAction.ExecuteActions(MyTurnActs, YouTurnActs, out var newMyEndActs, out var newYouEndActs);
+		MyEndActs = newMyEndActs;
+		YouEndActs = newYouEndActs;
+
 		TransitionTo(FightState.CheckFaint);
 	}
 
@@ -210,8 +212,8 @@ public partial class FightCenterManger : Node2D
 
 		if (alive == 0) { GD.Print("  ❌ 我方全灭！战败！"); LabelGameStatus.SetText("❌ 我方全灭！战败！"); TransitionTo(FightState.BattleEnd); return; }
 		if (enemyDead) { GD.Print("  ✅ 敌方全灭！胜利！"); LabelGameStatus.SetText("✅ 敌方全灭！胜利！"); TransitionTo(FightState.BattleEnd); return; }
-		if (playerDead) { LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场"); EmitSignal(SignalPetFainted, "player", FightCenterUtil.GetCurrentPlayerPetIndex()); TransitionTo(FightState.PlayerSwitch); return; }
-		if (enemyDead) { LabelGameStatus.SetText("💀 敌方精灵濒死，敌方准备换宠..."); EmitSignal(SignalPetFainted, "enemy", 0); TransitionTo(FightState.EnemySwitch); return; }
+		if (playerDead) { LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场"); EmitSignal(SignalPetFainted, "my", FightCenterUtil.GetCurrentPlayerPetIndex()); TransitionTo(FightState.PlayerSwitch); return; }
+		if (enemyDead) { LabelGameStatus.SetText("💀 敌方精灵濒死，敌方准备换宠..."); EmitSignal(SignalPetFainted, "you", 0); TransitionTo(FightState.EnemySwitch); return; }
 		NextTurn();
 	}
 
@@ -273,26 +275,8 @@ public partial class FightCenterManger : Node2D
 	{
 		FightCenterUtil.ClearActionQueue(MyTurnActs);
 		FightCenterUtil.ClearActionQueue(MyEndActs);
-		FightCenterUtil.ClearActionQueue(EnemyTurnActs);
-		FightCenterUtil.ClearActionQueue(EnemyEndActs);
+		FightCenterUtil.ClearActionQueue(YouTurnActs);
+		FightCenterUtil.ClearActionQueue(YouEndActs);
 	}
 
-	private static int StatOrDefault(Dictionary<EnumPetBaseStats, int> dict, EnumPetBaseStats key, int def)
-	{
-		if (dict != null && dict.TryGetValue(key, out int val)) return val;
-		return def;
-	}
-
-	private static string StateName(FightState s) => s switch
-	{
-		FightState.BattleStart => "🎬 战斗开始",
-		FightState.TurnStart => "🌅 回合开始",
-		FightState.PlayerTurn => "🧑 玩家回合",
-		FightState.EnemyTurn => "👹 敌方回合",
-		FightState.ExecuteTurn => "⚔️ 回合执行",
-		FightState.CheckFaint => "💀 濒死检查",
-		FightState.PlayerSwitch => "🔄 玩家换宠",
-		FightState.EnemySwitch => "🔄 敌方换宠",
-		_ => "❓ " + s.ToString()
-	};
 }

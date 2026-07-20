@@ -20,16 +20,17 @@ public enum FightState
 /// <summary>回合行动类型</summary>
 public enum TurnActionType
 {
-	None,        // 无行动
+	Charge,      // 聚能（默认）
 	UseSkill,    // 使用技能
 	SwitchPet,   // 切换精灵
+	UseItem,     // 使用道具
 }
 
 /// <summary>单次回合行动实例</summary>
 public class TurnAction
 {
-	public TurnActionType ActionType = TurnActionType.None;
-	public string Side;                    // "player" / "enemy"
+	public TurnActionType ActionType = TurnActionType.Charge;
+	public string Side;                    // "my" / "you"
 	public string SkillId;                 // 技能ID
 	public InsFightSkill FightSkill;       // 战斗技能实例
 	public int SwitchTargetIndex = -1;     // 换宠目标索引
@@ -63,5 +64,5 @@ public class TurnAction
 		Side = side;
 	}
 
-	public bool IsValid => ActionType != TurnActionType.None;
+	public bool IsValid => ActionType != TurnActionType.Charge;
 }
