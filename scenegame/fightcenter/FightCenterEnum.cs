@@ -34,7 +34,6 @@ public class TurnAction
 	public string SkillId;                 // 技能ID
 	public InsFightSkill FightSkill;       // 战斗技能实例
 	public int SwitchTargetIndex = -1;     // 换宠目标索引
-	public int Speed;                      // 速度值
 	public int Priority;                   // 先手值
 
 	public TurnAction() {}
@@ -45,7 +44,6 @@ public class TurnAction
 		Side = side;
 		FightSkill = fightSkill;
 		SkillId = fightSkill?.Skill?.SkillId;
-		Speed = fightSkill?.Skill?.Priority ?? 0;
 		Priority = fightSkill?.Skill?.Priority ?? 0;
 	}
 
@@ -54,7 +52,6 @@ public class TurnAction
 		ActionType = TurnActionType.SwitchPet;
 		Side = side;
 		SwitchTargetIndex = switchIndex;
-		Speed = speed;
 		Priority = 0;
 	}
 

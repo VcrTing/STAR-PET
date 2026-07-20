@@ -27,6 +27,18 @@ public partial class FightLandMyStandPet : Node2D
 
 	public override void _Process(double delta) { }
 
+	/// <summary>
+	/// 获取当前宠物速度值
+	/// 从 FinalStats 字典中读取 SPD，默认返回 50
+	/// </summary>
+	public int GetSpeed()
+	{
+		if (FightPetData?.FinalStats != null &&
+			FightPetData.FinalStats.TryGetValue(EnumPetBaseStats.SPD, out int speed))
+			return speed;
+		return 50;
+	}
+
 	public void SwitchPet(InsFightPetData fightPetData)
 	{
 		if (fightPetData == null) return;
@@ -39,6 +51,8 @@ public partial class FightLandMyStandPet : Node2D
 		// Node2D p = (Node2D) PetWrapper;
 		// p.Position = _spawnPosition;
 		GD.Print($"[FightLandMyStandPet] 切换精灵: {FightPetData?.PetName}, HP={FightPetData?.Hp}/{FightPetData?.MaxHp}, Level={FightPetData?.Level}");
+		if (FightPetData?.FinalStats != null)
+			GD.Print($"  └─ FinalStats: {string.Join(", ", FightPetData.FinalStats)}");
 
 
 		AddChild(PetWrapper);

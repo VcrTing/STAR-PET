@@ -17,7 +17,9 @@ var is_special := false               # 是否特殊精灵
 var default_big := 2                 # 默认个体档位（2=中等，对应 EnumPetBig.Medium）
 
 # ---- 初始天赋 ----
-var talent_type := 2                 # 天赋类型（2=好天赋）
+var talent_type := 4                 # 天赋类型（2=好天赋）
+
+var talent_fixed_stats := [2, 3, 6]  # 固定物攻、魔攻、速度三项为极品天赋
 
 # ---- 获得信息 ----
 var obtained_method := "敌方精灵"     # 获得方式

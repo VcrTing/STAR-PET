@@ -79,37 +79,6 @@ public static class FightCenterUtil
 	/// <param name="sideLabel">显示标签，如 "我方" / "敌方"</param>
 	public static void PrintQueueStatus(TurnAction[] acts, string sideLabel)
 	{
-		// 统计有效行动数量
-		int validCount = 0;
-		foreach (var a in acts)
-		{
-			if (a != null && a.IsValid)
-				validCount++;
-		}
-
-		if (validCount > 0)
-		{
-			GD.Print($"  └─ [{sideLabel}行动队列] 共 {validCount} 个有效行动:");
-			for (int i = 0; i < acts.Length; i++)
-			{
-				var a = acts[i];
-				if (a != null && a.IsValid)
-				{
-					// 根据行动类型生成描述文字
-					string desc = a.ActionType switch
-					{
-						TurnActionType.UseSkill => $"技能[{a.SkillId}]",
-						TurnActionType.SwitchPet => $"换宠(Index={a.SwitchTargetIndex})",
-						_ => a.ActionType.ToString()
-					};
-					GD.Print($"         [{i}] {desc} (速度={a.Speed}, 先手={a.Priority})");
-				}
-			}
-		}
-		else
-		{
-			GD.Print($"  └─ [{sideLabel}行动队列] 无有效行动");
-		}
 	}
 
 	// ───────────────────────────── 数组管理 ─────────────────────────
