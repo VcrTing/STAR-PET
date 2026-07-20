@@ -154,7 +154,8 @@ public static class FightExeAction
 	private static void ExecSkill(TurnAction act, string side, InsFightPetData myPet, InsFightPetData youPet)
 	{
 		InsFightSkill skill = act.FightSkill;
-		GD.Print($"      → [ExecSkill] {side} " + myPet.PetName + "使用技能" + skill.Skill.SkillName);
+		InsFightPetData nowPet = side == "my" ? myPet : youPet;
+		GD.Print($"      → [ExecSkill] {side} " + nowPet.PetName + " 使用技能：" + skill.Skill.SkillName);
 	}
 
 	// ───────────────────────────── 换宠执行 ─────────────────────────

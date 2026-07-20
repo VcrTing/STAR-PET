@@ -45,19 +45,8 @@ public partial class FightLandMyStandPet : Node2D
 
 		if (PetWrapper != null) { PetWrapper.QueueFree(); PetWrapper = null; }
 		FightPetData = fightPetData;
-
-		var scene = GD.Load<PackedScene>("res://scenepet/__wrapper/pet_fight_wrapper.tscn");
-		PetWrapper = scene.Instantiate<PetFightWrapper>();
-		// Node2D p = (Node2D) PetWrapper;
-		// p.Position = _spawnPosition;
-		GD.Print($"[FightLandMyStandPet] 切换精灵: {FightPetData?.PetName}, HP={FightPetData?.Hp}/{FightPetData?.MaxHp}, Level={FightPetData?.Level}");
-		if (FightPetData?.FinalStats != null)
-			GD.Print($"  └─ FinalStats: {string.Join(", ", FightPetData.FinalStats)}");
-
-
-		AddChild(PetWrapper);
-		PetWrapper.Init(_spawnPosition, true, FightPetData);
-		
+		//
+		PetWrapper = DevPetLoadTool.SpawnPetFightWrapper(fightPetData, this, _spawnPosition, true);
 		// 刷新技能UI
 		if (FightPetData?.FightSkills != null)
 		{

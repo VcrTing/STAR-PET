@@ -6,7 +6,7 @@ extends Resource
 
 # ---- 基础信息客制化 ----
 var initial_level := 60               # 初始等级（PVP等级）
-var initial_nature := 7               # 初始性格（7=固执，对应 EnumPetNature.Adamant）
+var initial_nature := 1               # 初始性格
 var initial_intimacy := 100           # 初始亲密度
 
 # ---- 特殊标识 ----

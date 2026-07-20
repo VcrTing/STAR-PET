@@ -8,57 +8,30 @@ using System;
 /// </summary>
 public static class DevPetLoadTool
 {
-	private static string GetScenePath(EnumPet pet, EnumPetType petType)
+
+	public static String GetPetTexTurePath(InsFightPetData FightPet)
 	{
-		int petId = (int)pet;
+		int petId = int.Parse(FightPet.PetId);
+		var petType = FightPet.PetTypes.Count > 0 ? FightPet.PetTypes[0] : EnumPetType.Gold;
 		string typeFolder = PetTypeDesign.GetDataFolderPath(petType);
-		string specificPath = $"res://scenepet/{typeFolder}/pet_{petId}.tscn";
-		if (ResourceLoader.Exists(specificPath))
-			return specificPath;
-		return "res://scenepet/origin/pet_origin.tscn";
+		string scenePath = $"res://scenepet/{typeFolder}/pet_{petId}.tscn";
+		if (!ResourceLoader.Exists(scenePath))
+			scenePath = "res://scenepet/Gold/pet_0.tscn";
+		return scenePath;
 	}
-
-	public static DevPetWrapper SpawnDevPet(EnumPet pet, EnumPetType petType, Node parent, Vector2 position, bool flipX = false)
+	public static PetFightWrapper SpawnPetFightWrapper(InsFightPetData FightPetData, Node parent, Vector2 position, bool isMy)
 	{
-		string scenePath = GetScenePath(pet, petType);
-		var scene = GD.Load<PackedScene>(scenePath);
-		var devPet = scene.Instantiate<DevPetWrapper>();
-		devPet.Init(pet, petType);
-		parent.AddChild(devPet);
-		devPet.Position = position;
-		if (flipX) devPet.FlipChildrenX();
-		return devPet;
-	}
-
-	public static DevPetWrapper SpawnDevPetFromFightData(InsFightPetData fightPetData, Node parent, Vector2 position, bool flipX = false)
-	{
-		if (fightPetData == null) return null;
-		int petId = int.Parse(fightPetData.PetId);
-		var pet = (EnumPet)petId;
-		var petType = fightPetData.PetTypes.Count > 0 ? fightPetData.PetTypes[0] : EnumPetType.Gold;
-
-		string scenePath = GetScenePath(pet, petType);
-		var scene = GD.Load<PackedScene>(scenePath);
-		var devPet = scene.Instantiate<DevPetWrapper>();
-		devPet.Pet = pet;
-		devPet.PetType = petType;
-		devPet.InstanceUuid = fightPetData.PetUuid;
-
-		parent.AddChild(devPet);
-		devPet.Position = position;
-		if (flipX) devPet.FlipChildrenX();
-		return devPet;
-	}
-
-	public static PetFightWrapper SpawnPetFightWrapper(InsFightPetData fightPetData, Node parent, Vector2 position, bool isMy)
-	{
-		if (fightPetData == null) return null;
+		if (FightPetData == null) return null;
 
 		var scene = GD.Load<PackedScene>("res://scenepet/__wrapper/pet_fight_wrapper.tscn");
-		var wrapper = scene.Instantiate<PetFightWrapper>();
-		wrapper.Name = $"PetFight_{fightPetData.PetName}";
-		wrapper.Init(position, isMy, fightPetData);
-		parent.AddChild(wrapper);
-		return wrapper;
+
+		PetFightWrapper PetWrapper = scene.Instantiate<PetFightWrapper>();
+		parent.AddChild(PetWrapper);
+		PetWrapper.Init(position, false, FightPetData);
+		
+		if (FightPetData?.FinalStats != null)
+			GD.Print($"  {FightPetData?.PetName}，Level={FightPetData?.Level}，FinalStats: {string.Join(", ", FightPetData.FinalStats)}");
+
+		return PetWrapper;
 	}
 }

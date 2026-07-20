@@ -21,15 +21,7 @@ public partial class PetFightWrapper : Node2D
 		Position = position;
 		IsMy = isMy;
 		FightPet = fightPetData;
-
-		int petId = int.Parse(FightPet.PetId);
-		var petType = FightPet.PetTypes.Count > 0 ? FightPet.PetTypes[0] : EnumPetType.Gold;
-		string typeFolder = PetTypeDesign.GetDataFolderPath(petType);
-		string scenePath = $"res://scenepet/{typeFolder}/pet_{petId}.tscn";
-		if (!ResourceLoader.Exists(scenePath))
-			scenePath = "res://scenepet/Gold/pet_0.tscn";
-
-		var scene = GD.Load<PackedScene>(scenePath);
+		var scene = GD.Load<PackedScene>(DevPetLoadTool.GetPetTexTurePath(fightPetData));
 		PetView = scene.Instantiate<Node2D>();
 		AddChild(PetView);
 	}

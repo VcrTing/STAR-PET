@@ -59,6 +59,7 @@ public static class DevFightPackPetTool
 		fightPet.FinalStats = finalStats;
 		fightPet.MaxHp = fightPet.FinalStats.GetValueOrDefault(EnumPetBaseStats.HP, 100);
 		fightPet.Hp = fightPet.MaxHp;
+		// GD.Print("Fight宠物初始化完成，名字="+fightPet.PetName);
 		return fightPet;
 	}
 }

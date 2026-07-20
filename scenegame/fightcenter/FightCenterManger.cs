@@ -174,7 +174,6 @@ public partial class FightCenterManger : Node2D
 		var pet = FightLandMyStandPet.Instance?.FightPetData;
 		string info = pet != null ? $"{pet.PetName} (HP={pet.Hp}/{pet.MaxHp})" : "无精灵";
 		GD.Print($"━━━ 第 {_turnNumber} 回合 · 玩家回合 · {info} ━━━");
-		GD.Print("  ▶ 请选择: PlayerSelectSkill(id) 或 PlayerSelectSwitch(idx)");
 		LabelGameStatus.SetText($"🧑 第 {_turnNumber} 回合 · 请选择行动\n{info}");
 	}
 

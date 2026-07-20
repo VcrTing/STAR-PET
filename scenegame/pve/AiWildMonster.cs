@@ -12,8 +12,6 @@ public class AiWildMonster : IPveAiRunnerImpl
 		if (playerAction?.FightSkill != null)
 			slotIndex = playerAction.FightSkill.SlotIndex;
 
-		GD.Print($"    └─ [AiWildMonster] 野怪思考... 模仿玩家选择 Slot[{slotIndex}] 技能");
-
 		var enemySkills = FightLandYouStandPet.Instance?.FightPetData?.FightSkills;
 		InsFightSkill enemySkill = null;
 		if (enemySkills != null && slotIndex < enemySkills.Count)
