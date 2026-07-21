@@ -18,10 +18,13 @@ public static class FightSkillRunTool
 	/// <param name="attacker">攻击方宠物</param>
 	/// <param name="defender">防守方宠物</param>
 	/// <param name="side">攻击方标识："my" 或 "you"</param>
-	public static void ExecAttack(InsFightSkill skill, InsFightPetData attacker, InsFightPetData defender, string side)
+	public static void ExecAttack(InsFightSkill skill, InsFightPetData attacker, InsFightPetData defender, 
+        string side, TurnAction[] sideActions)
 	{
 		if (skill?.Skill == null || attacker == null || defender == null)
 			return;
+
+        
 
 		int damage = FightDamageTool.CalcDamage(skill, attacker, defender);
 		defender.Hp = Math.Max(defender.Hp - damage, 0);
@@ -40,7 +43,8 @@ public static class FightSkillRunTool
 	/// <param name="attacker">使用技能方宠物（自身）</param>
 	/// <param name="defender">对方宠物</param>
 	/// <param name="side">使用方标识："my" 或 "you"</param>
-	public static void ExecDefense(InsFightSkill skill, InsFightPetData attacker, InsFightPetData defender, string side)
+	public static void ExecDefense(InsFightSkill skill, InsFightPetData attacker, InsFightPetData defender, 
+        string side, TurnAction[] sideActions)
 	{
 		if (skill?.Skill == null || attacker == null)
 			return;
@@ -57,7 +61,8 @@ public static class FightSkillRunTool
 	/// <param name="attacker">使用技能方宠物</param>
 	/// <param name="defender">对方宠物</param>
 	/// <param name="side">使用方标识："my" 或 "you"</param>
-	public static void ExecStatus(InsFightSkill skill, InsFightPetData attacker, InsFightPetData defender, string side)
+	public static void ExecStatus(InsFightSkill skill, InsFightPetData attacker, InsFightPetData defender, 
+        string side, TurnAction[] sideActions)
 	{
 		if (skill?.Skill == null || attacker == null)
 			return;

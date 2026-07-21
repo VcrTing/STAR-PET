@@ -26,6 +26,7 @@ public class InsSkill
 	public float InstantKillRate;                                // 秒杀概率
 	public int TurnEndSpecialId;                                 // 回合结束特殊处理ID
 	public int BeforeActionSpecialId;                            // 释放前特殊处理ID
+	public int BingoSkillType;                                   // 应对类型（1=应对攻击, 0=无应对）
 	public int GainEnergy;                                       // 获得能量
 	public int GainHp;                                           // 获得血量
 	public Godot.Collections.Array GainIv = new();               // 获得个体值量
@@ -65,6 +66,7 @@ public class InsSkill
 			InstantKillRate = (float)res.Get("instant_kill_rate").AsDouble(),
 			TurnEndSpecialId = res.Get("turn_end_special_id").AsInt32(),
 			BeforeActionSpecialId = res.Get("before_action_special_id").AsInt32(),
+			BingoSkillType = res.Get("bingo_skill_type").AsInt32(),
 			GainEnergy = res.Get("gain_energy").AsInt32(),
 			GainHp = res.Get("gain_hp").AsInt32(),
 			GainIv = res.Get("gain_iv").AsGodotArray(),

@@ -6,17 +6,26 @@ using Godot;
 /// </summary>
 public class AiWildMonster : IPveAiRunnerImpl
 {
+	InsFightSkill GetSkill(int slotIndex)
+	{
+		var enemySkills = FightLandYouStandPet.Instance?.FightPetData?.FightSkills;
+		InsFightSkill enemySkill = null;
+		if (enemySkills != null && slotIndex < enemySkills.Count)
+			enemySkill = enemySkills[slotIndex];
+		if (enemySkill == null)
+		{
+			enemySkill = DevFightSkillLoadTool.LoadChargeSkill();
+		}
+		return enemySkill;
+	}
+
 	public TurnAction GetAction(TurnAction playerAction)
 	{
 		int slotIndex = 0;
 		if (playerAction?.FightSkill != null)
 			slotIndex = playerAction.FightSkill.SlotIndex;
 
-		var enemySkills = FightLandYouStandPet.Instance?.FightPetData?.FightSkills;
-		InsFightSkill enemySkill = null;
-		if (enemySkills != null && slotIndex < enemySkills.Count)
-			enemySkill = enemySkills[slotIndex];
-
+		InsFightSkill enemySkill = GetSkill(slotIndex);
 		if (enemySkill != null)
 		{
 			GD.Print($"    └─ [AiWildMonster] 野怪 选择技能: {enemySkill.Skill?.SkillName ?? "未知"} (Slot={slotIndex})");

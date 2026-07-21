@@ -59,4 +59,36 @@ public static class DevSkillLoadTool
 
 		return result;
 	}
+
+	/// <summary>
+	/// 加载聚能技能（res://define/dataskill/Normal/status/0_3_1.gd）
+	/// 聚能：状态技能，本回合不攻击，下回合提升技能威力
+	/// </summary>
+	/// <returns>聚能技能的 InsSkill 实例，加载失败返回 null</returns>
+	public static InsSkill LoadChargeSkill()
+	{
+		const string path = "res://define/dataskill/Normal/status/0_3_1.gd";
+
+		if (!ResourceLoader.Exists(path))
+		{
+			GD.PrintErr($"[DevSkillLoadTool] 聚能技能文件不存在: {path}");
+			return null;
+		}
+
+		var gdScript = GD.Load<GDScript>(path);
+		if (gdScript == null)
+		{
+			GD.PrintErr($"[DevSkillLoadTool] 聚能技能脚本加载失败: {path}");
+			return null;
+		}
+
+		var res = (Resource)gdScript.New();
+		if (res == null)
+		{
+			GD.PrintErr($"[DevSkillLoadTool] 聚能技能脚本实例化失败: {path}");
+			return null;
+		}
+
+		return InsSkill.FromResource(res);
+	}
 }

@@ -31,7 +31,6 @@ public static class FightExeAction
 		if (myTurnActs == null || youTurnActs == null)
 			return;
 
-		GD.Print($"    └─ [FightExeAction] 开始执行回合行动...");
 
 		// 步骤1：通过 FightExeAfter 进行排序
 		FightExeAfter.SortActionsByPriority(myTurnActs, youTurnActs, out var sortedMy, out var sortedYou);
@@ -40,19 +39,19 @@ public static class FightExeAction
 		int len = Math.Max(sortedMy.Length, sortedYou.Length);
 		for (int i = 0; i < len; i++)
 		{
-			var myAction = i < sortedMy.Length ? sortedMy[i] : null;
-			var youAction = i < sortedYou.Length ? sortedYou[i] : null;
+			TurnAction myAction = i < sortedMy.Length ? sortedMy[i] : null;
+			TurnAction youAction = i < sortedYou.Length ? sortedYou[i] : null;
 
 			// 跳过双方都无行动的索引
 			if (myAction == null && youAction == null)
 				continue;
 
-			ExecuteActionPair(myAction, youAction, myEndActs, youEndActs);
+			GD.Print($"    └─ [FightExeAction] 执行回合行动 index = " + i);
+			ExecuteActionPair(myAction, sortedMy, sortedYou, youAction, myEndActs, youEndActs);
 		}
 
 		// 步骤3：处理回合结束效果
-
-		GD.Print($"    └─ [FightExeAction] ✓");
+		
 	}
 
 	/// <summary>
@@ -61,6 +60,8 @@ public static class FightExeAction
 	/// </summary>
 	private static void ExecuteActionPair(
 		TurnAction myAction,
+		TurnAction[] myActions,
+		TurnAction[] youActions,
 		TurnAction youAction,
 		TurnAction[] myEndActs,
 		TurnAction[] youEndActs)
@@ -76,14 +77,14 @@ public static class FightExeAction
 			if (mySpeed > youSpeed)
 			{
 				// 我速度快 → 我先手
-				ExecuteSingleAction(myAction, "my", myEndActs, youEndActs);
-				ExecuteSingleAction(youAction, "you", myEndActs, youEndActs);
+				ExecuteSingleAction(myAction, "my", youActions, myEndActs, youEndActs);
+				ExecuteSingleAction(youAction, "you", myActions, myEndActs, youEndActs);
 			}
 			else if (youSpeed > mySpeed)
 			{
 				// 敌速度快 → 敌先手
-				ExecuteSingleAction(youAction, "you", myEndActs, youEndActs);
-				ExecuteSingleAction(myAction, "my", myEndActs, youEndActs);
+				ExecuteSingleAction(youAction, "you", myActions, myEndActs, youEndActs);
+				ExecuteSingleAction(myAction, "my", youActions, myEndActs, youEndActs);
 			}
 			else
 			{
@@ -91,14 +92,14 @@ public static class FightExeAction
 				if (_random.Next(2) == 0)
 				{
 					GD.Print($"    └─ [FightExeAction] 速度相同，随机: 我方先手");
-					ExecuteSingleAction(myAction, "my", myEndActs, youEndActs);
-					ExecuteSingleAction(youAction, "you", myEndActs, youEndActs);
+					ExecuteSingleAction(myAction, "my", youActions, myEndActs, youEndActs);
+					ExecuteSingleAction(youAction, "you", myActions, myEndActs, youEndActs);
 				}
 				else
 				{
 					GD.Print($"    └─ [FightExeAction] 速度相同，随机: 敌方先手");
-					ExecuteSingleAction(youAction, "you", myEndActs, youEndActs);
-					ExecuteSingleAction(myAction, "my", myEndActs, youEndActs);
+					ExecuteSingleAction(youAction, "you", myActions, myEndActs, youEndActs);
+					ExecuteSingleAction(myAction, "my", youActions, myEndActs, youEndActs);
 				}
 			}
 		}
@@ -106,10 +107,10 @@ public static class FightExeAction
 		{
 			// 只有一方有行动
 			if (myAction != null)
-				ExecuteSingleAction(myAction, "my", myEndActs, youEndActs);
+				ExecuteSingleAction(myAction, "my", youActions, myEndActs, youEndActs);
 
 			if (youAction != null)
-				ExecuteSingleAction(youAction, "you", myEndActs, youEndActs);
+				ExecuteSingleAction(youAction, "you", myActions, myEndActs, youEndActs);
 		}
 	}
 
@@ -121,6 +122,7 @@ public static class FightExeAction
 	private static void ExecuteSingleAction(
 		TurnAction act,
 		string side,
+		TurnAction[] sideActions,
 		TurnAction[] myEndActs,
 		TurnAction[] youEndActs)
 	{
@@ -134,7 +136,7 @@ public static class FightExeAction
 		switch (act.ActionType)
 		{
 			case TurnActionType.UseSkill:
-				ExecSkill(act, side, myPet, youPet);
+				ExecSkill(act, side, sideActions, myPet, youPet);
 				break;
 			case TurnActionType.SwitchPet:
 				ExecSwitch(act, side);
@@ -151,7 +153,8 @@ public static class FightExeAction
 
 	// ───────────────────────────── 技能执行 ─────────────────────────
 
-	private static void ExecSkill(TurnAction act, string side, InsFightPetData myPet, InsFightPetData youPet)
+	private static void ExecSkill(TurnAction act, string side,
+		TurnAction[] sideActions, InsFightPetData myPet, InsFightPetData youPet)
 	{
 		InsFightSkill skill = act.FightSkill;
 		InsFightPetData nowPet = side == "my" ? myPet : youPet;
@@ -163,13 +166,13 @@ public static class FightExeAction
 		switch (skill.Skill.SkillType)
 		{
 			case 1: // 攻击技能
-				FightSkillRunTool.ExecAttack(skill, nowPet, targetPet, side);
+				FightSkillRunTool.ExecAttack(skill, nowPet, targetPet, side, sideActions);
 				break;
 			case 2: // 防御技能
-				FightSkillRunTool.ExecDefense(skill, nowPet, targetPet, side);
+				FightSkillRunTool.ExecDefense(skill, nowPet, targetPet, side, sideActions);
 				break;
 			case 3: // 状态技能
-				FightSkillRunTool.ExecStatus(skill, nowPet, targetPet, side);
+				FightSkillRunTool.ExecStatus(skill, nowPet, targetPet, side, sideActions);
 				break;
 			default:
 				GD.Print($"      → [ExecSkill] 未知技能类型: {skill.Skill.SkillType}");

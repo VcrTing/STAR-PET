@@ -48,41 +48,29 @@ public static class FightDamageTool
 
 		int level = Math.Max(attacker.Level, 1);
 
-		/*
-		// 宝可梦经典伤害公式：
-		// damage = ((2 * Level / 5 + 2) * Power * (Atk / Def) / 50 + 2) * TypeMod
-		float baseDamage = ((2.0f * level / 5.0f + 2.0f) * power * ((float)atkVal / defVal)) / 50.0f + 2.0f;
-
-		// 系别克制修正（使用技能的实际系别，可被特性/道具改变）
-		float typeMod = GetTypeEffectiveness(skill.ActualPetType, defender.PetTypes);
-
-		// 如果系别克制为 0（完全免疫），伤害为 0
-		if (typeMod <= 0.0f)
-			return 0;
-
-		// 随机浮动 ±5%（0.9 基础 ±0.05，即 0.85~0.95）
-		float randomFactor = 0.90f + ((float)_random.NextDouble() * 0.10f - 0.05f);
-
-		int finalDamage = Math.Max((int)(baseDamage * typeMod * randomFactor), 0);
-		*/
-		// return finalDamage;
-
-		// 1. 先算基础伤害，立刻取整（+2 是在括号内完成）
-
+		// 1. 先算基础伤害（只取整一次）
 		float baseCalc = ((2.0f * level / 5.0f + 2.0f) * power * ((float)atkVal / defVal)) / 50.0f + 2.0f;
-		int baseDamage = (int)baseCalc; // 关键：先向下取整一次
+		int baseDamage = Math.Max((int)baseCalc, 1); 
 
-		// 2. 再乘各种修正，每乘一个就取整一次
-		int damageAfterType = (int)(baseDamage * typeMod);
-		if (typeMod <= 0) return 0;
+		// 2. 获取系别克制倍率（如果免疫直接返回0）
+		float typeMod = GetTypeEffectiveness(skillData.PetType, defender.PetTypes);
+		if (typeMod <= 0.0f) return 0;
 
-		// 加入 STAB
-		int damageAfterStab = (int)(damageAfterType * stabMod);
+		// 3. ★核心修正：合并所有系数为一个总倍率（顺序在此毫无影响！）
+		float totalModifier = 1.0f;
+		totalModifier *= typeMod;                    // 系别克制
+		if (skill.IsSameType(attacker)) 
+			totalModifier *= 1.5f;                   // 本系加成（STAB）
+		// 以后你如果要加"会心一击"、"天气"、"特性"等，都乘在这里
 
-		// 最后乘随机数（85~100）
+		// 4. 统一应用总倍率，并取整
+		int damageAfterMod = (int)(baseDamage * totalModifier);
+
+		// 5. 最后乘随机数（0.85~1.00）并取整
 		float randomFactor = 0.85f + (float)_random.NextDouble() * 0.15f;
-		int finalDamage = (int)(damageAfterStab * randomFactor);
+		int finalDamage = (int)(damageAfterMod * randomFactor);
 
+		GD.Print($"基础={baseDamage}, 总倍率={totalModifier:F2}, 随机={randomFactor:F2}，最终={finalDamage}");
 		return Math.Max(finalDamage, 0);
 	}
 

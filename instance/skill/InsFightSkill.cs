@@ -48,6 +48,20 @@ public class InsFightSkill
 	public int ActualPetType { get; set; }
 
 	/// <summary>
+	/// 判断技能是否为使用者的本系技能（STAB）
+	/// 即技能的 ActualPetType 是否存在于 PetData 的 PetTypes 中
+	/// </summary>
+	/// <param name="petData">使用该技能的宠物数据</param>
+	/// <returns>true=本系技能</returns>
+	public bool IsSameType(InsFightPetData petData)
+	{
+		if (petData?.PetTypes == null)
+			return false;
+
+		return petData.PetTypes.Contains((EnumPetType)ActualPetType);
+	}
+
+	/// <summary>
 	/// 从 InsSkill 创建战斗技能实例
 	/// </summary>
 	/// <param name="skill">技能基础数据</param>
@@ -67,7 +81,7 @@ public class InsFightSkill
 			DisplayAttackValue = skill.AttackValue,
 			IsFrozen = false,
 			CooldownTurns = 0,
-			ActualPetType = skill.PetType
+			ActualPetType = skill.PetType,
 		};
 	}
 }
