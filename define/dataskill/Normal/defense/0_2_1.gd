@@ -29,8 +29,9 @@ var priority := 0                   # 先手值（默认0）
 var hidden_priority := 1            # 隐藏先手判断（1=需根据对方释放的技能判断本技能是否先手，防御类技能根据对方攻击技能决定是否先手）
 
 
-# ---- 应对 ----
+# ---- 应对与减伤 ----
 var bingo_skill_type = 1            # 1 = 应对攻击，0 = 无应对
+var damage_reduction_rate = 70      # 减伤率（默认0，0-100范围，70代表70%减伤）
 
 # ---- 特殊效果 ----
 var instant_kill_rate := 0.00       # 秒杀敌人概率（默认0.00）

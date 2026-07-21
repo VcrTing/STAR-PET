@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// 技能运行工具
@@ -10,6 +11,28 @@ using System;
 /// </summary>
 public static class FightSkillRunTool
 {
+    static List<InsFightSkill> GetBingGoSideSkills(InsFightSkill skill, TurnAction[] sideActions)
+    {
+        List<InsFightSkill> res = new List<InsFightSkill>();
+        int bingoSkillType = skill.Skill.BingoSkillType;
+        if (bingoSkillType != 0)
+        {
+            int len = sideActions.Length;
+		    for (int i = 0; i < len; i++)
+            {
+                if (sideActions[i] != null)
+                {
+                    InsFightSkill sideSkill = sideActions[i].FightSkill;
+                    if (sideSkill.Skill.SkillType == bingoSkillType)
+                    {
+                        res.Add(sideSkill);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
 	/// <summary>
 	/// 执行攻击技能
 	/// 计算伤害并扣除防守方血量
@@ -24,8 +47,13 @@ public static class FightSkillRunTool
 		if (skill?.Skill == null || attacker == null || defender == null)
 			return;
 
-        
-
+        // 应对状态
+        List<InsFightSkill> bingoSkills = GetBingGoSideSkills(skill, sideActions);
+        if (bingoSkills.Count > 0)
+        {
+            
+        }
+        //
 		int damage = FightDamageTool.CalcDamage(skill, attacker, defender);
 		defender.Hp = Math.Max(defender.Hp - damage, 0);
 
@@ -48,9 +76,19 @@ public static class FightSkillRunTool
 	{
 		if (skill?.Skill == null || attacker == null)
 			return;
+    
+        // 应对攻击
+        List<InsFightSkill> bingoSkills = GetBingGoSideSkills(skill, sideActions);
+        if (bingoSkills.Count > 0)
+        {
+
+            // 防御减伤率
+            int defenseRatio = skill.Skill.DamageReductionRate;
+
+        }
 
 		string label = side == "my" ? "🧑我方" : "👹敌方";
-		GD.Print($"      → [{label}防御] {attacker.PetName} 使用 {skill.Skill.SkillName}，进入防御状态。");
+		GD.Print($"      → [{label}防御] {attacker.PetName} 使用 {skill.Skill.SkillName}，进入防御状态。应对 = {bingoSkills.Count > 0}");
 	}
 
 	/// <summary>
@@ -66,6 +104,13 @@ public static class FightSkillRunTool
 	{
 		if (skill?.Skill == null || attacker == null)
 			return;
+
+        // 应对防御
+        List<InsFightSkill> bingoSkills = GetBingGoSideSkills(skill, sideActions);
+        if (bingoSkills.Count > 0)
+        {
+            
+        }
 
 		string label = side == "my" ? "🧑我方" : "👹敌方";
 		GD.Print($"      → [{label}状态] {attacker.PetName} 使用 {skill.Skill.SkillName}，产生状态效果。");

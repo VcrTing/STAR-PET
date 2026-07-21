@@ -28,8 +28,9 @@ var hit_rate := 100.00              # 命中率（默认100.00）
 var priority := -1                  # 先手值（-1=后手出手，比普通技能更慢）
 var hidden_priority := 0            # 隐藏先手判断（0=不先手判断，普通先手值比较）
 
-# ---- 应对 ----
+# ---- 应对与减伤 ----
 var bingo_skill_type = 0            # 1 = 应对攻击，0 = 无应对
+var damage_reduction_rate = 0       # 减伤率（默认0，0-100范围，防御技能如70代表70%）
 
 # ---- 特殊效果 ----
 var instant_kill_rate := 0.00       # 秒杀敌人概率（默认0.00）
