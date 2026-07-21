@@ -155,7 +155,26 @@ public static class FightExeAction
 	{
 		InsFightSkill skill = act.FightSkill;
 		InsFightPetData nowPet = side == "my" ? myPet : youPet;
+		InsFightPetData targetPet = side == "my" ? youPet : myPet;
+
 		GD.Print($"      → [ExecSkill] {side} " + nowPet.PetName + " 使用技能：" + skill.Skill.SkillName);
+
+		// 根据技能类型分派执行
+		switch (skill.Skill.SkillType)
+		{
+			case 1: // 攻击技能
+				FightSkillRunTool.ExecAttack(skill, nowPet, targetPet, side);
+				break;
+			case 2: // 防御技能
+				FightSkillRunTool.ExecDefense(skill, nowPet, targetPet, side);
+				break;
+			case 3: // 状态技能
+				FightSkillRunTool.ExecStatus(skill, nowPet, targetPet, side);
+				break;
+			default:
+				GD.Print($"      → [ExecSkill] 未知技能类型: {skill.Skill.SkillType}");
+				break;
+		}
 	}
 
 	// ───────────────────────────── 换宠执行 ─────────────────────────

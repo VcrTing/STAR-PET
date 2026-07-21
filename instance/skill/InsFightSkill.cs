@@ -43,6 +43,11 @@ public class InsFightSkill
 	public int CooldownTurns { get; set; }
 
 	/// <summary>
+	/// 实际系别（默认取 InsSkill.PetType，战斗中可被特性/道具改变）
+	/// </summary>
+	public int ActualPetType { get; set; }
+
+	/// <summary>
 	/// 从 InsSkill 创建战斗技能实例
 	/// </summary>
 	/// <param name="skill">技能基础数据</param>
@@ -61,7 +66,8 @@ public class InsFightSkill
 			ActualAttackValue = skill.AttackValue,
 			DisplayAttackValue = skill.AttackValue,
 			IsFrozen = false,
-			CooldownTurns = 0
+			CooldownTurns = 0,
+			ActualPetType = skill.PetType
 		};
 	}
 }

@@ -7,20 +7,6 @@ using System.Collections.Generic;
 /// </summary>
 public static class PetTypeDesign
 {
-	// const int 常量已提取到 EnumPetType 枚举，见 scripts/design/pet/enum/EnumPetType.cs
-	// 内置名称映射为静态方法，方便直接引用：PetTypeDesign.Water 等
-	public const int Normal = (int)EnumPetType.Normal;   // 普通系
-	public const int Water = (int)EnumPetType.Water;
-	public const int Fire = (int)EnumPetType.Fire;
-	public const int Grass = (int)EnumPetType.Grass;
-	public const int Earth = (int)EnumPetType.Earth;
-	public const int Gold = (int)EnumPetType.Gold;       // 原 Metal，现改名为 Gold（黄金）
-	public const int Ice = (int)EnumPetType.Ice;
-	public const int Electric = (int)EnumPetType.Electric;
-	public const int Fairy = (int)EnumPetType.Fairy;
-	public const int Dragon = (int)EnumPetType.Dragon;
-	public const int Ghost = (int)EnumPetType.Ghost;
-	public const int Fighting = (int)EnumPetType.Fighting;
 
 	// ---- 攻击克制关系（攻击方 → 被克制的防御系别） ----
 	// 普通系(Normal)不克制任何系别，均1倍输出
@@ -64,7 +50,7 @@ public static class PetTypeDesign
 	};
 
 	/// <summary>
-	/// 计算伤害系数
+	/// 计算伤害系数（单攻击方系别 → 单防御方系别）
 	/// </summary>
 	/// <param name="attackType">攻击方系别</param>
 	/// <param name="defendType">防御方系别</param>
@@ -91,6 +77,83 @@ public static class PetTypeDesign
 
 		// 4. 普通 → 1.0
 		return 1f;
+	}
+
+	/// <summary>
+	/// 计算伤害系数（单攻击方系别 → 多防御方系别）
+	/// 对每个防御方系别分别取得系数，按以下规则复合：
+	///   - 双 0.5 → 0.25（乘积）
+	///   - 双 2.0 → 3.0（上限，非 4）
+	///   - 含免疫(0.0)时：取另一系数 × 0.5，最低 0.5
+	///   - 其余情况：乘积
+	/// </summary>
+	/// <param name="attackType">攻击方系别</param>
+	/// <param name="defendTypes">防御方系别数组（双属性时传入两个系别）</param>
+	/// <returns>克制系数乘积（0.0 表示免疫）</returns>
+	public static float GetDamageMultipliers(int attackType, IEnumerable<int> defendTypes)
+	{
+		if (defendTypes == null)
+			return 1.0f;
+
+		// 收集所有系数
+		float m1 = 1.0f, m2 = 1.0f;
+		int count = 0;
+		foreach (int def in defendTypes)
+		{
+			float mul = GetDamageMultiplier(attackType, def);
+			if (count == 0) m1 = mul;
+			else if (count == 1) m2 = mul;
+			count++;
+		}
+
+		if (count == 0) return 1.0f;
+		if (count == 1) return m1;
+
+		return CombineMultipliers(m1, m2);
+	}
+
+	/// <summary>
+	/// 计算伤害系数（单攻击方系别 → 多防御方系别）
+	/// 对每个防御方系别分别取得系数，按以下规则复合：
+	///   - 双 0.5 → 0.25（乘积）
+	///   - 双 2.0 → 3.0（上限，非 4）
+	///   - 含免疫(0.0)时：取另一系数 × 0.5，最低 0.5
+	///   - 其余情况：乘积
+	/// </summary>
+	/// <param name="attackType">攻击方系别（int 值）</param>
+	/// <param name="defendTypes">防御方系别列表（如 List<EnumPetType>）</param>
+	/// <returns>克制系数乘积（0.0 表示免疫）</returns>
+	public static float GetDamageMultipliers(int attackType, List<EnumPetType> defendTypes)
+	{
+		if (defendTypes == null || defendTypes.Count == 0)
+			return 1.0f;
+		if (defendTypes.Count == 1)
+			return GetDamageMultiplier(attackType, (int)defendTypes[0]);
+
+		float m1 = GetDamageMultiplier(attackType, (int)defendTypes[0]);
+		float m2 = GetDamageMultiplier(attackType, (int)defendTypes[1]);
+
+		return CombineMultipliers(m1, m2);
+	}
+
+	/// <summary>
+	/// 复合两个单属性系数为双属性结果
+	/// </summary>
+	private static float CombineMultipliers(float m1, float m2)
+	{
+		// 双 2.0 → 3.0（上限）
+		if (m1 >= 2.0f && m2 >= 2.0f)
+			return 3.0f;
+
+		// 含免疫(0.0)：取另一系数 × 0.5，最低 0.5
+		if (m1 <= 0.0f || m2 <= 0.0f)
+		{
+			float other = (m1 <= 0.0f) ? m2 : m1;
+			return Math.Max(other * 0.5f, 0.5f);
+		}
+
+		// 其余情况：乘积
+		return m1 * m2;
 	}
 
 	/// <summary>
