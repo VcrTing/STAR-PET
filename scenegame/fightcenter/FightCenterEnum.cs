@@ -17,6 +17,13 @@ public enum FightState
 	BattleEnd       // 🏁 战斗结束
 }
 
+/// <summary>双方标识枚举，取代 "my"/"you" 字符串</summary>
+public enum EnumWho
+{
+    My,   // 我方
+    You,  // 敌方
+}
+
 /// <summary>回合行动类型</summary>
 public enum TurnActionType
 {
@@ -30,7 +37,7 @@ public enum TurnActionType
 public class TurnAction
 {
 	public TurnActionType ActionType = TurnActionType.Charge;
-	public string Side;                    // "my" / "you"
+	public EnumWho Side;                   // 行动方：My / You
 	public string SkillId;                 // 技能ID
 	public InsFightSkill FightSkill;       // 战斗技能实例
 	public int SwitchTargetIndex = -1;     // 换宠目标索引
@@ -38,7 +45,7 @@ public class TurnAction
 
 	public TurnAction() {}
 
-	public TurnAction(string side, InsFightSkill fightSkill)
+	public TurnAction(EnumWho side, InsFightSkill fightSkill)
 	{
 		ActionType = TurnActionType.UseSkill;
 		Side = side;
@@ -47,7 +54,7 @@ public class TurnAction
 		Priority = fightSkill?.Skill?.Priority ?? 0;
 	}
 
-	public TurnAction(string side, int switchIndex, int speed)
+	public TurnAction(EnumWho side, int switchIndex, int speed)
 	{
 		ActionType = TurnActionType.SwitchPet;
 		Side = side;
@@ -55,7 +62,7 @@ public class TurnAction
 		Priority = 0;
 	}
 
-	public TurnAction(TurnActionType type, string side)
+	public TurnAction(TurnActionType type, EnumWho side)
 	{
 		ActionType = type;
 		Side = side;

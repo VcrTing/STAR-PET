@@ -22,7 +22,7 @@ public static class FightDamageTool
 	/// <param name="attacker">攻击方宠物战斗数据</param>
 	/// <param name="defender">防守方宠物战斗数据</param>
 	/// <returns>计算后的最终伤害值（整数，向下取整，最低为 0）</returns>
-	public static int CalcDamage(InsFightSkill skill, InsFightPetData attacker, InsFightPetData defender)
+	public static int CalcBasicDamage(InsFightSkill skill, InsFightPetData attacker, InsFightPetData defender)
 	{
 		if (skill?.Skill == null || attacker == null || defender == null)
 			return 0;

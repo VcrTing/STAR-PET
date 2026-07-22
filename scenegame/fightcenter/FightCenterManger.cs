@@ -79,7 +79,7 @@ public partial class FightCenterManger : Node2D
 		if (_currentState != FightState.PlayerTurn) { GD.Print($"  ⚠ 当前不是玩家回合"); return; }
 		if (fightSkill?.Skill == null) { GD.Print($"  ⚠ 技能数据无效"); return; }
 
-		MyTurnActs[4] = new TurnAction("my", fightSkill);
+		MyTurnActs[4] = new TurnAction(EnumWho.My, fightSkill);
 		_playerActedThisTurn = true;
 
 		GD.Print($"  └─ [玩家] 选择技能【{fightSkill.Skill.SkillName}】(先手={fightSkill.Skill.Priority}) → 等待敌方...");
@@ -97,7 +97,7 @@ public partial class FightCenterManger : Node2D
 		if (targetIndex < 0 || targetIndex >= pets.Count || pets[targetIndex].Hp <= 0) { GD.Print($"  ⚠ 目标无效"); return; }
 
 		int speed = FightCenterUtil.StatOrDefault(pets[targetIndex].FinalStats, EnumPetBaseStats.SPD, 50);
-		MyTurnActs[4] = new TurnAction("my", targetIndex, speed);
+		MyTurnActs[4] = new TurnAction(EnumWho.My, targetIndex, speed);
 		_playerActedThisTurn = true;
 		GD.Print($"  └─ [玩家] 换宠 Index={targetIndex} ({pets[targetIndex].PetName}) → 等待敌方...");
 
@@ -181,7 +181,7 @@ public partial class FightCenterManger : Node2D
 	{
 		GD.Print($"  └─ [敌方] AI思考...");
 		LabelGameStatus.SetText($"👹 敌方行动中...");
-		YouTurnActs[4] = new TurnAction(TurnActionType.Charge, "you");
+		YouTurnActs[4] = new TurnAction(TurnActionType.Charge, EnumWho.You);
 		_youActedThisTurn = true;
 		TryExecute();
 	}
@@ -211,8 +211,8 @@ public partial class FightCenterManger : Node2D
 
 		if (alive == 0) { GD.Print("  ❌ 我方全灭！战败！"); LabelGameStatus.SetText("❌ 我方全灭！战败！"); TransitionTo(FightState.BattleEnd); return; }
 		if (enemyDead) { GD.Print("  ✅ 敌方全灭！胜利！"); LabelGameStatus.SetText("✅ 敌方全灭！胜利！"); TransitionTo(FightState.BattleEnd); return; }
-		if (playerDead) { LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场"); EmitSignal(SignalPetFainted, "my", FightCenterUtil.GetCurrentPlayerPetIndex()); TransitionTo(FightState.PlayerSwitch); return; }
-		if (enemyDead) { LabelGameStatus.SetText("💀 敌方精灵濒死，敌方准备换宠..."); EmitSignal(SignalPetFainted, "you", 0); TransitionTo(FightState.EnemySwitch); return; }
+		if (playerDead) { LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场"); EmitSignal(SignalPetFainted, EnumWho.My.ToString(), FightCenterUtil.GetCurrentPlayerPetIndex()); TransitionTo(FightState.PlayerSwitch); return; }
+		if (enemyDead) { LabelGameStatus.SetText("💀 敌方精灵濒死，敌方准备换宠..."); EmitSignal(SignalPetFainted, EnumWho.You.ToString(), 0); TransitionTo(FightState.EnemySwitch); return; }
 		NextTurn();
 	}
 
