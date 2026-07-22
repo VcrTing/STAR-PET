@@ -31,8 +31,8 @@ public enum EnumFightRunningType
     EndDefenseMy,
     /// <summary>结束攻击阶段：攻击效果结算完毕，清除临时攻击加成</summary>
     EndAttackMy,
-    /// <summary>计算扣血阶段：根据伤害计算结果扣除我方血量</summary>
-    CalcDamageMy,
+    /// <summary>扣血执行阶段：根据伤害计算结果扣除我方血量</summary>
+    DoDamageMy,
     /// <summary>检查血量阶段：检查我方精灵血量是否归零，触发濒死逻辑</summary>
     CheckHpMy,
     /// <summary>生成回合结束数组阶段：生成我方回合结束时要执行的持续效果列表</summary>
@@ -60,8 +60,8 @@ public enum EnumFightRunningType
     EndDefenseYou,
     /// <summary>结束攻击阶段：攻击效果结算完毕</summary>
     EndAttackYou,
-    /// <summary>计算扣血阶段：根据伤害计算结果扣除敌方血量</summary>
-    CalcDamageYou,
+    /// <summary>扣血执行阶段：根据伤害计算结果扣除敌方血量</summary>
+    DoDamageYou,
     /// <summary>检查血量阶段：检查敌方精灵血量是否归零，触发濒死逻辑</summary>
     CheckHpYou,
     /// <summary>生成回合结束数组阶段：生成敌方回合结束时要执行的持续效果列表</summary>
