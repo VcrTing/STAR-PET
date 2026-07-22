@@ -30,10 +30,10 @@ public class AiNpc : IPveAiRunnerImpl
 		if (enemySkill != null)
 		{
 			GD.Print($"    └─ [AiNpc] NPC 选择技能: {enemySkill.Skill?.SkillName ?? "未知"} (随机)");
-			return new TurnAction("you", enemySkill);
+			return new TurnAction(EnumWho.You, enemySkill);
 		}
 
 		GD.Print($"    └─ [AiNpc] NPC 无可用技能，执行无行动");
-		return new TurnAction(TurnActionType.Charge, "you");
+		return new TurnAction(TurnActionType.Charge, EnumWho.You);
 	}
 }

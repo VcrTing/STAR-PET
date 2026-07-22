@@ -19,9 +19,7 @@ public partial class FightCenterManger : Node2D
 
 	// ─── 4 个行动数组 ───
 	public TurnAction[] MyTurnActs { get; private set; } = new TurnAction[9];
-	public TurnAction[] MyEndActs { get; private set; } = new TurnAction[4];
 	public TurnAction[] YouTurnActs { get; private set; } = new TurnAction[9];
-	public TurnAction[] YouEndActs { get; private set; } = new TurnAction[4];
 
 	private bool _playerActedThisTurn = false;
 	private bool _youActedThisTurn = false;
@@ -191,9 +189,7 @@ public partial class FightCenterManger : Node2D
 		GD.Print($"─────────────────\n  ⚔️ 第 {_turnNumber} 回合执行\n─────────────────");
 
 		// 执行双方行动，接收回合结束效果
-		FightExeAction.ExecuteActions(MyTurnActs, YouTurnActs, out var newMyEndActs, out var newYouEndActs);
-		MyEndActs = newMyEndActs;
-		YouEndActs = newYouEndActs;
+		FightExeAction.ExecuteActions(MyTurnActs, YouTurnActs);
 
 		TransitionTo(FightState.CheckFaint);
 	}
@@ -273,9 +269,7 @@ public partial class FightCenterManger : Node2D
 	private void ClearAllQueues()
 	{
 		FightCenterUtil.ClearActionQueue(MyTurnActs);
-		FightCenterUtil.ClearActionQueue(MyEndActs);
 		FightCenterUtil.ClearActionQueue(YouTurnActs);
-		FightCenterUtil.ClearActionQueue(YouEndActs);
 	}
 
 }

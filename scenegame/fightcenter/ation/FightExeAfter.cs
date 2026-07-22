@@ -29,13 +29,22 @@ public static class FightExeAfter
 			return;
 		}
 
-		int len = Math.Max(myActs.Length, youActs.Length);
-		sortedMyActs = new TurnAction[len];
-		sortedYouActs = new TurnAction[len];
+		// 步骤1：从原始数组中提取 center 行动（通常位于索引 4）
+		TurnAction myCenter = null;
+		TurnAction youCenter = null;
+		for (int i = 0; i < myActs.Length; i++)
+		{
+			if (myActs[i] != null) { myCenter = myActs[i]; break; }
+		}
+		for (int i = 0; i < youActs.Length; i++)
+		{
+			if (youActs[i] != null) { youCenter = youActs[i]; break; }
+		}
 
-		// 浅拷贝原始数据
-		Array.Copy(myActs, sortedMyActs, myActs.Length);
-		Array.Copy(youActs, sortedYouActs, youActs.Length);
+		// 步骤2：通过 CreateMyActsFromCenter / CreateYouActsFromCenter 生成按优先级排好 slot 的数组
+		sortedMyActs = CreateMyActsFromCenter(myCenter);
+		sortedYouActs = CreateYouActsFromCenter(youCenter);
+
 	}
 
 	/// <summary>

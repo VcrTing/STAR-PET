@@ -28,10 +28,10 @@ public class AiBoss : IPveAiRunnerImpl
 		if (enemySkill != null)
 		{
 			GD.Print($"    └─ [AiBoss] BOSS 选择技能: {enemySkill.Skill?.SkillName ?? "未知"} (优先级={enemySkill.Skill?.Priority})");
-			return new TurnAction("you", enemySkill);
+			return new TurnAction(EnumWho.You, enemySkill);
 		}
 
 		GD.Print($"    └─ [AiBoss] BOSS 无可用技能，执行无行动");
-		return new TurnAction(TurnActionType.Charge, "you");
+		return new TurnAction(TurnActionType.Charge, EnumWho.You);
 	}
 }

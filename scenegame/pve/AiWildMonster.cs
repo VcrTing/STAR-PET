@@ -29,10 +29,10 @@ public class AiWildMonster : IPveAiRunnerImpl
 		if (enemySkill != null)
 		{
 			GD.Print($"    └─ [AiWildMonster] 野怪 选择技能: {enemySkill.Skill?.SkillName ?? "未知"} (Slot={slotIndex})");
-			return new TurnAction("you", enemySkill);
+			return new TurnAction(EnumWho.You, enemySkill);
 		}
 
 		GD.Print($"    └─ [AiWildMonster] 野怪 无可用技能，执行无行动");
-		return new TurnAction(TurnActionType.Charge, "you");
+		return new TurnAction(TurnActionType.Charge, EnumWho.You);
 	}
 }

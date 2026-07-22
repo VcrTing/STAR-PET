@@ -38,10 +38,10 @@ public class AiElite : IPveAiRunnerImpl
 		if (enemySkill != null)
 		{
 			GD.Print($"    └─ [AiElite] 精英怪 选择技能: {enemySkill.Skill?.SkillName ?? "未知"} (战术决策)");
-			return new TurnAction("you", enemySkill);
+			return new TurnAction(EnumWho.You, enemySkill);
 		}
 
 		GD.Print($"    └─ [AiElite] 精英怪 无可用技能，执行无行动");
-		return new TurnAction(TurnActionType.Charge, "you");
+		return new TurnAction(TurnActionType.Charge, EnumWho.You);
 	}
 }

@@ -1,6 +1,6 @@
 // ════════════════════════════════════════════════════════════════
-//  回合运行数据类
-//  表示一回合中真正需要执行的一个步骤，不是 TurnAction
+//  回合运行类型设计
+//  定义 EnumFightRunningType 并提供阶段映射方法
 // ════════════════════════════════════════════════════════════════
 
 /// <summary>
@@ -69,43 +69,47 @@ public enum EnumFightRunningType
 }
 
 /// <summary>
-/// 回合运行数据
-/// 每回合真正要执行的东西，不是 TurnAction
-/// FightRunningTool 中使用 12 长度的数组存放
+/// 回合运行类型设计工具
+/// 提供 EnumFightRunningType 的辅助方法
 /// </summary>
-public class FightRunning
+public static class FightRunningTypeDesign
 {
-    /// <summary>运行阶段类型</summary>
-    public EnumFightRunningType RunningType;
-
-    /// <summary>所属方</summary>
-    public EnumWho Side;
-
-    /// <summary>关联的战斗技能实例（如果是技能相关阶段）</summary>
-    public InsFightSkill FightSkill;
-
-    /// <summary>伤害值（计算扣血阶段使用）</summary>
-    public int Damage;
-
-    /// <summary>是否已完成</summary>
-    public bool IsCompleted;
-
-    /// <summary>是否应对阶段</summary>
-    public bool IsBingo;
-
-    /// <summary>应对的技能类型（对应 BingoSkillType）</summary>
-    public int BingoSkillType;
-
-    public FightRunning() { }
-
-    public FightRunning(EnumFightRunningType type, EnumWho side, InsFightSkill fightSkill = null)
+    /// <summary>
+    /// 判断某个 EnumFightRunningType 是否为 StartXX 类型
+    /// </summary>
+    public static bool IsStartType(EnumFightRunningType type)
     {
-        RunningType = type;
-        Side = side;
-        FightSkill = fightSkill;
-        IsCompleted = false;
+        return type == EnumFightRunningType.StartStatusMy
+            || type == EnumFightRunningType.StartAttackMy
+            || type == EnumFightRunningType.StartDefenseMy
+            || type == EnumFightRunningType.StartStatusYou
+            || type == EnumFightRunningType.StartAttackYou
+            || type == EnumFightRunningType.StartDefenseYou;
     }
 
-    /// <summary>是否为 My 方</summary>
-    public bool IsMy => Side == EnumWho.My;
+    /// <summary>
+    /// 根据 StartXXX 类型返回对应的 EndXXX 类型
+    /// 例如：StartStatusMy → EndStatusMy，StartAttackYou → EndAttackYou
+    /// </summary>
+    /// <param name="type">开始阶段类型（StartXXX）</param>
+    /// <returns>对应的结束阶段类型（EndXXX），若没有对应关系则返回原值</returns>
+    public static EnumFightRunningType GetEndType(EnumFightRunningType type)
+    {
+        switch (type)
+        {
+            // ─── 我方 ───
+            case EnumFightRunningType.StartStatusMy:   return EnumFightRunningType.EndStatusMy;
+            case EnumFightRunningType.StartAttackMy:   return EnumFightRunningType.EndAttackMy;
+            case EnumFightRunningType.StartDefenseMy:  return EnumFightRunningType.EndDefenseMy;
+
+            // ─── 敌方 ───
+            case EnumFightRunningType.StartStatusYou:  return EnumFightRunningType.EndStatusYou;
+            case EnumFightRunningType.StartAttackYou:  return EnumFightRunningType.EndAttackYou;
+            case EnumFightRunningType.StartDefenseYou: return EnumFightRunningType.EndDefenseYou;
+
+            default:
+                // 如果本身就是 EndXXX 或其他无对应 End 的类型，返回自身
+                return type;
+        }
+    }
 }
