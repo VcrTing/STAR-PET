@@ -51,6 +51,13 @@ public partial class FightLandYouStandPet : Node2D
 		FightPetData = fightPetData;
 		//
 		PetWrapper = DevPetLoadTool.SpawnPetFightWrapper(fightPetData, this, _spawnPosition, false);
+
+		// 敌方换宠时，用 VBoxViewBuffsContentYou 展示敌方技能列表
+		if (VBoxViewBuffsContentYou.Instance != null)
+		{
+			var skills = fightPetData.FightSkills?.ToArray();
+			VBoxViewBuffsContentYou.Instance.UpdateSkills(skills);
+		}
 	}
 
 	public override void _ExitTree()

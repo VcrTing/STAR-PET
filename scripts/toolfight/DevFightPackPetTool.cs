@@ -44,8 +44,8 @@ public static class DevFightPackPetTool
 			Medals = new List<EnumPetMedal>(packData.Medals),
 			FinalStats = new Dictionary<EnumPetBaseStats, int>(packData.FinalStats)
 		};
-
 		// 根据 CarriedSkills 加载战斗技能（按数组索引记录技能顺序）
+		GD.Print("     [DevFightPackPetTool] CarriedSkills: " + string.Join(", ", packData.CarriedSkills ?? new List<string>()));
 		if (packData.CarriedSkills != null && packData.CarriedSkills.Count > 0)
 		{
 			var skillIds = packData.CarriedSkills.ToArray();

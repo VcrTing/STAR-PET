@@ -1,8 +1,8 @@
 extends Resource
 # ======================================================
 # 技能静态数据
-# 命名: 0_3_1.gd
-# 0 = 普通系, 3 = 状态, 1 = code
+# 命名: 0_3_2.gd
+# 0 = 普通系, 3 = 状态, 2 = code
 # ======================================================
 
 # ---- 系别信息 ----
@@ -47,11 +47,11 @@ var before_action_special_id := 1   # 回合内释放前特殊处理代码ID（1
 var gain_energy := 5                # 获得能量（默认2，聚能+2点能量）
 var gain_hp := 0                    # 获得血量（默认0，正数=获得，负数=扣除）
 var gain_buff := [
-	{"target_stat": 4, "num": 1, "value": 70, "is_ratio": true},
+	{"stat": 4, "layer": 1, "value": 70, "is_ratio": true},
 ]
-# 获得 Buff（数组类型，每个元素为字典：target_stat=属性ID对应EnumPetBaseStats，4=DEF物防；num=层数；value=每层值；is_ratio=是否百分比，true=70%）
+# 获得 Buff（数组类型，每个元素为字典：stat=属性ID对应EnumPetBaseStats，4=DEF物防；num=层数；value=每层值；is_ratio=是否百分比，true=70%）
 var gain_buff_bingo := [
-	{"target_stat": 4, "num": 1, "value": 140, "is_ratio": true},
+	{"stat": 4, "layer": 1, "value": 140, "is_ratio": true},
 ]
 # 应对成功后的 Buff（应对成功时替换 gain_buff 生效，value 翻倍）
 

@@ -23,6 +23,7 @@ public static class DevSkillConf
 		{ "0_2_1", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.DEFENSE } },  // 防御
 		// 普通系 - 状态
 		{ "0_3_1", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.STATUS } },   // 聚能
+		{ "0_3_2", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.STATUS } },   // 加固
 	};
 
 	/// <summary>

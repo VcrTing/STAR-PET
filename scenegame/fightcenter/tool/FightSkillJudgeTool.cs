@@ -124,6 +124,8 @@ public static class FightSkillJudgeTool
                     FightRunningHouse.AddRunning(
                         side == EnumWho.My ? EnumFightRunningType.BingoStatusMy : EnumFightRunningType.BingoStatusYou,
                         side, otherOneSkill);
+                    //
+                    GD.Print(side + " 攻击应对了状态----------");
                 }
                 // 3. side 计算自己要扣的血，根据 otherOneSkill 计算 自身要扣的血量 basicDamag，FightRunning 加入CurrentRunArray
                 int basicDamag = 0;
@@ -199,7 +201,11 @@ public static class FightSkillJudgeTool
                     FightRunningHouse.AddRunning(
                         side == EnumWho.My ? EnumFightRunningType.BingoAttackMy : EnumFightRunningType.BingoAttackYou,
                         side, otherOneSkill);
+
+                    GD.Print(side + " 防御应对了攻击----------");
                 }
+
+                SideDefenseWhenOtherOneAttack(sideSkill, side, attacker, defender, otherOneSkill);
             }
             // 应对防御
             else if (otherOneSkill.Skill.SkillType == (int)EnumSkillType.DEFENSE)
@@ -304,6 +310,8 @@ public static class FightSkillJudgeTool
                     FightRunningHouse.AddRunning(
                         side == EnumWho.My ? EnumFightRunningType.BingoDefenseMy : EnumFightRunningType.BingoDefenseYou,
                         side, otherOneSkill);
+                    //
+                    GD.Print(side + " 状态应对了防御----------");
                 }
                 // 3. side 计算自己要扣的血量，应对防御暂时 = 0，FightRunning 加入CurrentRunArray
                 int basicDamag = 0;

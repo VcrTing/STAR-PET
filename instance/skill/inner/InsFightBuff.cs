@@ -7,10 +7,10 @@ using Godot;
 public class InsFightBuff
 {
     /// 影响的个体值属性
-    public EnumPetBaseStats TargetStat;
+    public EnumPetBaseStats Stat;
 
     // 层数
-    public int Num;
+    public int Layer;
 
     // 每一层多少值
     public int Value; 

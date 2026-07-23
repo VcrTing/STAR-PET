@@ -16,7 +16,7 @@ public static class DevSkillLoadTool
 	public static List<InsSkill> LoadSkills(string[] skillIds)
 	{
 		var result = new List<InsSkill>();
-
+		
 		if (skillIds == null || skillIds.Length == 0)
 			return result;
 

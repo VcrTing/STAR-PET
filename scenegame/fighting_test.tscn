@@ -10,7 +10,9 @@
 [ext_resource type="Script" uid="uid://bma3y3nt16idf" path="res://scenegame/origin/UiHBoxHeartWrapper.cs" id="8_n00ms"]
 [ext_resource type="Script" uid="uid://dfae6hpek38xj" path="res://scenegame/origin/LabelGameStatus.cs" id="9_7oi6l"]
 [ext_resource type="PackedScene" uid="uid://btbms5rgup6yp" path="res://sceneui/fight/pack/pan_fight_player_pack.tscn" id="10_nues3"]
+[ext_resource type="Script" uid="uid://da54yavlkvkaj" path="res://sceneui/fight/skills/content/VBoxViewBuffsContentMy.cs" id="11_3l0sp"]
 [ext_resource type="PackedScene" uid="uid://bvnck5flu1dha" path="res://scenegame/fightcenter/fight_origin_manager.tscn" id="11_x64ax"]
+[ext_resource type="Script" uid="uid://d2jniwvlol464" path="res://sceneui/fight/skills/content/VBoxViewBuffsContentYou.cs" id="12_5yix2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ppfa1"]
 size = Vector2(240, 120)
@@ -165,6 +167,80 @@ size_flags_vertical = 3
 alignment = 2
 
 [node name="PanFightPlayerPack" parent="PlayerUi/FightCanvasLayer" unique_id=1813670500 instance=ExtResource("10_nues3")]
+
+[node name="BuffViewMy" type="Control" parent="PlayerUi/FightCanvasLayer" unique_id=1080227871]
+custom_minimum_size = Vector2(120, 420)
+layout_mode = 3
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -210.0
+offset_right = 60.0
+offset_bottom = 210.0
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy" unique_id=1801921149]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer" unique_id=1620123130]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxViewBuffsContentMy" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer" unique_id=485984842]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("11_3l0sp")
+
+[node name="BuffsContent" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy" unique_id=2124814818]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BuffViewYou" type="Control" parent="PlayerUi/FightCanvasLayer" unique_id=1869446298]
+custom_minimum_size = Vector2(120, 420)
+layout_mode = 3
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -210.0
+offset_bottom = 210.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerUi/FightCanvasLayer/BuffViewYou" unique_id=145457818]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PlayerUi/FightCanvasLayer/BuffViewYou/MarginContainer" unique_id=1031354887]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxViewBuffsContentYou" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewYou/MarginContainer/ScrollContainer" unique_id=1781208919]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("12_5yix2")
+
+[node name="BuffsContent" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewYou/MarginContainer/ScrollContainer/VBoxViewBuffsContentYou" unique_id=15493502]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkillContent" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewYou/MarginContainer/ScrollContainer/VBoxViewBuffsContentYou" unique_id=609743959]
+layout_mode = 2
 
 [node name="FightOriginManager" parent="." unique_id=1944409961 instance=ExtResource("11_x64ax")]
 

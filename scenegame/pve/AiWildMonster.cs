@@ -28,7 +28,7 @@ public class AiWildMonster : IPveAiRunnerImpl
 		InsFightSkill enemySkill = GetSkill(slotIndex);
 		if (enemySkill != null)
 		{
-			GD.Print($"   [AiWildMonster] 野怪 选择技能: {enemySkill.Skill?.SkillName ?? "未知"} (Slot={slotIndex})");
+			GD.Print($"   [AiWildMonster] 野怪模式 选择技能: 【{enemySkill.Skill?.SkillName ?? "未知"}】 (Slot={slotIndex})");
 			return new TurnAction(EnumWho.You, enemySkill);
 		}
 

@@ -84,7 +84,24 @@ public static class DevPackPetTool
 			ObtainedMethod = "开发测试", ObtainedLocation = "DevTool"
 		};
 		if (packData.CarriedSkills == null || packData.CarriedSkills.Count == 0)
-			packData.CarriedSkills = new List<string> { "0_2_1", "0_1_1", "0_1_2", "0_1_3" };
+		{
+			// 从 petData 的 learnable_skills 中取前 4 个作为默认携带技能
+			packData.CarriedSkills = new List<string>();
+			if (petData != null)
+			{
+				var learnable = petData.Get("learnable_skills").AsGodotArray();
+				int count = Math.Min(learnable.Count, 4);
+				for (int i = 0; i < count; i++)
+				{
+					var entry = learnable[i].AsGodotArray();
+					if (entry.Count > 0)
+						packData.CarriedSkills.Add(entry[0].AsString());
+				}
+			}
+			// fallback：如果 petData 没有 learnable_skills，使用默认值
+			if (packData.CarriedSkills.Count == 0)
+				packData.CarriedSkills = new List<string> { "0_2_1", "0_1_1", "0_1_2", "0_1_3" };
+		}
 		InstancePackPetManager.Instance.AddPet(packData);
 		return packData;
 	}
