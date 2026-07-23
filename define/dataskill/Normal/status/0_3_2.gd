@@ -17,6 +17,10 @@ var skill_name := "加固"            # 技能名
 var attack_value := 0              # 攻击数值/威力（状态技能为0）
 var attack_type := 0               # 攻击类型（状态技能为0）
 
+# ---- 连击 ----
+var hit_count := 1                  # 连击数（默认1，>1表示连击技能）
+var is_hit_combo := false           # 是否连击技能（默认false）
+
 # ---- 能耗 ----
 var pp_cost := 0                    # PP能耗（默认3）
 
@@ -42,8 +46,14 @@ var before_action_special_id := 1   # 回合内释放前特殊处理代码ID（1
 # ---- 增减益 ----
 var gain_energy := 5                # 获得能量（默认2，聚能+2点能量）
 var gain_hp := 0                    # 获得血量（默认0，正数=获得，负数=扣除）
-var gain_iv := []  
-# 获得个体值量（数组类型，每个元素为字典：stat=属性ID对应PetBaseStatsDesign，value=数值，is_percent=是否百分比；默认空数组）
+var gain_buff := [
+	{"target_stat": 4, "num": 1, "value": 70, "is_ratio": true},
+]
+# 获得 Buff（数组类型，每个元素为字典：target_stat=属性ID对应EnumPetBaseStats，4=DEF物防；num=层数；value=每层值；is_ratio=是否百分比，true=70%）
+var gain_buff_bingo := [
+	{"target_stat": 4, "num": 1, "value": 140, "is_ratio": true},
+]
+# 应对成功后的 Buff（应对成功时替换 gain_buff 生效，value 翻倍）
 
 # ---- 印记 ----
 var marks := []                     # 印记（数组类型，每个元素为印记ID对应SkillMarkDesign，默认空数组。精灵下场印记不消失）

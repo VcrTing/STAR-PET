@@ -10,7 +10,7 @@
 public static class FightRunningHouse
 {
     /// <summary>回合运行数组长度</summary>
-    public const int RunArrayLength = 32;
+    public const int RunArrayLength = 9999;
 
     /// <summary>
     /// 当前回合的运行数组，存储 FightRunning

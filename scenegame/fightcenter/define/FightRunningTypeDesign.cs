@@ -27,6 +27,8 @@ public enum EnumFightRunningType
     StartDefenseMy,
     /// <summary>应对攻击阶段：检查敌方是否有攻击技能，产生应对效果</summary>
     BingoAttackMy,
+    /// <summary>执行攻击阶段：我方实际执行攻击，扣除对方血量</summary>
+    DoAttackMy,
     /// <summary>结束防御阶段：防御效果结算完毕，清除临时防御加成</summary>
     EndDefenseMy,
     /// <summary>结束攻击阶段：攻击效果结算完毕，清除临时攻击加成</summary>
@@ -56,6 +58,8 @@ public enum EnumFightRunningType
     StartDefenseYou,
     /// <summary>应对攻击阶段：检查我方是否有攻击技能，产生应对效果</summary>
     BingoAttackYou,
+    /// <summary>执行攻击阶段：敌方实际执行攻击，扣除我方血量</summary>
+    DoAttackYou,
     /// <summary>结束防御阶段：防御效果结算完毕</summary>
     EndDefenseYou,
     /// <summary>结束攻击阶段：攻击效果结算完毕</summary>

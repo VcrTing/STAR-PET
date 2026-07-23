@@ -48,6 +48,11 @@ public class InsFightSkill
 	public int ActualPetType { get; set; }
 
 	/// <summary>
+	/// 实际连击数（默认取 InsSkill.HitCount，战斗中可被特性/道具改变）
+	/// </summary>
+	public int ActualHitCount { get; set; }
+
+	/// <summary>
 	/// 判断技能是否为使用者的本系技能（STAB）
 	/// 即技能的 ActualPetType 是否存在于 PetData 的 PetTypes 中
 	/// </summary>
@@ -82,6 +87,7 @@ public class InsFightSkill
 			IsFrozen = false,
 			CooldownTurns = 0,
 			ActualPetType = skill.PetType,
+			ActualHitCount = skill.HitCount,
 		};
 	}
 }

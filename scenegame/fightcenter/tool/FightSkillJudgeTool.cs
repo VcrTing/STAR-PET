@@ -28,6 +28,36 @@ public static class FightSkillJudgeTool
         return res.ToArray();
     }
 
+    // Side 攻击 对方 也攻击
+    public static void SideAttackWhenOtherOneAttack(InsFightSkill sideSkill, EnumWho side, InsFightPetData attacker, InsFightPetData defender)
+    {
+        
+        // 2. 根据 sideSkill 计算出连击后的 InsFightSkill[]
+        //    如为连击技能则拆分为多段，非连击技能则返回包含自身的单元素数组
+        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(sideSkill);
+
+        // 计算对方（被攻击方）的标识
+        EnumWho targetSide = side == EnumWho.My ? EnumWho.You : EnumWho.My;
+
+        // 3. 循环处理每一段连击
+        for (int h = 0; h < hitSkills.Length; h++)
+        {
+            InsFightSkill hit = hitSkills[h];
+
+            // 3a. 生成执行攻击阶段 FightRunning，记录本次连击的执行
+            FightRunningHouse.AddRunning(
+                side == EnumWho.My ? EnumFightRunningType.DoAttackMy : EnumFightRunningType.DoAttackYou,
+                side, hit);
+
+            // 3b. 用当前连击段计算攻击对方要扣的血
+            int basicDamag = FightDamageTool.CalcBasicDamage(hit, attacker, defender);
+
+            // 3c. 生成扣血阶段 FightRunning，扣除的是对面的血
+            FightRunningHouse.AddRunning(
+                side == EnumWho.My ? EnumFightRunningType.DoDamageYou : EnumFightRunningType.DoDamageMy,
+                targetSide, hit, basicDamag);
+        }
+    }
 	/// <summary>
 	/// 执行攻击技能
 	/// 计算伤害并扣除防守方血量
@@ -54,14 +84,8 @@ public static class FightSkillJudgeTool
         InsFightSkill[] sideSkills = GetFightSkillFromActions(otherOneActions);
 
         // 打印 sideSkills 数组内容
-        string sideLabel = side == EnumWho.My ? "🧑我方" : "👹敌方";
-        GD.Print($"      → [{sideLabel}攻击] sideSkills 共 {sideSkills.Length} 个:");
-        for (int k = 0; k < sideSkills.Length; k++)
-        {
-            InsFightSkill sk = sideSkills[k];
-            if (sk?.Skill != null)
-                GD.Print($"        [{k}] {sk.Skill.SkillName} (type={sk.Skill.SkillType})");
-        }
+        // string sideLabel = side == EnumWho.My ? "🧑我方" : "👹敌方";
+        // GD.Print($"      → [{sideLabel}攻击] sideSkills 共 {sideSkills.Length} 个:");
 
         for (int i = 0; i < sideSkills.Length; i++)
         {
@@ -72,13 +96,9 @@ public static class FightSkillJudgeTool
                 // 检查应对攻击
                 if (bingoType == (int)EnumSkillType.ATTACK)
                 {
-                    // 应对攻击，暂无作用
+                    // 应对攻击：扣除对面血量
                 }
-                // 2. side 计算自己要扣的血，根据 otherOneSkill 计算 自身要扣的血量 basicDamag，FightRunning 加入CurrentRunArray
-                int basicDamag = FightDamageTool.CalcBasicDamage(otherOneSkill, defender, attacker);
-                FightRunningHouse.AddRunning(
-                    side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,
-                    side, otherOneSkill, basicDamag);
+                SideAttackWhenOtherOneAttack(sideSkill, side, attacker, defender);
             }
             // 防御
             else if (otherOneSkill.Skill.SkillType == (int)EnumSkillType.DEFENSE)
@@ -113,6 +133,35 @@ public static class FightSkillJudgeTool
             }
         }
 	}
+
+    // Side 防御 对方 攻击
+    public static void SideDefenseWhenOtherOneAttack(InsFightSkill sideSkill, EnumWho side, InsFightPetData attacker, InsFightPetData defender, InsFightSkill otherOneSkill)
+    {
+        // 3. 计算 otherOneSkill 的连击，生成 InsFightSkill[]
+        //    如对方为连击技能则拆分为多段，非连击技能则返回包含自身的单元素数组
+        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(otherOneSkill);
+
+        // 4. 循环处理对方每一段连击，计算我方（side）要扣的血量
+        for (int h = 0; h < hitSkills.Length; h++)
+        {
+            InsFightSkill otherHit = hitSkills[h];
+
+            // 4a. 根据每一连击 otherHit，计算出原始伤害
+            int basicDamag = FightDamageTool.CalcBasicDamage(otherHit, defender, attacker);
+
+            // 4b. 提出防御减伤，计算出减伤后的伤害
+            int jsRatio = sideSkill.Skill.DamageReductionRate;
+            if (jsRatio == null || jsRatio == 0) { GD.Print("是不是忘记定义减伤率了"); }
+            int finalDamage = (int)(basicDamag * ((float)jsRatio / 100));
+
+            GD.Print($"      防御第{h + 1}击: 原始伤害={basicDamag}, 减伤率={jsRatio}%, 最终伤害={finalDamage}");
+
+            // 4c. 生成扣血阶段 FightRunning，扣的是我方（side）的血
+            FightRunningHouse.AddRunning(
+                side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,
+                side, otherHit, finalDamage);
+        }
+    }
 
 	/// <summary>
 	/// 执行防御技能
@@ -151,14 +200,6 @@ public static class FightSkillJudgeTool
                         side == EnumWho.My ? EnumFightRunningType.BingoAttackMy : EnumFightRunningType.BingoAttackYou,
                         side, otherOneSkill);
                 }
-                // 3. side 计算自己要扣的血，根据 otherOneSkill 计算 自身要扣的血量 finalDamage，FightRunning 加入CurrentRunArray
-                int basicDamag = FightDamageTool.CalcBasicDamage(otherOneSkill, defender, attacker);
-                // 提出防御减伤，计算出减伤后的伤害
-                int jsRatio = sideSkill.Skill.DamageReductionRate;
-                int finalDamage = (int)(basicDamag * jsRatio / 100);
-                FightRunningHouse.AddRunning(
-                    side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,
-                    side, otherOneSkill, finalDamage);
             }
             // 应对防御
             else if (otherOneSkill.Skill.SkillType == (int)EnumSkillType.DEFENSE)
@@ -187,6 +228,33 @@ public static class FightSkillJudgeTool
                     side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,
                     side, otherOneSkill, basicDamag);
             }
+        }
+    }
+
+    public static void SideStatusWhenOtherOneAttack(InsFightSkill sideSkill, EnumWho side, InsFightPetData attacker, InsFightPetData defender, InsFightSkill otherOneSkill)
+    {
+        /*
+        // 2. side 计算自己要扣的血，根据 otherOneSkill 计算 自身要扣的血量 basicDamag 加入CurrentRunArray
+        int basicDamag = FightDamageTool.CalcBasicDamage(otherOneSkill, defender, attacker);
+        FightRunningHouse.AddRunning(
+            side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,
+            side, otherOneSkill, basicDamag);
+        */
+        // 3. 计算 otherOneSkill 的连击，生成 InsFightSkill[]
+        //    如对方为连击技能则拆分为多段，非连击技能则返回包含自身的单元素数组
+        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(otherOneSkill);
+
+        // 4. 循环处理对方每一段连击，计算我方（side）要扣的血量
+        for (int h = 0; h < hitSkills.Length; h++)
+        {
+            InsFightSkill otherHit = hitSkills[h];
+            // 4a. 根据每一连击 otherHit，计算出原始伤害
+            int basicDamag = FightDamageTool.CalcBasicDamage(otherHit, defender, attacker);
+            GD.Print($"      被攻击第{h + 1}击: 原始伤害={basicDamag}, 最终伤害={basicDamag}");
+            // 4b. 生成扣血阶段 FightRunning，扣的是我方（side）的血
+            FightRunningHouse.AddRunning(
+                side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,
+                side, otherHit, basicDamag);
         }
     }
 
@@ -224,11 +292,7 @@ public static class FightSkillJudgeTool
                 {
                     // 应对攻击，没什么影响
                 }
-                // 2. side 计算自己要扣的血，根据 otherOneSkill 计算 自身要扣的血量 basicDamag 加入CurrentRunArray
-                int basicDamag = FightDamageTool.CalcBasicDamage(otherOneSkill, defender, attacker);
-                FightRunningHouse.AddRunning(
-                    side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,
-                    side, otherOneSkill, basicDamag);
+                SideStatusWhenOtherOneAttack(sideSkill, side, attacker, defender, otherOneSkill);
             }
             // 应对防御
             else if (otherOneSkill.Skill.SkillType == (int)EnumSkillType.DEFENSE)

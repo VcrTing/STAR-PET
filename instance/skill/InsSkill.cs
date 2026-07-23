@@ -28,9 +28,12 @@ public class InsSkill
 	public int BeforeActionSpecialId;                            // 释放前特殊处理ID
 	public int BingoSkillType;                                   // 应对类型（1=应对攻击, 0=无应对）
 	public int DamageReductionRate;                              // 减伤率（0-100，防御技能如70代表70%）
+	public int HitCount;                                         // 连击数（默认1，>1表示连击技能）
+	public bool IsHitCombo;                                      // 是否连击技能（默认false）
 	public int GainEnergy;                                       // 获得能量
 	public int GainHp;                                           // 获得血量
-	public Godot.Collections.Array GainIv = new();               // 获得个体值量
+	public Godot.Collections.Array GainBuff = new();             // 获得 Buff
+	public Godot.Collections.Array GainBuffBingo = new();        // 应对成功后的 Buff
 	public Godot.Collections.Array Marks = new();                 // 印记
 	public Godot.Collections.Array StatusEffects = new();        // 异常状态
 	public Godot.Collections.Array SoundEffects = new();         // 音效
@@ -69,9 +72,12 @@ public class InsSkill
 			BeforeActionSpecialId = res.Get("before_action_special_id").AsInt32(),
 			BingoSkillType = res.Get("bingo_skill_type").AsInt32(),
 			DamageReductionRate = res.Get("damage_reduction_rate").AsInt32(),
+			HitCount = res.Get("hit_count").AsInt32(),
+			IsHitCombo = res.Get("is_hit_combo").AsBool(),
 			GainEnergy = res.Get("gain_energy").AsInt32(),
 			GainHp = res.Get("gain_hp").AsInt32(),
-			GainIv = res.Get("gain_iv").AsGodotArray(),
+			GainBuff = res.Get("gain_buff").AsGodotArray(),
+			GainBuffBingo = res.Get("gain_buff_bingo").AsGodotArray(),
 			Marks = res.Get("marks").AsGodotArray(),
 			StatusEffects = res.Get("status_effects").AsGodotArray(),
 			SoundEffects = res.Get("sound_effects").AsGodotArray(),

@@ -28,11 +28,11 @@ public class AiWildMonster : IPveAiRunnerImpl
 		InsFightSkill enemySkill = GetSkill(slotIndex);
 		if (enemySkill != null)
 		{
-			GD.Print($"    └─ [AiWildMonster] 野怪 选择技能: {enemySkill.Skill?.SkillName ?? "未知"} (Slot={slotIndex})");
+			GD.Print($"   [AiWildMonster] 野怪 选择技能: {enemySkill.Skill?.SkillName ?? "未知"} (Slot={slotIndex})");
 			return new TurnAction(EnumWho.You, enemySkill);
 		}
 
-		GD.Print($"    └─ [AiWildMonster] 野怪 无可用技能，执行无行动");
+		GD.Print($"   [AiWildMonster] 野怪 无可用技能，执行无行动");
 		return new TurnAction(TurnActionType.Charge, EnumWho.You);
 	}
 }

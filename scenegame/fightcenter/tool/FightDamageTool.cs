@@ -70,7 +70,7 @@ public static class FightDamageTool
 		float randomFactor = 0.85f + (float)_random.NextDouble() * 0.15f;
 		int finalDamage = (int)(damageAfterMod * randomFactor);
 
-		GD.Print($"基础={baseDamage}, 总倍率={totalModifier:F2}, 随机={randomFactor:F2}，最终={finalDamage}");
+		GD.Print($"			基础={baseDamage}, 总倍率={totalModifier:F2}, 随机={randomFactor:F2}，最终={finalDamage}");
 		return Math.Max(finalDamage, 0);
 	}
 
