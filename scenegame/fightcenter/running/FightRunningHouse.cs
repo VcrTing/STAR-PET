@@ -31,18 +31,36 @@ public static class FightRunningHouse
     /// </summary>
     /// <param name="type">运行阶段类型</param>
     /// <param name="side">所属方</param>
-    /// <param name="fightSkill">关联的技能（可选）</param>
     /// <param name="damage">伤害值（可选）</param>
+    /// <param name="targetFightSkill">目标战斗技能实例（可选）</param>
     /// <param name="bingoSkillType">应对的技能类型（None=无应对，可选）</param>
-    public static void AddRunning(EnumFightRunningType type, EnumWho side, InsFightSkill fightSkill = null, int damage = 0, EnumSkillType bingoSkillType = EnumSkillType.None)
+    public static void AddRunningEasy(EnumFightRunningType type, EnumWho side, int damage = 0, InsFightSkill targetFightSkill = null)
     {
         for (int i = 0; i < RunArrayLength; i++)
         {
             if (CurrentRunArray[i] == null)
             {
-                CurrentRunArray[i] = new FightRunning(type, side, fightSkill)
+                CurrentRunArray[i] = new FightRunning(type, side)
                 {
                     Damage = damage,
+                    TargetFightSkill = targetFightSkill
+                };
+                return;
+            }
+        }
+    }
+    
+    public static void AddRunning2(EnumFightRunningType type, EnumWho side, InsFightSkill sideFightSkill, int damage, InsFightSkill targetFightSkill, EnumSkillType bingoSkillType = EnumSkillType.None)
+    {
+        for (int i = 0; i < RunArrayLength; i++)
+        {
+            if (CurrentRunArray[i] == null)
+            {
+                CurrentRunArray[i] = new FightRunning(type, side)
+                {
+                    Damage = damage,
+                    SideFightSkill = sideFightSkill,
+                    TargetFightSkill = targetFightSkill,
                     BingoSkillType = bingoSkillType
                 };
                 return;

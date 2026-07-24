@@ -79,7 +79,7 @@ public static class FightRunningBuildTool
             EnumFightRunningType endType = FightRunningTypeDesign.GetEndType(startRun.RunningType);
             if (endType != startRun.RunningType) // 确保有对应的 End 类型
             {
-                FightRunningHouse.AddRunning(endType, startRun.Side, startRun.FightSkill, startRun.Damage);
+                FightRunningHouse.AddRunningEasy(endType, startRun.Side, startRun.Damage, startRun.TargetFightSkill);
             }
         }
     }
@@ -110,22 +110,22 @@ public static class FightRunningBuildTool
         {
             if (mySpeed <= youSpeed)
             {
-                FightRunningHouse.AddRunning(EnumFightRunningType.CheckHpMy, EnumWho.My);
-                FightRunningHouse.AddRunning(EnumFightRunningType.CheckHpYou, EnumWho.You);
+                FightRunningHouse.AddRunningEasy(EnumFightRunningType.CheckHpMy, EnumWho.My);
+                FightRunningHouse.AddRunningEasy(EnumFightRunningType.CheckHpYou, EnumWho.You);
             }
             else
             {
-                FightRunningHouse.AddRunning(EnumFightRunningType.CheckHpYou, EnumWho.You);
-                FightRunningHouse.AddRunning(EnumFightRunningType.CheckHpMy, EnumWho.My);
+                FightRunningHouse.AddRunningEasy(EnumFightRunningType.CheckHpYou, EnumWho.You);
+                FightRunningHouse.AddRunningEasy(EnumFightRunningType.CheckHpMy, EnumWho.My);
             }
         }
         else if (hasMyCheckHp)
         {
-            FightRunningHouse.AddRunning(EnumFightRunningType.CheckHpMy, EnumWho.My);
+            FightRunningHouse.AddRunningEasy(EnumFightRunningType.CheckHpMy, EnumWho.My);
         }
         else if (hasYouCheckHp)
         {
-            FightRunningHouse.AddRunning(EnumFightRunningType.CheckHpYou, EnumWho.You);
+            FightRunningHouse.AddRunningEasy(EnumFightRunningType.CheckHpYou, EnumWho.You);
         }
     }
 }

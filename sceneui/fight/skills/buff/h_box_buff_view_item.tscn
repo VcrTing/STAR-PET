@@ -20,7 +20,6 @@ layout_mode = 2
 [node name="LabelName" type="Label" parent="MarginContainer/HBoxContainer" unique_id=183164882]
 layout_mode = 2
 theme = ExtResource("2_4ogwf")
-text = "物攻"
 vertical_alignment = 1
 
 [node name="LabelValue" type="Label" parent="MarginContainer/HBoxContainer" unique_id=1168688986]

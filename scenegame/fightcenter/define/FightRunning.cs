@@ -16,8 +16,11 @@ public class FightRunning
     /// <summary>所属方</summary>
     public EnumWho Side;
 
-    /// <summary>关联的战斗技能实例（如果是技能相关阶段）</summary>
-    public InsFightSkill FightSkill;
+    /// <summary>目标战斗技能实例（本阶段要处理的技能）</summary>
+    public InsFightSkill TargetFightSkill;
+
+    /// <summary>本方战斗技能实例（本阶段对应的本方技能）</summary>
+    public InsFightSkill SideFightSkill;
 
     /// <summary>伤害值（计算扣血阶段使用）</summary>
     public int Damage;
@@ -30,12 +33,13 @@ public class FightRunning
 
     public FightRunning() { }
 
-    public FightRunning(EnumFightRunningType type, EnumWho side, InsFightSkill fightSkill = null)
+    public FightRunning(EnumFightRunningType type, EnumWho side, InsFightSkill sideFightSkill = null, InsFightSkill targetFightSkill = null)
     {
         RunningType = type;
         Side = side;
-        FightSkill = fightSkill;
         IsCompleted = false;
+        SideFightSkill = sideFightSkill;
+        TargetFightSkill = targetFightSkill;
     }
 
     /// <summary>是否为 My 方</summary>

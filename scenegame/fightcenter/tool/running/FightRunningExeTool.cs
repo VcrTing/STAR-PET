@@ -34,47 +34,62 @@ public static class FightRunningExeTool
     }
 
     /// <summary>
-    /// 执行状态阶段：处理 StartStatusMy / StartStatusYou 状态技能效果
-    /// 根据技能配置的 gain_buff / gain_buff_bingo 向对应方添加 Buff
+    /// 执行 DoAttack 阶段：处理 DoAttackMy / DoAttackYou 攻击技能执行
     /// </summary>
-    public static void ExecuteStatus(FightRunning run, int index)
+    public static void ExecuteDoAttack(FightRunning run, int index)
     {
-        return;
+        // 留空
+    }
+
+    /// <summary>
+    /// 执行 DoDefense 阶段：处理 DoDefenseMy / DoDefenseYou 防御技能执行
+    /// </summary>
+    public static void ExecuteDoDefense(FightRunning run, int index)
+    {
+        // 留空
+    }
+
+    /// <summary>
+    /// 执行 DoStatus 阶段：处理 DoStatusMy / DoStatusYou 状态技能执行
+    /// 判断 BingoSkillType 是否是防御，是则根据 GainBuffBingo 生成 InsFightBuff 数组，否则根据 GainBuff 生成
+    /// </summary>
+    public static void ExecuteDoStatus(FightRunning run, int index)
+    {
         string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
 
-        InsFightSkill fightSkill = run.FightSkill;
-        if (fightSkill?.Skill == null)
+        InsFightSkill sideSkill = run.SideFightSkill;
+        if (sideSkill?.Skill == null)
         {
             GD.Print($"      [{index}] {sideLabel} {run.RunningType} | 技能为空，跳过状态执行");
             return;
         }
 
-        InsSkill skill = fightSkill.Skill;
+        InsSkill skill = sideSkill.Skill;
 
-        // 用 DevBuffTool 解析 gain_buff 为 InsFightBuff[]
-        if (skill.GainBuff != null && skill.GainBuff.Count > 0)
+        // 判断 BingoSkillType 是否是防御
+        Godot.Collections.Array buffSource = run.BingoSkillType == EnumSkillType.DEFENSE
+            ? skill.GainBuffBingo
+            : skill.GainBuff;
+
+        if (buffSource != null && buffSource.Count > 0)
         {
-            var buffs = DevBuffTool.CreateFromArray(skill.GainBuff);
+            var buffs = DevBuffTool.CreateFromArray(buffSource);
             if (buffs != null && buffs.Count > 0)
             {
-                EnumWho targetSide = run.Side == EnumWho.My ? EnumWho.You : EnumWho.My;
-                // TODO: 找到对应方的 BuffManager 后调用 AddBuffs
-                GD.Print($"      [{index}] {sideLabel} {run.RunningType} | gain_buff {buffs.Count} 个 → 目标:{targetSide}");
-            }
-        }
+                // 根据 Side 判断保存到哪个 BuffManager
+                if (run.Side == EnumWho.My)
+                {
+                    FightMyStandBuffManager.Instance?.AddBuffs(buffs.ToArray());
+                }
 
-        // 用 DevBuffTool 解析 gain_buff_bingo（应对成功后额外效果）
-        if (run.BingoSkillType > 0 && skill.GainBuffBingo != null && skill.GainBuffBingo.Count > 0)
-        {
-            var bingoBuffs = DevBuffTool.CreateFromArray(skill.GainBuffBingo);
-            if (bingoBuffs != null && bingoBuffs.Count > 0)
-            {
                 EnumWho targetSide = run.Side == EnumWho.My ? EnumWho.You : EnumWho.My;
-                GD.Print($"      [{index}] {sideLabel} {run.RunningType} | gain_buff_bingo {bingoBuffs.Count} 个 → 目标:{targetSide}");
+                GD.Print($"      [{index}] {sideLabel} {run.RunningType} | " +
+                         $"bingoSkillType={run.BingoSkillType} 生成 InsFightBuff {buffs.Count} 个 → 目标:{targetSide}");
             }
         }
 
         GD.Print($"      [{index}] {sideLabel} {run.RunningType} | " +
-                 $"skill={skill.SkillName} bingoSkillType={run.BingoSkillType} completed={run.IsCompleted}");
+                 $"skill={skill.SkillName} bingoSkillType={run.BingoSkillType} sideSkill={sideSkill.Skill.SkillName} completed={run.IsCompleted}");
     }
+
 }

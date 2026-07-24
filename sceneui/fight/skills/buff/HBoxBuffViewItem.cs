@@ -24,8 +24,15 @@ public partial class HBoxBuffViewItem : HBoxContainer
     public override void _Ready()
     {
         // 获取深层子节点
-        _labelName = GetNode<Label>("LabelName");
-        _labelValue = GetNode<Label>("LabelValue");
+    }
+
+    void Load ()
+    {
+        if (_labelName == null || _labelValue == null)
+        {
+            _labelName = (Label) GodotTool.FindChildByName(this, "LabelName");
+            _labelValue = (Label) GodotTool.FindChildByName(this, "LabelValue");
+        }
     }
 
     /// <summary>
@@ -35,6 +42,8 @@ public partial class HBoxBuffViewItem : HBoxContainer
     /// <param name="buff">最新的 Buff 数据</param>
     public void UpdateBuffView(InsFightBuff buff)
     {
+        Load();
+
         BuffData = buff;
         if (buff == null)
         {
@@ -43,12 +52,7 @@ public partial class HBoxBuffViewItem : HBoxContainer
             return;
         }
 
-        // LabelName 展示 Stat（属性名），如 "物攻"、"物防"
-        _labelName.Text = PetBaseStatsDesign.GetName((int)buff.Stat);
-
-        // LabelValue 展示 Layer（层数），如 "+1"、"+2"、"-1"
-        string sign = buff.Layer >= 0 ? "+" : "";
-        _labelValue.Text = $"{sign}{buff.Layer}";
+        _labelValue.Text = DevBuffHelpTool.BuffToText(buff);
     }
 
 }

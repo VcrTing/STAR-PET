@@ -55,6 +55,31 @@ public static class DevBuffHelpTool
     }
 
     /// <summary>
+    /// 将 InsFightBuff 转换为可读文本
+    /// 格式：stat中文 （layer正数？+ ： -）（isRatio？（layer*value %）: (layer*value 点)）
+    /// 示例："物攻 +70%" 或 "物防 -1点"
+    /// </summary>
+    /// <param name="buff">Buff 数据</param>
+    /// <returns>格式化后的文本</returns>
+    public static string BuffToText(InsFightBuff buff)
+    {
+        if (buff == null)
+            return "";
+
+        int an = buff.AliveNum;
+        string end = an > 0 ? " " + an : "";
+        string statName = PetBaseStatsDesign.GetName((int)buff.Stat);
+        string sign = buff.Layer >= 0 ? "+" : "-";
+
+        int totalValue = System.Math.Abs(buff.Layer) * buff.Value;
+        string valueStr = buff.IsRatio
+            ? $"{totalValue}%"
+            : $"{totalValue}点";
+
+        return $"{statName}:{sign}{valueStr} {end}";
+    }
+
+    /// <summary>
     /// 在列表中查找与 target 具有相同 Stat + Value + IsRatio 的 buff 索引
     /// </summary>
     private static int FindSameBuffIndex(System.Collections.Generic.List<InsFightBuff> list, InsFightBuff target)

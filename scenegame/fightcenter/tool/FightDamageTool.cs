@@ -66,8 +66,8 @@ public static class FightDamageTool
 		// 4. 统一应用总倍率，并取整
 		int damageAfterMod = (int)(baseDamage * totalModifier);
 
-		// 5. 最后乘随机数（0.85~1.00）并取整
-		float randomFactor = 0.85f + (float)_random.NextDouble() * 0.15f;
+		// 5. 最后乘随机数（0.9~1.00）并取整
+		float randomFactor = 0.9f + (float)_random.NextDouble() * 0.1f;
 		int finalDamage = (int)(damageAfterMod * randomFactor);
 
 		GD.Print($"			基础={baseDamage}, 总倍率={totalModifier:F2}, 随机={randomFactor:F2}，最终={finalDamage}");

@@ -17,7 +17,7 @@ public static class FightRunningExe
     public static void ExecuteAll()
     {
         FightRunning[] runnings = FightRunningHouse.CurrentRunArray;
-        GD.Print($"    └─ [FightRunningExe] 开始执行 FightRunning，共 {runnings.Length} 个阶段");
+        GD.Print($"[FightRunningExe] 开始执行 FightRunning，==================");
 
         for (int i = 0; i < runnings.Length; i++)
         {
@@ -31,11 +31,23 @@ public static class FightRunningExe
             {
                 FightRunningExeTool.ExecuteDamage(run, i);
             }
-            // 状态环节：StartStatusMy / StartStatusYou → 执行状态技能效果
-            else if (run.RunningType == EnumFightRunningType.StartStatusMy
-                || run.RunningType == EnumFightRunningType.StartStatusYou)
+            // 执行攻击阶段：DoAttackMy / DoAttackYou → 执行攻击技能效果
+            else if (run.RunningType == EnumFightRunningType.DoAttackMy
+                || run.RunningType == EnumFightRunningType.DoAttackYou)
             {
-                FightRunningExeTool.ExecuteStatus(run, i);
+                FightRunningExeTool.ExecuteDoAttack(run, i);
+            }
+            // 执行防御阶段：DoDefenseMy / DoDefenseYou → 执行防御技能效果
+            else if (run.RunningType == EnumFightRunningType.DoDefenseMy
+                || run.RunningType == EnumFightRunningType.DoDefenseYou)
+            {
+                FightRunningExeTool.ExecuteDoDefense(run, i);
+            }
+            // 执行状态阶段：DoStatusMy / DoStatusYou → 执行状态技能效果
+            else if (run.RunningType == EnumFightRunningType.DoStatusMy
+                || run.RunningType == EnumFightRunningType.DoStatusYou)
+            {
+                FightRunningExeTool.ExecuteDoStatus(run, i);
             }
             else
             {
@@ -43,7 +55,7 @@ public static class FightRunningExe
             }
         }
 
-        GD.Print($"    └─ [FightRunningExe] FightRunning 执行完毕");
+        GD.Print($"[FightRunningExe] FightRunning 执行完毕，==================");
     }
 
 
