@@ -33,7 +33,8 @@ public static class FightRunningHouse
     /// <param name="side">所属方</param>
     /// <param name="fightSkill">关联的技能（可选）</param>
     /// <param name="damage">伤害值（可选）</param>
-    public static void AddRunning(EnumFightRunningType type, EnumWho side, InsFightSkill fightSkill = null, int damage = 0)
+    /// <param name="bingoSkillType">应对的技能类型（None=无应对，可选）</param>
+    public static void AddRunning(EnumFightRunningType type, EnumWho side, InsFightSkill fightSkill = null, int damage = 0, EnumSkillType bingoSkillType = EnumSkillType.None)
     {
         for (int i = 0; i < RunArrayLength; i++)
         {
@@ -41,7 +42,8 @@ public static class FightRunningHouse
             {
                 CurrentRunArray[i] = new FightRunning(type, side, fightSkill)
                 {
-                    Damage = damage
+                    Damage = damage,
+                    BingoSkillType = bingoSkillType
                 };
                 return;
             }

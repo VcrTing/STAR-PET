@@ -15,7 +15,7 @@ using System.Collections.Generic;
 /// 每回合通过 BuildRunArray 生成 12 长度的步骤数组，
 /// 然后依次执行各阶段
 /// </summary>
-public static class FightRunningTool
+public static class FightRunningBuildTool
 {
 
     /// <summary>

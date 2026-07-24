@@ -17,4 +17,7 @@ public class InsFightBuff
 
     // 是百分比还是纯加值
     public bool IsRatio;
+
+    // 存活回合数
+    public int AliveNum;
 }

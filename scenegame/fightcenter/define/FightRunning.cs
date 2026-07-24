@@ -6,7 +6,7 @@
 /// <summary>
 /// 回合运行数据
 /// 每回合真正要执行的东西，不是 TurnAction
-/// FightRunningTool 中使用 12 长度的数组存放
+/// FightRunningBuildTool 中使用 12 长度的数组存放
 /// </summary>
 public class FightRunning
 {
@@ -25,11 +25,8 @@ public class FightRunning
     /// <summary>是否已完成</summary>
     public bool IsCompleted;
 
-    /// <summary>是否应对阶段</summary>
-    public bool IsBingo;
-
-    /// <summary>应对的技能类型（对应 BingoSkillType）</summary>
-    public int BingoSkillType;
+    /// <summary>应对的技能类型（None=无应对，ATTACK=应对攻击，DEFENSE=应对防御，STATUS=应对状态）</summary>
+    public EnumSkillType BingoSkillType;
 
     public FightRunning() { }
 

@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://d08w6mqd00s60" path="res://scenegame/origin/you/FightLandYouStandPet.cs" id="3_5yix2"]
 [ext_resource type="Script" uid="uid://btj8i42x4ajcr" path="res://scenegame/origin/my/PlayerLandMyStandPlayer.cs" id="4_n2bdn"]
 [ext_resource type="Script" uid="uid://d1xutegydv2ti" path="res://scenegame/origin/my/FightLandMyStandPet.cs" id="5_3l0sp"]
+[ext_resource type="Script" uid="uid://dl58r7mdsroc" path="res://scenegame/origin/my/FightMyStandBuffManager.cs" id="6_d74j3"]
 [ext_resource type="Script" uid="uid://bl8r1jwep8x6f" path="res://scenegame/origin/FightCanvasLayer.cs" id="6_igxn0"]
 [ext_resource type="PackedScene" uid="uid://btf86142sy52" path="res://sceneui/fight/bars/ui_fight_bottom_bar_tab.tscn" id="7_h78vf"]
 [ext_resource type="Script" uid="uid://bma3y3nt16idf" path="res://scenegame/origin/UiHBoxHeartWrapper.cs" id="8_n00ms"]
@@ -77,6 +78,9 @@ position = Vector2(-90, -360)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FightLandMy/FightLandMyStandPet/Land" unique_id=210742130]
 shape = SubResource("RectangleShape2D_cplhs")
+
+[node name="FightMyStandBuffManager" type="Node2D" parent="FightLandMy/FightLandMyStandPet" unique_id=1489733166]
+script = ExtResource("6_d74j3")
 
 [node name="PlayerUi" type="Node2D" parent="." unique_id=214073081]
 

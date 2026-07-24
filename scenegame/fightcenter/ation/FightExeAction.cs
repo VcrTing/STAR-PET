@@ -46,10 +46,10 @@ public static class FightExeAction
 		}
 
 		// 步骤3：技能循序判断结束，构建Running结束
-		FightRunningTool.BuildEndSkill();
+		FightRunningBuildTool.BuildEndSkill();
 
 		// 步骤5：加入血量检查 Running
-		FightRunningTool.BuildCheckHp();
+		FightRunningBuildTool.BuildCheckHp();
 
 		// 步骤6：最终执行 Running[]
 		FightRunningExe.ExecuteAll();

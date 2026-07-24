@@ -29,6 +29,10 @@ public enum EnumFightRunningType
     BingoAttackMy,
     /// <summary>执行攻击阶段：我方实际执行攻击，扣除对方血量</summary>
     DoAttackMy,
+    /// <summary>执行防御阶段：我方实际执行防御，应用减伤/护盾效果</summary>
+    DoDefenseMy,
+    /// <summary>执行状态阶段：我方实际执行状态，施加增益/减益效果</summary>
+    DoStatusMy,
     /// <summary>结束防御阶段：防御效果结算完毕，清除临时防御加成</summary>
     EndDefenseMy,
     /// <summary>结束攻击阶段：攻击效果结算完毕，清除临时攻击加成</summary>
@@ -60,6 +64,10 @@ public enum EnumFightRunningType
     BingoAttackYou,
     /// <summary>执行攻击阶段：敌方实际执行攻击，扣除我方血量</summary>
     DoAttackYou,
+    /// <summary>执行防御阶段：敌方实际执行防御，应用减伤/护盾效果</summary>
+    DoDefenseYou,
+    /// <summary>执行状态阶段：敌方实际执行状态，施加增益/减益效果</summary>
+    DoStatusYou,
     /// <summary>结束防御阶段：防御效果结算完毕</summary>
     EndDefenseYou,
     /// <summary>结束攻击阶段：攻击效果结算完毕</summary>

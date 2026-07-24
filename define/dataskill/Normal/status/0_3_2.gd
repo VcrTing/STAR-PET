@@ -51,7 +51,7 @@ var gain_buff := [
 ]
 # 获得 Buff（数组类型，每个元素为字典：stat=属性ID对应EnumPetBaseStats，4=DEF物防；num=层数；value=每层值；is_ratio=是否百分比，true=70%）
 var gain_buff_bingo := [
-	{"stat": 4, "layer": 1, "value": 140, "is_ratio": true},
+	{"stat": 4, "layer": 1, "value": 100, "is_ratio": true},
 ]
 # 应对成功后的 Buff（应对成功时替换 gain_buff 生效，value 翻倍）
 
