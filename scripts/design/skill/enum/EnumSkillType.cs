@@ -9,4 +9,5 @@ public enum EnumSkillType
 	ATTACK = 1,   // 攻击
 	DEFENSE = 2,  // 防御
 	STATUS = 3,   // 状态
+	SYSTEM = 4,   // 系统
 }

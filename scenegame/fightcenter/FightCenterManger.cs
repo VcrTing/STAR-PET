@@ -60,6 +60,16 @@ public partial class FightCenterManger : Node2D
 
 	public bool CanUseSkill(InsFightSkill fightSkill) => true;
 
+	public bool CanEnemySwitch()
+	{
+		return _currentState == FightState.YouSwitch;
+	}
+
+	public bool CanPlayerActBySwitch()
+	{
+		return _currentState == FightState.PlayerSwitch;
+	}
+
 	public void StartBattle()
 	{
 		if (_battleStarted) return;
@@ -94,10 +104,19 @@ public partial class FightCenterManger : Node2D
 		var pets = PlayerLandMyStandPlayer.Instance.FightPets;
 		if (targetIndex < 0 || targetIndex >= pets.Count || pets[targetIndex].Hp <= 0) { GD.Print($"  ⚠ 目标无效"); return; }
 
-		int speed = FightCenterUtil.StatOrDefault(pets[targetIndex].FinalStats, EnumPetBaseStats.SPD, 50);
-		MyTurnActs[4] = new TurnAction(EnumWho.My, targetIndex, speed);
+		// 加载系统换宠技能 0_4_1 并作为 UseSkill 行动
+		InsSkill switchSkill = DevSkillLoadTool.LoadSwitchPetSkill();
+		if (switchSkill == null)
+		{
+			GD.PrintErr($"  ⚠ 加载换宠技能失败");
+			return;
+		}
+		var fightSkill = InsFightSkill.FromInsSkill(switchSkill);
+		var action = new TurnAction(EnumWho.My, fightSkill);
+		action.SwitchTargetIndex = targetIndex;
+		MyTurnActs[4] = action;
 		_playerActedThisTurn = true;
-		GD.Print($"  └─ [玩家] 换宠 Index={targetIndex} ({pets[targetIndex].PetName}) → 等待敌方...");
+		GD.Print($"  └─ [玩家] 换宠 Index={targetIndex} ({pets[targetIndex].PetName}) → 使用技能【{switchSkill.SkillName}】等待敌方...");
 
 		// 检查Pve
 		PveRunning();
@@ -112,7 +131,7 @@ public partial class FightCenterManger : Node2D
 		if (targetIndex < 0 || targetIndex >= pets.Count || pets[targetIndex].Hp <= 0) { GD.Print($"  ⚠ 目标无效"); return; }
 		GD.Print($"  └─ [玩家] 濒死后换宠 → {pets[targetIndex].PetName}");
 		DoPlayerSwitch(targetIndex);
-		TransitionTo(FightState.EnemyTurn);
+		TransitionTo(FightState.YouTurn);
 	}
 
 	public void SetPveActedAndExecute()
@@ -150,11 +169,11 @@ public partial class FightCenterManger : Node2D
 			case FightState.BattleStart:  HandleBattleStart();  break;
 			case FightState.TurnStart:    HandleTurnStart();    break;
 			case FightState.PlayerTurn:   HandlePlayerTurn();   break;
-			case FightState.EnemyTurn:    HandleEnemyTurn();    break;
+			case FightState.YouTurn:      HandleEnemyTurn();    break;
 			case FightState.ExecuteTurn:  HandleExecuteTurn();  break;
 			case FightState.CheckFaint:   HandleCheckFaint();   break;
 			case FightState.PlayerSwitch: HandlePlayerSwitch(); break;
-			case FightState.EnemySwitch:  HandleEnemySwitch();  break;
+			case FightState.YouSwitch:    HandleEnemySwitch();  break;
 			case FightState.BattleEnd:    HandleBattleEnd();    break;
 		}
 	}
@@ -208,7 +227,7 @@ public partial class FightCenterManger : Node2D
 		if (alive == 0) { GD.Print("  ❌ 我方全灭！战败！"); LabelGameStatus.SetText("❌ 我方全灭！战败！"); TransitionTo(FightState.BattleEnd); return; }
 		if (enemyDead) { GD.Print("  ✅ 敌方全灭！胜利！"); LabelGameStatus.SetText("✅ 敌方全灭！胜利！"); TransitionTo(FightState.BattleEnd); return; }
 		if (playerDead) { LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场"); EmitSignal(SignalPetFainted, EnumWho.My.ToString(), FightCenterUtil.GetCurrentPlayerPetIndex()); TransitionTo(FightState.PlayerSwitch); return; }
-		if (enemyDead) { LabelGameStatus.SetText("💀 敌方精灵濒死，敌方准备换宠..."); EmitSignal(SignalPetFainted, EnumWho.You.ToString(), 0); TransitionTo(FightState.EnemySwitch); return; }
+		if (enemyDead) { LabelGameStatus.SetText("💀 敌方精灵濒死，敌方准备换宠..."); EmitSignal(SignalPetFainted, EnumWho.You.ToString(), 0); TransitionTo(FightState.YouSwitch); return; }
 		NextTurn();
 	}
 

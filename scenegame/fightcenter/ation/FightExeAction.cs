@@ -174,10 +174,42 @@ public static class FightExeAction
 			case 3: // 状态技能
 				FightSkillJudgeTool.ExecStatus(skill, nowPet, targetPet, side, otherOneActions);
 				break;
+			case 4: // 系统技能（选择切换宠物）
+				GD.Print($"      → [系统技能] {side} 执行系统技能：{skill.Skill.SkillName}");
+				ExecSystemSkill(sideAct, side);
+				break;
 			default:
 				GD.Print($"      → [ExecSkill] 未知技能类型: {skill.Skill.SkillType}");
 				break;
 		}
+	}
+
+	// ───────────────────────────── 系统技能执行 ─────────────────────
+
+	private static void ExecSystemSkill(TurnAction act, EnumWho side)
+	{
+		int targetIndex = act.SwitchTargetIndex;
+		if (targetIndex < 0)
+		{
+			GD.Print($"      → [系统技能] {side} 无效的换宠目标索引: {targetIndex}");
+			return;
+		}
+
+		if (side != EnumWho.My)
+		{
+			GD.Print($"      → [系统技能] {side} 暂不支持敌方系统技能执行");
+			return;
+		}
+
+		var pets = PlayerLandMyStandPlayer.Instance.FightPets;
+		if (pets == null || targetIndex >= pets.Count || pets[targetIndex].Hp <= 0)
+		{
+			GD.Print($"      → [系统技能] {side} 换宠目标无效: Index={targetIndex}");
+			return;
+		}
+
+		GD.Print($"      → [系统技能] {side} 切换宠物到: {pets[targetIndex].PetName}");
+		FightLandMyStandPet.Instance?.SwitchPet(pets[targetIndex]);
 	}
 
 	// ───────────────────────────── 换宠执行 ─────────────────────────

@@ -39,6 +39,15 @@ public partial class PlayerLandMyStandPlayer : Node2D
 		FightPets = DevFightPackPetTool.InitPackPetsToFight(StandPets, fightLevel, isPvp);
 	}
 
+	/// <summary>
+	/// 判断当前是否可以切换宠物
+	/// 依据：FightCenterManger 当前状态是否为 PlayerSwitch
+	/// </summary>
+	public bool CanSwitchPet()
+	{
+		return FightCenterManger.Instance?.CanPlayerActBySwitch() ?? false;
+	}
+
 	public override void _ExitTree()
 	{
 		if (_instance == this) _instance = null;

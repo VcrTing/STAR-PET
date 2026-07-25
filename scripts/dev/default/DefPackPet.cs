@@ -15,17 +15,19 @@ public static class DefPackPet
 	public static List<InsPackPetData> testModeMyPackPets()
 	{
 		var zero = DevPackPetGeneraTool.InitSpecialStonePet(EnumPet.Zero, EnumPetType.Gold);
-		return new List<InsPackPetData> { zero };
+		var five = DevPackPetGeneraTool.InitSpecialStonePet(EnumPet.Five, EnumPetType.Grass);
+		return new List<InsPackPetData> { zero, five };
 	}
 
 	/// <summary>
 	/// 测试模式下的敌方默认上阵精灵列表
-	/// 加载一号精灵（地系）作为默认精灵
+	/// 加载一号精灵（地系）、五号精灵（草+妖精系）作为默认精灵
 	/// </summary>
 	public static List<InsPackPetData> testModeYouPackPets()
 	{
 		var one = DevPackPetGeneraTool.InitSpecialStonePet(EnumPet.One, EnumPetType.Earth);
-		return new List<InsPackPetData> { one };
+		var five = DevPackPetGeneraTool.InitSpecialStonePet(EnumPet.Five, EnumPetType.Grass);
+		return new List<InsPackPetData> { one, five };
 	}
 
 	/// <summary>

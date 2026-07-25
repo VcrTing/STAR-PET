@@ -6,9 +6,6 @@ using System;
 /// </summary>
 public static class SkillTypeDesign
 {
-	public const int ATTACK = (int)EnumSkillType.ATTACK;
-	public const int DEFENSE = (int)EnumSkillType.DEFENSE;
-	public const int STATUS = (int)EnumSkillType.STATUS;
 
 	public static string GetName(int type)
 	{
@@ -17,6 +14,7 @@ public static class SkillTypeDesign
 			(int)EnumSkillType.ATTACK => "攻击",
 			(int)EnumSkillType.DEFENSE => "防御",
 			(int)EnumSkillType.STATUS => "状态",
+			(int)EnumSkillType.SYSTEM => "系统",
 			_ => $"未知({type})"
 		};
 	}
@@ -28,6 +26,7 @@ public static class SkillTypeDesign
 			(int)EnumSkillType.ATTACK => "attack",
 			(int)EnumSkillType.DEFENSE => "defense",
 			(int)EnumSkillType.STATUS => "status",
+			(int)EnumSkillType.SYSTEM => "system",
 			_ => "attack"
 		};
 	}

@@ -19,4 +19,11 @@ public enum EnumPet
 	/// 地系（Earth），以坚硬甲壳防御著称的虫型精灵
 	/// </summary>
 	One = 1,
+
+	/// <summary>
+	/// 五号精灵 — 萤花仙
+	/// 对应 datapet/Grass/pet_5.gd
+	/// 草+妖精系（Grass + Fairy），低速团队回能辅助
+	/// </summary>
+	Five = 5,
 }

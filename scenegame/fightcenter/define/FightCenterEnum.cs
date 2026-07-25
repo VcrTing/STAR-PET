@@ -9,11 +9,11 @@ public enum FightState
 	BattleStart,    // 🎬 战斗开始
 	TurnStart,      // 🌅 回合开始
 	PlayerTurn,     // 🧑 玩家回合
-	EnemyTurn,      // 👹 敌方回合
+	YouTurn,        // 👹 敌方回合
 	ExecuteTurn,    // ⚔️ 回合执行
 	CheckFaint,     // 💀 濒死检查
 	PlayerSwitch,   // 🔄 玩家换宠
-	EnemySwitch,    // 🔄 敌方换宠
+	YouSwitch,      // 🔄 敌方换宠
 	BattleEnd       // 🏁 战斗结束
 }
 

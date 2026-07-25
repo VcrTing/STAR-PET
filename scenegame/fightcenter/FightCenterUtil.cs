@@ -121,11 +121,11 @@ public static class FightCenterUtil
 		FightState.BattleStart => "🎬 战斗开始",
 		FightState.TurnStart => "🌅 回合开始",
 		FightState.PlayerTurn => "🧑 玩家回合",
-		FightState.EnemyTurn => "👹 敌方回合",
+		FightState.YouTurn => "👹 敌方回合",
 		FightState.ExecuteTurn => "⚔️ 回合执行",
 		FightState.CheckFaint => "💀 濒死检查",
 		FightState.PlayerSwitch => "🔄 玩家换宠",
-		FightState.EnemySwitch => "🔄 敌方换宠",
+		FightState.YouSwitch => "🔄 敌方换宠",
 		_ => "❓ " + s.ToString()
 	};
 }
