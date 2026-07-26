@@ -29,12 +29,38 @@ public partial class UiHBoxSkillsManager : HBoxContainer
 	{
 	}
 
-	/// <summary>
-	/// 切换显示的技能列表
-	/// 先清除旧的技能项，再根据传入的 InsFightSkill 数组生成新的技能按钮并刷新UI数据
-	/// </summary>
-	/// <param name="fightSkills">战斗技能数组</param>
-	public void SwitchSkills(List<InsFightSkill> fightSkills)
+    /// <summary>
+    /// 更新技能列表 UI
+    /// 不销毁子节点，直接遍历现有子节点中的 UiMSkilItemButton 调用 Refresh 刷新数据
+    /// 用于战斗过程中 PP 扣除等需要实时更新技能按钮显示的场景
+    /// </summary>
+    /// <param name="fightSkills">战斗技能数组（长度必须与现有子节点数量一致）</param>
+    public void UpdateSkills(List<InsFightSkill> fightSkills)
+    {
+        if (fightSkills == null || fightSkills.Count == 0)
+            return;
+
+        var children = GetChildren();
+        int count = Mathf.Min(children.Count, fightSkills.Count);
+        for (int i = 0; i < count; i++)
+        {
+            if (children[i] is MarginContainer mc)
+            {
+                var btn = mc.FindChild("UiMSkilItemButton", true, false) as UiMSkilItemButton;
+                if (btn != null)
+                {
+                    btn.Refresh(fightSkills[i]);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 切换显示的技能列表
+    /// 先清除旧的技能项，再根据传入的 InsFightSkill 数组生成新的技能按钮并刷新UI数据
+    /// </summary>
+    /// <param name="fightSkills">战斗技能数组</param>
+    public void SwitchSkills(List<InsFightSkill> fightSkills)
 	{
 		// 1. 清除旧的技能项
 		foreach (Node child in GetChildren())

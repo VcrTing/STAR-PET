@@ -9,6 +9,16 @@ public partial class FightGameInit : Node2D
 	private static FightGameInit _instance;
 	public static FightGameInit Instance => _instance;
 
+	/// <summary>
+	/// 我方精灵最大 PP 值
+	/// </summary>
+	public const int MaxPpMy = 10;
+
+	/// <summary>
+	/// 敌方精灵最大 PP 值
+	/// </summary>
+	public const int MaxPpYou = 10;
+
 	private int _initStep = -1;
 	private bool _initComplete = false;
 
@@ -85,6 +95,10 @@ public partial class FightGameInit : Node2D
 	{
 		GD.Print("  ── [1/6] 加载我方数据...");
 		PlayerLandMyStandPlayer.Instance?.Init();
+		// 初始化前设置 PP 值
+		var myStandPets = PlayerLandMyStandPlayer.Instance?.StandPets;
+		if (myStandPets != null && myStandPets.Count > 0)
+			DevFightPackPetTool.SetPackPetsPp(myStandPets.ToArray(), MaxPpMy);
 		PlayerLandMyStandPlayer.Instance?.InitFight(IsBalanceMode, MyFightLevel);
 		var fightPets = PlayerLandMyStandPlayer.Instance?.FightPets;
 		if (fightPets != null && fightPets.Count > 0)
@@ -96,6 +110,10 @@ public partial class FightGameInit : Node2D
 	{
 		GD.Print("  ── [2/6] 加载敌方数据...");
 		PlayerLandYouStandPlayer.Instance?.Init();
+		// 初始化前设置 PP 值
+		var youStandPets = PlayerLandYouStandPlayer.Instance?.StandPets;
+		if (youStandPets != null && youStandPets.Count > 0)
+			DevFightPackPetTool.SetPackPetsPp(youStandPets.ToArray(), MaxPpYou);
 		PlayerLandYouStandPlayer.Instance?.InitFight(IsBalanceMode, YouFightLevel);
 		var fightPets = PlayerLandYouStandPlayer.Instance?.FightPets;
 		if (fightPets != null && fightPets.Count > 0)

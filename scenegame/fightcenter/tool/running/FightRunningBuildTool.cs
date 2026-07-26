@@ -36,34 +36,46 @@ public static class FightRunningBuildTool
             }
         }
 
-        if (startList.Count == 0)
-            return;
-
-        // 获取双方速度
+        // 获取双方速度（即使没有 Start 也加入 GenEndActs）
         int mySpeed = FightLandMyStandPet.Instance?.GetSpeed() ?? 20;
         int youSpeed = FightLandYouStandPet.Instance?.GetSpeed() ?? 20;
 
-        // 按 side 分组：先处理 speed 快的一方
-        List<FightRunning> myStarts = new List<FightRunning>();
-        List<FightRunning> youStarts = new List<FightRunning>();
-        for (int i = 0; i < startList.Count; i++)
+        if (startList.Count > 0)
         {
-            if (startList[i].Side == EnumWho.My)
-                myStarts.Add(startList[i]);
+            // 按 side 分组：先处理 speed 快的一方
+            List<FightRunning> myStarts = new List<FightRunning>();
+            List<FightRunning> youStarts = new List<FightRunning>();
+            for (int i = 0; i < startList.Count; i++)
+            {
+                if (startList[i].Side == EnumWho.My)
+                    myStarts.Add(startList[i]);
+                else
+                    youStarts.Add(startList[i]);
+            }
+
+            // 速度快的先执行 End
+            if (mySpeed >= youSpeed)
+            {
+                AddEndRunningList(myStarts);
+                AddEndRunningList(youStarts);
+            }
             else
-                youStarts.Add(startList[i]);
+            {
+                AddEndRunningList(youStarts);
+                AddEndRunningList(myStarts);
+            }
         }
 
-        // 速度快的先执行 End
+        // 最后再加入 My+You 的回合结束阶段
         if (mySpeed >= youSpeed)
         {
-            AddEndRunningList(myStarts);
-            AddEndRunningList(youStarts);
+            FightRunningHouse.AddRunningEasy(EnumFightRunningType.GenEndActsMy, EnumWho.My);
+            FightRunningHouse.AddRunningEasy(EnumFightRunningType.GenEndActsYou, EnumWho.You);
         }
         else
         {
-            AddEndRunningList(youStarts);
-            AddEndRunningList(myStarts);
+            FightRunningHouse.AddRunningEasy(EnumFightRunningType.GenEndActsYou, EnumWho.You);
+            FightRunningHouse.AddRunningEasy(EnumFightRunningType.GenEndActsMy, EnumWho.My);
         }
     }
 

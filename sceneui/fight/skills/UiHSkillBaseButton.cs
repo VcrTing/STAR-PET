@@ -12,8 +12,13 @@ public partial class UiHSkillBaseButton : TextureButton
 	/// </summary>
 	public InsFightSkill FightSkill { get; private set; }
 
+	private Label _labelPp;
+
 	public override void _Ready()
 	{
+		// 缓存 LabelPp 引用
+		_labelPp = FindChild("LabelPp", true, false) as Label;
+
 		// 默认加载聚能技能（0_3_1）
 		var skillIds = new[] { "0_3_1" };
 		var skills = DevSkillLoadTool.LoadSkills(skillIds);
@@ -22,19 +27,44 @@ public partial class UiHSkillBaseButton : TextureButton
 			FightSkill = InsFightSkill.FromInsSkill(skills[0]);
 		}
 
-		// 点击打印技能信息
-		Pressed += () =>
+		// 绑定点击事件
+		Pressed += OnClick;
+	}
+
+	/// <summary>
+	/// 点击处理：玩家可用时选择聚能技能
+	/// </summary>
+	private void OnClick()
+	{
+		if (FightSkill?.Skill == null)
 		{
-			if (FightSkill?.Skill != null)
-			{
-				var s = FightSkill.Skill;
-				GD.Print($"[UiHSkillBaseButton] 点击技能: {s.SkillId} {s.SkillName}, 威力={FightSkill.ActualAttackValue}(显示={FightSkill.DisplayAttackValue}), 能耗={FightSkill.ActualPpCost}, 冻结={FightSkill.IsFrozen}, 冷却={FightSkill.CooldownTurns}");
-			}
-			else
-			{
-				GD.PrintErr("[UiHSkillBaseButton] 点击技能但 FightSkill 为空");
-			}
-		};
+			GD.PrintErr("[UiHSkillBaseButton] 点击技能但 FightSkill 为空");
+			return;
+		}
+
+		if (FightCenterManger.Instance.CanPlayerAct())
+		{
+			FightCenterManger.Instance.PlayerSelectSkill(FightSkill);
+		}
+	}
+
+	/// <summary>
+	/// 更新 PP 显示
+	/// 显示格式：Pp / MaxPp（最大 PP 值来自 FightGameInit.MaxPpMy）
+	/// </summary>
+	/// <param name="petData">当前精灵数据</param>
+	public void Update(InsFightPetData petData)
+	{
+		if (_labelPp == null)
+		{
+			_labelPp = FindChild("LabelPp", true, false) as Label;
+			if (_labelPp == null) return;
+		}
+
+		if (petData != null)
+		{
+			_labelPp.Text = $"{petData.Pp} / {FightGameInit.MaxPpMy}";
+		}
 	}
 
 	public override void _Process(double delta)

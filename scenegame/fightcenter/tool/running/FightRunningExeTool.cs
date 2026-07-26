@@ -38,6 +38,8 @@ public static class FightRunningExeTool
     /// </summary>
     public static void ExecuteDoAttack(FightRunning run, int index)
     {
+        // 执行前扣除 PP
+        FightPpTool.DeductPp(run, index);
         // 留空
     }
 
@@ -46,6 +48,8 @@ public static class FightRunningExeTool
     /// </summary>
     public static void ExecuteDoDefense(FightRunning run, int index)
     {
+        // 执行前扣除 PP
+        FightPpTool.DeductPp(run, index);
         // 留空
     }
 
@@ -55,6 +59,9 @@ public static class FightRunningExeTool
     /// </summary>
     public static void ExecuteDoStatus(FightRunning run, int index)
     {
+        // 执行前扣除 PP
+        FightPpTool.DeductPp(run, index);
+
         string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
 
         InsFightSkill sideSkill = run.SideFightSkill;

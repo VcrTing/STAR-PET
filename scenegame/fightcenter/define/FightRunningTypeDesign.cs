@@ -122,6 +122,17 @@ public static class FightRunningTypeDesign
     }
 
     /// <summary>
+    /// 判断某个 EnumFightRunningType 是否需要更新 UI
+    /// StartXXX（开始阶段）和 GenEndActsXXX（生成回合结束数组）需要更新 UI
+    /// </summary>
+    public static bool IsNeedUpdateUi(EnumFightRunningType type)
+    {
+        return IsStartType(type)
+            || type == EnumFightRunningType.GenEndActsMy
+            || type == EnumFightRunningType.GenEndActsYou;
+    }
+
+    /// <summary>
     /// 根据 StartXXX 类型返回对应的 EndXXX 类型
     /// 例如：StartStatusMy → EndStatusMy，StartAttackYou → EndAttackYou
     /// </summary>

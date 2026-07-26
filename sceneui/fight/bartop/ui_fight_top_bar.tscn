@@ -1,0 +1,173 @@
+[gd_scene format=3 uid="uid://b7yomklq6xlw0"]
+
+[ext_resource type="Script" uid="uid://kfgq86h1f5d7" path="res://sceneui/fight/bartop/UiHTopBarPetInfoMy.cs" id="1_aob4d"]
+[ext_resource type="Texture2D" uid="uid://d8dltmavolkt" path="res://icon.svg" id="2_v70nb"]
+[ext_resource type="Script" uid="uid://dfae6hpek38xj" path="res://scenegame/origin/LabelGameStatus.cs" id="3_cofgy"]
+[ext_resource type="Script" uid="uid://ceff0u8iauqyy" path="res://sceneui/fight/bartop/UiHTopBarPetInfoYou.cs" id="4_v70nb"]
+
+[node name="UiFightTopBar" type="MarginContainer" unique_id=1095486476]
+custom_minimum_size = Vector2(0, 114)
+custom_maximum_size = Vector2(-1, 114)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=941521050]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxFighterMy" type="VBoxContainer" parent="HBoxContainer" unique_id=2026913239]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMy" unique_id=365469918]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="UiHTopBarPetInfoMy" type="VBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer" unique_id=1776086315]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_aob4d")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy" unique_id=1574256694]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainerFace" type="MarginContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer" unique_id=1625128380]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerFace" unique_id=831956310]
+layout_mode = 2
+
+[node name="TextureRectPetAvatar" type="TextureRect" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerFace/HBoxContainer" unique_id=1453757899]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_v70nb")
+expand_mode = 2
+
+[node name="MarginContainerInfo" type="MarginContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer" unique_id=2108236444]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo" unique_id=1475434735]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer" unique_id=1209392553]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="HBoxInfo" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer" unique_id=159256057]
+layout_mode = 2
+
+[node name="LabelPetName" type="Label" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer/HBoxInfo" unique_id=53372477]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 22
+text = "400"
+vertical_alignment = 1
+
+[node name="HBoxHealth" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer" unique_id=1305609227]
+layout_mode = 2
+
+[node name="LabelPetHealth" type="Label" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer/HBoxHealth" unique_id=2004553672]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 22
+text = "400"
+vertical_alignment = 1
+
+[node name="VBoxFighterTip" type="VBoxContainer" parent="HBoxContainer" unique_id=120622508]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxFighterTip" unique_id=1889868750]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="LabelGameStatus" type="Label" parent="HBoxContainer/VBoxFighterTip/HBoxContainer" unique_id=1420722805]
+layout_mode = 2
+script = ExtResource("3_cofgy")
+
+[node name="VBoxFighterMyYou" type="VBoxContainer" parent="HBoxContainer" unique_id=96851202]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMyYou" unique_id=320877333]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="UiHTopBarPetInfoYou" type="VBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer" unique_id=1776617023]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("4_v70nb")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou" unique_id=1141569785]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainerInfo" type="MarginContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer" unique_id=1166699206]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo" unique_id=1898193462]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer" unique_id=977642416]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer" unique_id=1915620719]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="HBoxInfo" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer" unique_id=976945390]
+layout_mode = 2
+alignment = 2
+
+[node name="LabelPetName" type="Label" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer/HBoxInfo" unique_id=1099662284]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 22
+text = "400"
+vertical_alignment = 1
+
+[node name="HBoxHealth" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer" unique_id=714403665]
+layout_mode = 2
+alignment = 2
+
+[node name="LabelPetHealth" type="Label" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer/HBoxHealth" unique_id=668306343]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 22
+text = "400"
+vertical_alignment = 1
+
+[node name="MarginContainerFace" type="MarginContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer" unique_id=1771274708]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerFace" unique_id=715977591]
+layout_mode = 2
+
+[node name="TextureRectPetAvatar" type="TextureRect" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerFace/HBoxContainer" unique_id=8779199]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_v70nb")
+expand_mode = 2

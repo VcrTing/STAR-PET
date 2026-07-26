@@ -286,6 +286,10 @@ public partial class FightCenterManger : Node2D
 
 	private void HandleTurnStart()
 	{
+		// 回合开始时先更新 UI 显示
+		FightUiUpdateTool.UpdateMyUi();
+		FightUiUpdateTool.UpdateYouUi();
+
 		var pet = FightLandMyStandPet.Instance?.FightPetData;
 		string info = pet != null ? $"{pet.PetName} (HP={pet.Hp}/{pet.MaxHp})" : "无精灵";
 

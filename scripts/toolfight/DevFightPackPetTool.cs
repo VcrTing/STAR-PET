@@ -32,6 +32,7 @@ public static class DevFightPackPetTool
 			PetUuid = packData.PetUuid, PetId = packData.PetId, PetName = packData.PetName,
 			PetTypes = new List<EnumPetType>(packData.PetTypes), Nickname = packData.Nickname,
 			Level = level, Exp = packData.Exp, Hp = packData.Hp, MaxHp = packData.MaxHp,
+			Pp = packData.Pp,
 			Iv = new Dictionary<EnumPetBaseStats, int>(iv),
 			Talent = new Dictionary<EnumPetBaseStats, int>(packData.Talent),
 			Skills = new List<string>(packData.Skills),
@@ -62,5 +63,21 @@ public static class DevFightPackPetTool
 		fightPet.Hp = fightPet.MaxHp;
 		// GD.Print("Fight宠物初始化完成，名字="+fightPet.PetName);
 		return fightPet;
+	}
+
+	/// <summary>
+	/// 给一组背包精灵数据设置 PP 值
+	/// 用于初始化时将最大 PP 值写入每个 packData.Pp
+	/// </summary>
+	/// <param name="pets">背包精灵数据数组</param>
+	/// <param name="pp">要设置的 PP 值</param>
+	public static void SetPackPetsPp(InsPackPetData[] pets, int pp)
+	{
+		if (pets == null) return;
+		foreach (var pet in pets)
+		{
+			if (pet != null)
+				pet.Pp = pp;
+		}
 	}
 }

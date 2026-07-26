@@ -40,6 +40,13 @@ public static class FightRunningExe
             {
                 ExecuteSingle(run, i);
             }
+
+            // 阶段执行结束后检查是否需要更新 UI（StartXXX 和 GenEndActsXXX）
+            if (FightRunningTypeDesign.IsNeedUpdateUi(run.RunningType))
+            {
+                FightUiUpdateTool.UpdateMyUi();
+                FightUiUpdateTool.UpdateYouUi();
+            }
         }
 
         GD.Print($"[FightRunningExe] FightRunning 执行完毕，==================");
@@ -47,9 +54,12 @@ public static class FightRunningExe
 
     /// <summary>
     /// 执行我方（My）阶段
+    /// 先执行检查，再分发各阶段
     /// </summary>
     private static void ExecuteMy(FightRunning run, int index)
     {
+        if (!FightRunningBetween.CheckHpNice(run)) return;
+
         switch (run.RunningType)
         {
             case EnumFightRunningType.DoDamageMy:
@@ -65,9 +75,10 @@ public static class FightRunningExe
                 FightRunningExeTool.ExecuteDoStatus(run, index);
                 break;
             case EnumFightRunningType.SwitchPetMy:
-                bool canMy = FightRunningBetween.CheckHpNice(run);
-                if (canMy)
-                    FightRunningExeSysTool.ExecuteSwitchPet(run, index);
+                FightRunningExeSysTool.ExecuteSwitchPet(run, index);
+                break;
+            case EnumFightRunningType.GenEndActsMy:
+                FightRunningExeEndTool.ExecuteGenEndMy(run, index);
                 break;
             default:
                 ExecuteSingle(run, index);
@@ -77,9 +88,12 @@ public static class FightRunningExe
 
     /// <summary>
     /// 执行敌方（You）阶段
+    /// 先执行检查，再分发各阶段
     /// </summary>
     private static void ExecuteYou(FightRunning run, int index)
     {
+        if (!FightRunningBetween.CheckHpNice(run)) return;
+
         switch (run.RunningType)
         {
             case EnumFightRunningType.DoDamageYou:
@@ -95,9 +109,10 @@ public static class FightRunningExe
                 FightRunningExeTool.ExecuteDoStatus(run, index);
                 break;
             case EnumFightRunningType.SwitchPetYou:
-                bool canYou = FightRunningBetween.CheckHpNice(run);
-                if (canYou)
-                    FightRunningExeSysTool.ExecuteSwitchPet(run, index);
+                FightRunningExeSysTool.ExecuteSwitchPet(run, index);
+                break;
+            case EnumFightRunningType.GenEndActsYou:
+                FightRunningExeEndTool.ExecuteGenEndYou(run, index);
                 break;
             default:
                 ExecuteSingle(run, index);
