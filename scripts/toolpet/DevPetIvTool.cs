@@ -67,12 +67,64 @@ public static class DevPetIvTool
 	}
 
 	/// <summary>
-	/// 传入 InsPackPetData + 自定义等级，返回计算结果字典（不修改原数据）
-	/// 用于战斗时用不同等级重新计算 FinalStats
+	/// 最大等级上限（evolution_level=-1 时用作进化等级参照）
 	/// </summary>
-	public static Dictionary<EnumPetBaseStats, int> Update(InsPackPetData petData, int level, Dictionary<EnumPetBaseStats, int> growth)
+	public const int MaxLevelCap = 60;
+
+	/// <summary>
+	/// 战斗个体值最小保留比例（原始 Iv 的百分比作为下限）
+	/// 例如 0.5f 表示最低保留 50%
+	/// </summary>
+	public const float MinIvRatio = 0.5f;
+
+	/// <summary>
+	/// 根据等级、PvP 模式、进化等级获取战斗用个体值字典
+	/// 等级未达到进化等级时，Iv 在 [MinIvRatio, 1.0] 区间内按等级比例缩放
+	/// 等级达到/超过进化等级时，返回原始 Iv
+	/// </summary>
+	/// <param name="iv">原始个体值字典</param>
+	/// <param name="evolutionLevel">进化等级（-1=最终形态，使用 MaxLevelCap 作为参照）</param>
+	/// <param name="level">当前等级</param>
+	/// <param name="isPvp">是否 PvP 模式</param>
+	public static Dictionary<EnumPetBaseStats, int> GetFightIv(
+		Dictionary<EnumPetBaseStats, int> iv,
+		int evolutionLevel,
+		int level,
+		bool isPvp)
 	{
-		return Calculate(petData.Iv, petData.Talent, level, petData.Nature, growth);
+		// 进化等级=-1 时使用最大等级上限
+		int evoLevel = evolutionLevel >= 0 ? evolutionLevel : MaxLevelCap;
+
+		// 等级 >= 进化等级 → 返回原始 Iv
+		if (level >= evoLevel)
+			return iv;
+
+		// 等级 < 进化等级 → 在 [MinIvRatio, 1.0] 区间内按等级比例插值
+		float t = (float)level / evoLevel;
+		t = Math.Clamp(t, 0f, 1f);
+
+		var scaledIv = new Dictionary<EnumPetBaseStats, int>();
+		foreach (var kvp in iv)
+		{
+			float original = kvp.Value;
+			float floor = original * MinIvRatio;        // 最低保留值
+			float scaled = floor + (original - floor) * t;
+			scaledIv[kvp.Key] = (int)scaled;
+		}
+		return scaledIv;
+	}
+
+	/// <summary>
+	/// 传入个体值字典 + 宠物数据 + 等级，返回计算结果字典（不修改原数据）
+	/// 内部自动使用 GetGrowth2 计算成长值
+	/// </summary>
+	/// <param name="iv">个体值字典（可来自 petData.Iv 或自定义）</param>
+	/// <param name="petData">宠物数据（用于读取 Talent、Nature、Intimacy）</param>
+	/// <param name="level">等级</param>
+	public static Dictionary<EnumPetBaseStats, int> UpdateStats(Dictionary<EnumPetBaseStats, int> iv, InsPackPetData petData, int level)
+	{
+		var growth = GetGrowth2(level, petData.Intimacy);
+		return Calculate(iv, petData.Talent, level, petData.Nature, growth);
 	}
 
 	// ==================== 天赋生成 ====================
@@ -160,101 +212,4 @@ public static class DevPetIvTool
 		return 1.0f;
 	}
 
-	// ==================== 以下为暂未使用的方法（保留备选） ====================
-
-	/* 暂未使用
-	/// <summary>
-	/// 根据等级获取成长值字典（无亲密加成）
-	/// 每级成长：生命 60级时 +100，其他五属性 60级时各 +50
-	/// 浮点向下取整
-	/// </summary>
-	public static Dictionary<EnumPetBaseStats, int> GetGrowth1(int level)
-	{
-		var growth = new Dictionary<EnumPetBaseStats, int>();
-
-		foreach (EnumPetBaseStats stat in Enum.GetValues(typeof(EnumPetBaseStats)))
-		{
-			if (stat == EnumPetBaseStats.HP)
-			{
-				growth[stat] = (int)(level * 100f / 60f);
-			}
-			else
-			{
-				growth[stat] = (int)(level * 50f / 60f);
-			}
-		}
-
-		return growth;
-	}
-	*/
-
-	/* 暂未使用
-	/// <summary>
-	/// 便捷方法：直接传入 InsPackPetData 计算并更新 FinalStats（使用自身等级）
-	/// </summary>
-	public static void Update(InsPackPetData petData, Dictionary<EnumPetBaseStats, int> growth)
-	{
-		petData.FinalStats = Calculate(petData.Iv, petData.Talent, petData.Level, petData.Nature, growth);
-	}
-	*/
-
-	/* 暂未使用
-	/// <summary>
-	/// 计算方案1 — 简化版
-	/// 公式：最终值 = (基础Iv + 等级×系数 + floor(等级/10)×天赋) × 性格修正
-	/// HP: (基础Iv + 等级修正) × 2 + 天赋修正 再 × 性格修正
-	/// </summary>
-	private static Dictionary<EnumPetBaseStats, int> CalculateFinalStats1(
-		Dictionary<EnumPetBaseStats, int> iv,
-		Dictionary<EnumPetBaseStats, int> talent,
-		int level,
-		EnumPetNature nature)
-	{
-		var finalStats = new Dictionary<EnumPetBaseStats, int>();
-
-		foreach (EnumPetBaseStats stat in Enum.GetValues(typeof(EnumPetBaseStats)))
-		{
-			int baseIv = iv.GetValueOrDefault(stat, 0);
-			int levelBonus = (int)(level * 0.5f);
-			int talentMultiplier = level / 10;
-			int statTalent = talent.GetValueOrDefault(stat, 0);
-			int talentBonus = talentMultiplier * statTalent;
-
-			int subtotal;
-			if (stat == EnumPetBaseStats.HP)
-			{
-				subtotal = (baseIv + levelBonus) * 2 + talentBonus;
-			}
-			else
-			{
-				subtotal = baseIv + levelBonus + talentBonus;
-			}
-
-			float natureMultiplier = GetNatureMultiplier(stat, nature);
-			int finalValue = (int)(subtotal * natureMultiplier);
-			finalValue = Math.Max(0, finalValue);
-
-			finalStats[stat] = finalValue;
-		}
-
-		return finalStats;
-	}
-	*/
-
-	/* 暂未使用
-	/// <summary>
-	/// 计算方案2 — 完整版（洛克王国世界风格）
-	/// 其他属性 = [(个体值 + 天赋值/2) / 2 × (1 + 等级/50) + 10] × 性格修正 + 成长值
-	/// 生命值   = [(等级/25 + 1) × (个体值 + 天赋值/2) / 2 + 等级 + 10] × 性格修正 + 成长值
-	/// </summary>
-	public static Dictionary<EnumPetBaseStats, int> CalculateFinalStats2(
-		Dictionary<EnumPetBaseStats, int> iv,
-		Dictionary<EnumPetBaseStats, int> talent,
-		int level,
-		EnumPetNature nature,
-		Dictionary<EnumPetBaseStats, int> growth)
-	{
-		return CalculateFinalStats3(iv, talent, level, nature, growth);
-	}
-	*/
 }

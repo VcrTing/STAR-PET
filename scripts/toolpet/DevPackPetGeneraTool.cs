@@ -106,11 +106,16 @@ public static class DevPackPetGeneraTool
 		packData.ObtainedMethod = obtainedMethod; packData.ObtainedLocation = obtainedLocation;
 		packData.ObtainedDate = DateTime.Now.ToString("yyyy-MM-dd");
 
+		// 从 petData 读取进化等级
+		int evolutionLevel = petData?.Get("evolution_level").AsInt32() ?? -1;
+		packData.EvolutionLevel = evolutionLevel;
+
 		FillPetTypes(packData, petData, petType);
 		FillLearnedSkills(packData, petData);
 
-		var growth = DevPetIvTool.GetGrowth2(packData.Level, packData.Intimacy);
-		packData.FinalStats = DevPetIvTool.Update(packData, packData.Level, growth);
+		// 背包中存储经过 GetFightIv 缩放后的 Iv
+		var fightIv = DevPetIvTool.GetFightIv(packData.Iv, packData.EvolutionLevel, packData.Level, false);
+		packData.FinalStats = DevPetIvTool.UpdateStats(fightIv, packData, packData.Level);
 		return packData;
 	}
 

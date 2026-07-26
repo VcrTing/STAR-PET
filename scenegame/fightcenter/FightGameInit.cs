@@ -14,8 +14,8 @@ public partial class FightGameInit : Node2D
 
 	public bool IsPvp { get; set; } = false;
 	public bool IsBalanceMode { get; set; } = true;
-	public int MyFightLevel { get; set; } = 60;
-	public int YouFightLevel { get; set; } = 60;
+	public int MyFightLevel { get; set; } = DevPetIvTool.MaxLevelCap;
+	public int YouFightLevel { get; set; } = DevPetIvTool.MaxLevelCap;
 
 	private const int STEP_INIT     = 0;
 	private const int STEP_MY_DATA  = 1;
@@ -77,8 +77,8 @@ public partial class FightGameInit : Node2D
 	private void InitPvpMode()
 	{
 		IsBalanceMode = true;
-		MyFightLevel = 60;
-		YouFightLevel = 60;
+		MyFightLevel = 30; // DevPetIvTool.MaxLevelCap;
+		YouFightLevel = 30; // DevPetIvTool.MaxLevelCap;
 	}
 
 	private void LoadMyData()
@@ -89,7 +89,7 @@ public partial class FightGameInit : Node2D
 		var fightPets = PlayerLandMyStandPlayer.Instance?.FightPets;
 		if (fightPets != null && fightPets.Count > 0)
 			FightLandMyStandPet.Instance?.SwitchPet(fightPets[0]);
-		GD.Print("  ✔ 我方数据加载完成");
+		GD.Print("  ✔ 我方数据加载完成，MyFightLevel = " + MyFightLevel);
 	}
 
 	private void LoadYouData()
@@ -123,6 +123,6 @@ public partial class FightGameInit : Node2D
 
 	private void LoadYou()
 	{
-		GD.Print("  ── [5/6] 加载敌方");
+		GD.Print("  ── [5/6] 加载敌方，YouFightLevel = " + YouFightLevel);
 	}
 }

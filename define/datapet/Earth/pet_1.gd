@@ -40,7 +40,7 @@ var learnable_skills := [
 
 # ---- 进化信息 ----
 var evolution_id := 0              # 进化目标图鉴编号（0=最终形态或无进化）
-var evolution_level := 0           # 进化等级（0=无法进化）
+var evolution_level := 20          # 进化等级（20级进化）
 
 # ---- 捕捉信息 ----
 var capture_rate := 0              # 捕捉率（0=不可捕捉，剧情获得）

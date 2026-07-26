@@ -27,6 +27,7 @@ public class InsFightPetData
 	public int BallType;                                          // 捕获用精灵球类型
 	public List<EnumPetFly> PetFly = new() { EnumPetFly.Walk };   // 移动方式数组（默认走路）
 	public EnumPetBig PetBig = EnumPetBig.Normal;                 // 体型档位（默认普通个体）
+	public int EvolutionLevel = -1;                                // 进化等级（-1=最终形态/不可进化，>0=该等级可进化）
 	public EnumPetAbility PetAbility = EnumPetAbility.None;       // 特性（默认无特性）
 	public bool IsShiny;                                          // 是否闪光
 	public int HatchCounter;                                      // 孵化计数（0=已孵化）

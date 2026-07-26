@@ -16,27 +16,29 @@ public static class DevFightPackPetTool
 		foreach (var packPet in pets)
 		{
 			int level = isPvp ? fightLevel : packPet.Level;
-			fightPets.Add(InitFightPets(packPet, level));
+			fightPets.Add(InitFightPets(packPet, level, isPvp));
 		}
 		return fightPets;
 	}
 
-	public static InsFightPetData InitFightPets(InsPackPetData packData, int level)
+	public static InsFightPetData InitFightPets(InsPackPetData packData, int level, bool isPvp)
 	{
 		if (packData == null) return null;
+
+		var iv = DevPetIvTool.GetFightIv(packData.Iv, packData.EvolutionLevel, level, isPvp);
 
 		var fightPet = new InsFightPetData
 		{
 			PetUuid = packData.PetUuid, PetId = packData.PetId, PetName = packData.PetName,
 			PetTypes = new List<EnumPetType>(packData.PetTypes), Nickname = packData.Nickname,
 			Level = level, Exp = packData.Exp, Hp = packData.Hp, MaxHp = packData.MaxHp,
-			Iv = new Dictionary<EnumPetBaseStats, int>(packData.Iv),
+			Iv = new Dictionary<EnumPetBaseStats, int>(iv),
 			Talent = new Dictionary<EnumPetBaseStats, int>(packData.Talent),
 			Skills = new List<string>(packData.Skills),
 			CarriedSkills = new List<string>(packData.CarriedSkills),
 			Nature = packData.Nature, Gender = packData.Gender, BallType = packData.BallType,
 			PetFly = new List<EnumPetFly>(packData.PetFly),
-			PetBig = packData.PetBig, PetAbility = packData.PetAbility,
+			PetBig = packData.PetBig, EvolutionLevel = packData.EvolutionLevel, PetAbility = packData.PetAbility,
 			IsShiny = packData.IsShiny, HatchCounter = packData.HatchCounter,
 			Intimacy = packData.Intimacy, IsLocked = packData.IsLocked, IsSpecial = packData.IsSpecial,
 			ObtainedDate = packData.ObtainedDate, ObtainedMethod = packData.ObtainedMethod,
@@ -54,8 +56,7 @@ public static class DevFightPackPetTool
 				fightPet.FightSkills.Add(InsFightSkill.FromInsSkill(skills[i], i));
 		}
 
-		var growth = DevPetIvTool.GetGrowth2(level, packData.Intimacy);
-		var finalStats = DevPetIvTool.Update(packData, level, growth);
+		var finalStats = DevPetIvTool.UpdateStats(iv, packData, level);
 		fightPet.FinalStats = finalStats;
 		fightPet.MaxHp = fightPet.FinalStats.GetValueOrDefault(EnumPetBaseStats.HP, 100);
 		fightPet.Hp = fightPet.MaxHp;
