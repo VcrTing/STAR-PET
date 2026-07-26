@@ -36,6 +36,7 @@ public partial class ScrollPetsContent : ScrollContainer
 	public void InitPetItems(InsFightPetData[] pets)
 	{
 		if (_itemScene == null) return;
+		if (pets == null) return;
 
 		// 清空原有项
 		foreach (Node child in _vBoxPetsContent.GetChildren())
@@ -45,8 +46,21 @@ public partial class ScrollPetsContent : ScrollContainer
 
 		foreach (var pet in pets)
 		{
-			var item = _itemScene.Instantiate<BtnPackPetItem>();
-			item.SetPetData(pet);
+			Control item = _itemScene.Instantiate<Control>();
+			if (item == null) continue;
+
+			BtnPackPetItem petItem = item.FindChild("BtnPackPetItem", true, false) as BtnPackPetItem;
+			if (petItem == null)
+			{
+				GD.PrintErr($"  ⚠ ScrollPetsContent InitPetItems 实例场景中未找到 BtnPackPetItem 子节点，使用 item 自身");
+				petItem = item as BtnPackPetItem;
+				if (petItem == null)
+				{
+					item.QueueFree();
+					continue;
+				}
+			}
+			petItem.SetPetData(pet);
 			_vBoxPetsContent.AddChild(item);
 		}
 	}

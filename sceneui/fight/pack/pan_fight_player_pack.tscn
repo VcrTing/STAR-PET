@@ -2,9 +2,11 @@
 
 [ext_resource type="Script" uid="uid://1k4n4buqlvst" path="res://sceneui/fight/pack/PanFightPlayerPack.cs" id="1_hck4m"]
 [ext_resource type="Script" uid="uid://d3i53cpd5xkf6" path="res://sceneui/fight/pack/VBoxFightPlayerPetsPack.cs" id="2_hck4m"]
-[ext_resource type="Script" path="res://sceneui/fight/pack/ScrollPetsContent.cs" id="3_hck4m"]
+[ext_resource type="Script" uid="uid://bkbm0md4gybq7" path="res://sceneui/fight/pack/ScrollPetsContent.cs" id="3_hck4m"]
+[ext_resource type="PackedScene" uid="uid://bmfpf3v72qa6o" path="res://sceneui/fight/pets/btn_pack_pet_item.tscn" id="4_33cl8"]
 [ext_resource type="Script" uid="uid://btjby1aginqih" path="res://sceneui/fight/pack/VBoxPetMsgContent.cs" id="4_hck4m"]
 [ext_resource type="Theme" uid="uid://cnosdvdh3h7sj" path="res://sceneui/__theme/theme_button_def.tres" id="5_547r2"]
+[ext_resource type="Texture2D" uid="uid://d8dltmavolkt" path="res://icon.svg" id="5_md54p"]
 [ext_resource type="Script" uid="uid://dchpd48aliwr4" path="res://sceneui/__common/BtnClosePan.cs" id="6_ajoen"]
 
 [node name="PanFightPlayerPack" type="PanelContainer" unique_id=1813670500]
@@ -46,6 +48,9 @@ script = ExtResource("3_hck4m")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="MarginContainer" parent="MarginContainer/HBoxContainer/VBoxFightPlayerPetsPack/ScrollPetsContent/VBoxPetsContent" unique_id=382306985 instance=ExtResource("4_33cl8")]
+layout_mode = 2
 
 [node name="HBoxPetsSub" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPlayerPetsPack" unique_id=245426819]
 custom_minimum_size = Vector2(0, 90)
@@ -97,17 +102,67 @@ layout_mode = 2
 alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer" unique_id=1861126462]
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
+
+[node name="MarginContainerAvatar" type="MarginContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1090047803]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+
+[node name="TextureRectPetAvatar" type="TextureRect" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxContainer/MarginContainerAvatar" unique_id=1249322796]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("5_md54p")
+expand_mode = 2
+
+[node name="MarginContainerBaisc" type="MarginContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxContainer" unique_id=365983864]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxContainer/MarginContainerBaisc" unique_id=1682726721]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxContainer/MarginContainerBaisc/VBoxContainer" unique_id=1932498701]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="LabelPetName" type="Label" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxContainer/MarginContainerBaisc/VBoxContainer/HBoxContainer" unique_id=1069994879]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+vertical_alignment = 1
+clip_text = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxContainer/MarginContainerBaisc/VBoxContainer" unique_id=447416920]
+layout_mode = 2
+
+[node name="LabelPetHealth" type="Label" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxContainer/MarginContainerBaisc/VBoxContainer/HBoxContainer2" unique_id=1100802967]
+layout_mode = 2
+size_flags_horizontal = 3
+vertical_alignment = 1
 
 [node name="HBoxPetMsg" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer" unique_id=1511124236]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="LabelPetMsgName" type="Label" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxPetMsg" unique_id=1069994879]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxPetMsg" unique_id=1827623821]
 layout_mode = 2
 size_flags_horizontal = 3
-horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxPetMsg/MarginContainer" unique_id=376000874]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxPetMsg/MarginContainer/VBoxContainer" unique_id=951505523]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxPetMsg/MarginContainer/VBoxContainer/MarginContainer" unique_id=1231658585]
+layout_mode = 2
+
+[node name="LabelPetPP" type="Label" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer/HBoxPetMsg/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=855474335]
+layout_mode = 2
+size_flags_horizontal = 3
 vertical_alignment = 1
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent/MarginContainer/VBoxContainer" unique_id=676200816]

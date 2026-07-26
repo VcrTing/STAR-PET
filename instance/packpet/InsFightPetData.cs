@@ -17,6 +17,7 @@ public class InsFightPetData
 	public int Exp;                                               // 当前经验
 	public int Hp;                                                // 当前生命值
 	public int MaxHp;                                             // 最大生命值
+	public int Pp = 10;                                           // 当前能量/PP（默认10点）
 	public Dictionary<EnumPetBaseStats, int> Iv = new();          // 个体值字典（stat -> value）
 	public Dictionary<EnumPetBaseStats, int> Talent = new();      // 天赋值字典（stat -> talent，范围0-10）
 	public List<string> Skills = new();                           // 已学习的技能ID列表

@@ -6,26 +6,20 @@ using System.Collections.Generic;
 /// 精灵天赋配置
 /// 天赋值范围 0-10
 /// 天赋类型：零天赋(固定0)、普通天赋(0-3)、一般般天赋(4-6)、好天赋(7-9)、极品天赋(10)
+/// 所有天赋类型常量请直接使用 EnumPetTalent 枚举
 /// </summary>
 public static class PetTalentDesign
 {
-	// const int 常量已提取到 EnumPetTalent 枚举，见 scripts/design/pet/enum/EnumPetTalent.cs
-	public const int Zero = (int)EnumPetTalent.Zero;             // 零天赋
-	public const int Normal = (int)EnumPetTalent.Normal;         // 普通天赋
-	public const int NormalPlus = (int)EnumPetTalent.NormalPlus; // 一般般天赋
-	public const int Good = (int)EnumPetTalent.Good;             // 好天赋
-	public const int Excellent = (int)EnumPetTalent.Excellent;   // 极品天赋
-
 	/// <summary>
 	/// 根据天赋值获取天赋类型
 	/// </summary>
 	public static int GetTalentType(int value)
 	{
-		if (value >= 10) return Excellent;
-		if (value >= 7) return Good;
-		if (value >= 4) return NormalPlus;
-		if (value > 0) return Normal;
-		return Zero;
+		if (value >= 10) return (int)EnumPetTalent.Excellent;
+		if (value >= 7) return (int)EnumPetTalent.Good;
+		if (value >= 4) return (int)EnumPetTalent.NormalPlus;
+		if (value > 0) return (int)EnumPetTalent.Normal;
+		return (int)EnumPetTalent.Zero;
 	}
 
 	/// <summary>
@@ -180,9 +174,9 @@ public static class PetTalentDesign
 	private static int RollRandomTalentType()
 	{
 		int roll = RandomTool.Range(0, 99);
-		if (roll < 25) return Normal;          // 0-24:  普通 (25%)
-		if (roll < 55) return NormalPlus;      // 25-54: 一般般 (30%)
-		if (roll < 80) return Good;            // 55-79: 好 (25%)
-		return Excellent;                       // 80-99: 极品 (20%)
+		if (roll < 25) return (int)EnumPetTalent.Normal;          // 0-24:  普通 (25%)
+		if (roll < 55) return (int)EnumPetTalent.NormalPlus;      // 25-54: 一般般 (30%)
+		if (roll < 80) return (int)EnumPetTalent.Good;            // 55-79: 好 (25%)
+		return (int)EnumPetTalent.Excellent;                       // 80-99: 极品 (20%)
 	}
 }

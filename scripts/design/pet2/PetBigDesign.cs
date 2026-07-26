@@ -8,9 +8,6 @@ using System.Collections.Generic;
 /// </summary>
 public static class PetBigDesign
 {
-	public const int Small = (int)EnumPetBig.Small;   // 小个体
-	public const int Normal = (int)EnumPetBig.Normal; // 普通个体
-	public const int Large = (int)EnumPetBig.Large;   // 大个体
 
 	/// <summary>
 	/// 体型档位中文名称映射

@@ -41,11 +41,11 @@ public partial class PlayerLandMyStandPlayer : Node2D
 
 	/// <summary>
 	/// 判断当前是否可以切换宠物
-	/// 依据：FightCenterManger 当前状态是否为 PlayerSwitch
+	/// PlayerTurn 状态下允许切换（含正常回合和濒死强制换宠）
 	/// </summary>
 	public bool CanSwitchPet()
 	{
-		return FightCenterManger.Instance?.CanPlayerActBySwitch() ?? false;
+		return FightCenterManger.Instance?.CanPlayerAct() ?? false;
 	}
 
 	public override void _ExitTree()

@@ -6,36 +6,10 @@ using System.Collections.Generic;
 /// 精灵性格设计，完全照搬宝可梦 25 种性格
 /// 每种种性格影响两项种族值：一项 +10%，一项 -10%（或五种种无影响）
 /// 种族值索引使用 PetBaseStatsDesign
+/// 所有性格常量请直接使用 EnumPetNature 枚举
 /// </summary>
 public static class PetNatureDesign
 {
-	// const int 常量已提取到 EnumPetNature 枚举，见 scripts/design/pet/enum/EnumPetNature.cs
-	public const int Hardy = (int)EnumPetNature.Hardy;
-	public const int Lonely = (int)EnumPetNature.Lonely;
-	public const int Brave = (int)EnumPetNature.Brave;
-	public const int Adamant = (int)EnumPetNature.Adamant;
-	public const int Naughty = (int)EnumPetNature.Naughty;
-	public const int Bold = (int)EnumPetNature.Bold;
-	public const int Docile = (int)EnumPetNature.Docile;
-	public const int Relaxed = (int)EnumPetNature.Relaxed;
-	public const int Impish = (int)EnumPetNature.Impish;
-	public const int Lax = (int)EnumPetNature.Lax;
-	public const int Timid = (int)EnumPetNature.Timid;
-	public const int Hasty = (int)EnumPetNature.Hasty;
-	public const int Serious = (int)EnumPetNature.Serious;
-	public const int Jolly = (int)EnumPetNature.Jolly;
-	public const int Naive = (int)EnumPetNature.Naive;
-	public const int Modest = (int)EnumPetNature.Modest;
-	public const int Mild = (int)EnumPetNature.Mild;
-	public const int Quiet = (int)EnumPetNature.Quiet;
-	public const int Rash = (int)EnumPetNature.Rash;
-	public const int Calm = (int)EnumPetNature.Calm;
-	public const int Gentle = (int)EnumPetNature.Gentle;
-	public const int Careful = (int)EnumPetNature.Careful;
-	public const int Quirky = (int)EnumPetNature.Quirky;
-	public const int Sassy = (int)EnumPetNature.Sassy;
-	public const int Bashful = (int)EnumPetNature.Bashful;
-
 	// 性格数据：提升项、降低项（无影响 = -1）
 	private static readonly Dictionary<int, (int up, int down)> _natureData = new()
 	{

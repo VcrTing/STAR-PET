@@ -7,13 +7,6 @@ using System.Collections.Generic;
 /// </summary>
 public static class PetBaseStatsDesign
 {
-	// const int 常量已提取到 EnumPetBaseStats 枚举，见 scripts/design/pet/enum/EnumPetBaseStats.cs
-	public const int HP = (int)EnumPetBaseStats.HP;     // 生命
-	public const int ATK = (int)EnumPetBaseStats.ATK;   // 物攻
-	public const int MATK = (int)EnumPetBaseStats.MATK; // 魔攻
-	public const int DEF = (int)EnumPetBaseStats.DEF;   // 物防
-	public const int MDEF = (int)EnumPetBaseStats.MDEF; // 魔防
-	public const int SPD = (int)EnumPetBaseStats.SPD;   // 速度
 
 	/// <summary>
 	/// 从 pet_xxxx.gd 的 base_stats 字典数据转换为 Iv 字典

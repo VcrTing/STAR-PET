@@ -6,9 +6,6 @@ using System;
 /// </summary>
 public static class PetGenderDesign
 {
-	// const int 常量已提取到 EnumPetGender 枚举，见 scripts/design/pet/enum/EnumPetGender.cs
-	public const int Male = (int)EnumPetGender.Male;
-	public const int Female = (int)EnumPetGender.Female;
 
 	/// <summary>
 	/// 获取性别中文名称

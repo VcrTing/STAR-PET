@@ -12,6 +12,9 @@ var pet_types := [5]               # 系别数组（第一个元素为主系别�
 var pet_model := ""                # 模型资源路径（后续补充）
 var pet_fly_type := [4]            # 移动方式数组（4=走路，对应 EnumPetFly.Walk）
 var hostile_level := 0             # 对人类攻击等级（0=不攻击，对应 EnumPetHostileLevel.None）
+var pet_role_group := 9            # 战斗定位组（9=正常，对应 EnumPetRoleGroup.Normal）
+var pet_category_group := 3        # 外观类别组（3=动物，对应 EnumPetCategoryGroup.Animal）
+var pet_map_group := 6             # 地图区域组（6=陆地，对应 EnumPetMapGroup.Land）
 
 # ---- 种族值（六维） ----
 # 对应 PetBaseStatsDesign: 1=生命 2=物攻 3=魔攻 4=物防 5=魔防 6=速度

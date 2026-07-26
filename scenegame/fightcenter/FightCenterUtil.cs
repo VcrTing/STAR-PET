@@ -124,8 +124,6 @@ public static class FightCenterUtil
 		FightState.YouTurn => "👹 敌方回合",
 		FightState.ExecuteTurn => "⚔️ 回合执行",
 		FightState.CheckFaint => "💀 濒死检查",
-		FightState.PlayerSwitch => "🔄 玩家换宠",
-		FightState.YouSwitch => "🔄 敌方换宠",
 		_ => "❓ " + s.ToString()
 	};
 }

@@ -12,6 +12,9 @@ var pet_types := [3, 8]            # 系别数组（3=草 Grass, 8=妖精 Fairy�
 var pet_model := ""                # 模型资源路径（后续补充）
 var pet_fly_type := [4]            # 移动方式数组（4=走路，对应 EnumPetFly.Walk）
 var hostile_level := 1             # 对人类攻击等级（1=不主动攻击，对应 EnumPetHostileLevel.Passive）
+var pet_role_group := 5            # 战斗定位组（5=增益辅助，对应 EnumPetRoleGroup.BuffSupport）
+var pet_category_group := 4        # 外观类别组（4=萌物，对应 EnumPetCategoryGroup.Cute）
+var pet_map_group := 6             # 地图区域组（6=陆地，对应 EnumPetMapGroup.Land）
 
 # ---- 种族值（六维） ----
 # 对应 PetBaseStatsDesign: 1=生命 2=物攻 3=魔攻 4=物防 5=魔防 6=速度

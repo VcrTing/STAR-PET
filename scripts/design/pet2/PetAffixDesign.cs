@@ -9,16 +9,6 @@ using System.Collections.Generic;
 public static class PetAffixDesign
 {
 	// const int 常量已提取到 EnumPetAffix 枚举，见 scripts/design/pet2/enum/EnumPetAffix.cs
-	public const int Surprise = (int)EnumPetAffix.Surprise;         // 奇袭
-	public const int Intimacy = (int)EnumPetAffix.Intimacy;         // 亲密
-	public const int Dexterity = (int)EnumPetAffix.Dexterity;       // 灵巧
-	public const int Swift = (int)EnumPetAffix.Swift;               // 疾行
-	public const int RideTogether = (int)EnumPetAffix.RideTogether; // 同行/同乘
-	public const int Brave = (int)EnumPetAffix.Brave;               // 勇敢
-	public const int Generous = (int)EnumPetAffix.Generous;         // 爱分享
-	public const int Homebody = (int)EnumPetAffix.Homebody;         // 家里蹲
-	public const int Mentor = (int)EnumPetAffix.Mentor;             // 热心教
-	public const int Mercy = (int)EnumPetAffix.Mercy;               // 慈悲为怀/点到为止
 
 	// ==================== 词条数据 ====================
 

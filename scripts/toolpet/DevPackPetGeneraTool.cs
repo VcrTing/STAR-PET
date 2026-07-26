@@ -15,8 +15,9 @@ public static class DevPackPetGeneraTool
 	/// <summary>
 	/// 生成固定特殊精灵（由 stone 客制化配置驱动）
 	/// 自动加载 define/datapet/{typeFolder}/stone/stone_pet_{petId}.gd 配置
+	/// 使用字典格式 pet_{petId}__{index} 读取生成参数
 	/// </summary>
-	public static InsPackPetData InitSpecialStonePet(EnumPet pet, EnumPetType petType)
+	public static InsPackPetData InitSpecialStonePet(EnumPet pet, EnumPetType petType, int index = 0)
 	{
 		string uuid = Guid.NewGuid().ToString();
 		int petId = (int)pet;
@@ -24,12 +25,16 @@ public static class DevPackPetGeneraTool
 
 		Resource petData = DevPackPetTool.LoadOrCreatePetData(pet, petType);
 		string stonePath = $"res://define/datapet/{typeFolder}/stone/stone_pet_{petId}.gd";
-		Resource stoneData = null;
+		Godot.Collections.Dictionary stoneDict = null;
 		if (ResourceLoader.Exists(stonePath))
 		{
 			var stoneScript = GD.Load<GDScript>(stonePath);
 			if (stoneScript != null)
-				stoneData = stoneScript.New().AsGodotObject() as Resource;
+			{
+				var stoneData = stoneScript.New().AsGodotObject() as Resource;
+				string dictKey = $"pet_{petId}__{index}";
+				stoneDict = stoneData?.Get(dictKey).AsGodotDictionary();
+			}
 		}
 
 		string petName = petData?.Get("pet_name").AsString() ?? "???";
@@ -38,10 +43,10 @@ public static class DevPackPetGeneraTool
 		var baseStatsDict = petData?.Get("base_stats").AsGodotDictionary();
 		var ivDict = PetBaseStatsDesign.BaseStatsToIvDict(baseStatsDict);
 
-		int initialLevel = stoneData?.Get("initial_level").AsInt32() ?? 5;
-		int initialNature = stoneData?.Get("initial_nature").AsInt32() ?? (int)EnumPetNature.Timid;
-		int initialIntimacy = stoneData?.Get("initial_intimacy").AsInt32() ?? 30;
-		int defaultBig = stoneData?.Get("default_big").AsInt32() ?? (int)EnumPetBig.Normal;
+		int initialLevel = (stoneDict != null && stoneDict.ContainsKey("initial_level")) ? ((int)stoneDict["initial_level"]) : 5;
+		int initialNature = (stoneDict != null && stoneDict.ContainsKey("initial_nature")) ? ((int)stoneDict["initial_nature"]) : (int)EnumPetNature.Timid;
+		int initialIntimacy = (stoneDict != null && stoneDict.ContainsKey("initial_intimacy")) ? ((int)stoneDict["initial_intimacy"]) : 30;
+		int defaultBig = (stoneDict != null && stoneDict.ContainsKey("default_big")) ? ((int)stoneDict["default_big"]) : (int)EnumPetBig.Normal;
 
 		// 从 petData 读取 pet_fly_type 数组
 		var petFlyTypeArray = petData?.Get("pet_fly_type").AsGodotArray();
@@ -57,13 +62,15 @@ public static class DevPackPetGeneraTool
 			petFlyTypes.Add(singleFlyType);
 		}
 
-		bool isLocked = stoneData?.Get("is_locked").AsBool() ?? true;
-		bool isSpecial = stoneData?.Get("is_special").AsBool() ?? true;
-		int talentType = stoneData?.Get("talent_type").AsInt32() ?? (int)EnumPetTalent.Normal;
-		string obtainedMethod = stoneData?.Get("obtained_method").AsString() ?? "初始精灵";
-		string obtainedLocation = stoneData?.Get("obtained_location").AsString() ?? "启程之森";
+		bool isLocked = (stoneDict != null && stoneDict.ContainsKey("is_locked")) ? (bool)stoneDict["is_locked"] : true;
+		bool isSpecial = (stoneDict != null && stoneDict.ContainsKey("is_special")) ? (bool)stoneDict["is_special"] : true;
+		int talentType = (stoneDict != null && stoneDict.ContainsKey("talent_type")) ? (int)stoneDict["talent_type"] : (int)EnumPetTalent.Normal;
+		string obtainedMethod = (stoneDict != null && stoneDict.ContainsKey("obtained_method")) ? (string)stoneDict["obtained_method"] : "初始精灵";
+		string obtainedLocation = (stoneDict != null && stoneDict.ContainsKey("obtained_location")) ? (string)stoneDict["obtained_location"] : "启程之森";
 
-		var talentFixedStatsArray = stoneData?.Get("talent_fixed_stats").AsGodotArray();
+		Godot.Collections.Array talentFixedStatsArray = null;
+		if (stoneDict != null && stoneDict.ContainsKey("talent_fixed_stats"))
+			talentFixedStatsArray = stoneDict["talent_fixed_stats"].AsGodotArray();
 		var talentPointsDict = new Dictionary<EnumPetBaseStats, int>();
 		foreach (EnumPetBaseStats stat in Enum.GetValues(typeof(EnumPetBaseStats)))
 			talentPointsDict[stat] = 0;

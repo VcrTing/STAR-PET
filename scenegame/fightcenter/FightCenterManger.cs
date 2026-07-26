@@ -1,6 +1,9 @@
 // ════════════════════════════════════════════════════════════════
 //  战斗中心管理器（单例）
 //  职责：控制战斗进程状态机
+//  状态流：None → BattleStart → TurnStart → PlayerTurn → YouTurn →
+//          ExecuteTurn → CheckFaint → (PlayerTurn/NextTurn) → ... → BattleEnd
+//  ⚠ PlayerTurn 即包含正常选行动也包含濒死后强制换宠
 // ════════════════════════════════════════════════════════════════
 
 using Godot;
@@ -23,6 +26,9 @@ public partial class FightCenterManger : Node2D
 
 	private bool _playerActedThisTurn = false;
 	private bool _youActedThisTurn = false;
+
+	/// <summary>玩家当前上场精灵濒死，需强制选择替补上场</summary>
+	private bool _needPlayerFaintSwitch = false;
 
 	// ─── 信号 ───
 	public const string SignalFightStateChanged = "OnFightStateChanged";
@@ -52,23 +58,14 @@ public partial class FightCenterManger : Node2D
 	//  公开接口
 	// ══════════════════════════════════════════
 
+	/// <summary>玩家是否可以正常行动（选技能）</summary>
 	public bool CanPlayerAct()
 	{
-		if (_currentState == FightState.PlayerSwitch) return true;
+		if (_needPlayerFaintSwitch) return false;
 		return _currentState == FightState.PlayerTurn && !_playerActedThisTurn;
 	}
 
 	public bool CanUseSkill(InsFightSkill fightSkill) => true;
-
-	public bool CanEnemySwitch()
-	{
-		return _currentState == FightState.YouSwitch;
-	}
-
-	public bool CanPlayerActBySwitch()
-	{
-		return _currentState == FightState.PlayerSwitch;
-	}
 
 	public void StartBattle()
 	{
@@ -84,6 +81,7 @@ public partial class FightCenterManger : Node2D
 
 	public void PlayerSelectSkill(InsFightSkill fightSkill)
 	{
+		if (_needPlayerFaintSwitch) { GD.Print($"  ⚠ 当前需要换宠，不能选择技能"); return; }
 		if (_currentState != FightState.PlayerTurn) { GD.Print($"  ⚠ 当前不是玩家回合"); return; }
 		if (fightSkill?.Skill == null) { GD.Print($"  ⚠ 技能数据无效"); return; }
 
@@ -100,9 +98,25 @@ public partial class FightCenterManger : Node2D
 
 	public void PlayerSelectSwitch(int targetIndex)
 	{
+		var allPets = PlayerLandMyStandPlayer.Instance.FightPets;
+		if (targetIndex < 0 || targetIndex >= allPets.Count || allPets[targetIndex].Hp <= 0)
+		{
+			GD.Print($"  ⚠ 目标无效");
+			return;
+		}
+
+		// ── 濒死强制换宠 ──
+		if (_needPlayerFaintSwitch)
+		{
+			DoPlayerSwitch(targetIndex);
+			_needPlayerFaintSwitch = false;
+			GD.Print($"  └─ [玩家] 濒死后换宠 → {allPets[targetIndex].PetName}");
+			TransitionTo(FightState.YouTurn);
+			return;
+		}
+
+		// ── 正常情况：玩家自愿换宠（作为行动） ──
 		if (_currentState != FightState.PlayerTurn) { GD.Print($"  ⚠ 当前不是玩家回合"); return; }
-		var pets = PlayerLandMyStandPlayer.Instance.FightPets;
-		if (targetIndex < 0 || targetIndex >= pets.Count || pets[targetIndex].Hp <= 0) { GD.Print($"  ⚠ 目标无效"); return; }
 
 		// 加载系统换宠技能 0_4_1 并作为 UseSkill 行动
 		InsSkill switchSkill = DevSkillLoadTool.LoadSwitchPetSkill();
@@ -116,22 +130,12 @@ public partial class FightCenterManger : Node2D
 		action.SwitchTargetIndex = targetIndex;
 		MyTurnActs[4] = action;
 		_playerActedThisTurn = true;
-		GD.Print($"  └─ [玩家] 换宠 Index={targetIndex} ({pets[targetIndex].PetName}) → 使用技能【{switchSkill.SkillName}】等待敌方...");
+		GD.Print($"  └─ [玩家] 换宠 Index={targetIndex} ({allPets[targetIndex].PetName}) → 使用技能【{switchSkill.SkillName}】等待敌方...");
 
 		// 检查Pve
 		PveRunning();
 		// 检查下一步
 		TryExecute();
-	}
-
-	public void PlayerSwitchAfterFaint(int targetIndex)
-	{
-		if (_currentState != FightState.PlayerSwitch) { GD.Print($"  ⚠ 当前不是换宠状态"); return; }
-		var pets = PlayerLandMyStandPlayer.Instance.FightPets;
-		if (targetIndex < 0 || targetIndex >= pets.Count || pets[targetIndex].Hp <= 0) { GD.Print($"  ⚠ 目标无效"); return; }
-		GD.Print($"  └─ [玩家] 濒死后换宠 → {pets[targetIndex].PetName}");
-		DoPlayerSwitch(targetIndex);
-		TransitionTo(FightState.YouTurn);
 	}
 
 	public void SetPveActedAndExecute()
@@ -172,8 +176,6 @@ public partial class FightCenterManger : Node2D
 			case FightState.YouTurn:      HandleEnemyTurn();    break;
 			case FightState.ExecuteTurn:  HandleExecuteTurn();  break;
 			case FightState.CheckFaint:   HandleCheckFaint();   break;
-			case FightState.PlayerSwitch: HandlePlayerSwitch(); break;
-			case FightState.YouSwitch:    HandleEnemySwitch();  break;
 			case FightState.BattleEnd:    HandleBattleEnd();    break;
 		}
 	}
@@ -183,6 +185,15 @@ public partial class FightCenterManger : Node2D
 
 	private void HandlePlayerTurn()
 	{
+		// ── 濒死换宠模式：不重置标记，仅提示玩家选择替补 ──
+		if (_needPlayerFaintSwitch)
+		{
+			LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场\nPlayerSelectSwitch(idx)");
+			GD.Print("  ▶ 我方精灵濒死，请调用 PlayerSelectSwitch(idx) 选择替补");
+			return;
+		}
+
+		// ── 正常回合 ──
 		_playerActedThisTurn = false;
 		_youActedThisTurn = false;
 		FightCenterUtil.ClearActionQueue(MyTurnActs);
@@ -196,6 +207,9 @@ public partial class FightCenterManger : Node2D
 
 	private void HandleEnemyTurn()
 	{
+		// 如果敌人因濒死需要换宠，在这里做自动换宠
+		// （暂未实现敌方多精灵，后续扩展）
+
 		GD.Print($"  └─ [敌方] AI思考...");
 		LabelGameStatus.SetText($"👹 敌方行动中...");
 		YouTurnActs[4] = new TurnAction(TurnActionType.Charge, EnumWho.You);
@@ -224,23 +238,37 @@ public partial class FightCenterManger : Node2D
 		foreach (var p in PlayerLandMyStandPlayer.Instance.FightPets)
 			if (p.Hp > 0) alive++;
 
-		if (alive == 0) { GD.Print("  ❌ 我方全灭！战败！"); LabelGameStatus.SetText("❌ 我方全灭！战败！"); TransitionTo(FightState.BattleEnd); return; }
-		if (enemyDead) { GD.Print("  ✅ 敌方全灭！胜利！"); LabelGameStatus.SetText("✅ 敌方全灭！胜利！"); TransitionTo(FightState.BattleEnd); return; }
-		if (playerDead) { LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场"); EmitSignal(SignalPetFainted, EnumWho.My.ToString(), FightCenterUtil.GetCurrentPlayerPetIndex()); TransitionTo(FightState.PlayerSwitch); return; }
-		if (enemyDead) { LabelGameStatus.SetText("💀 敌方精灵濒死，敌方准备换宠..."); EmitSignal(SignalPetFainted, EnumWho.You.ToString(), 0); TransitionTo(FightState.YouSwitch); return; }
-		NextTurn();
-	}
-
-	private void HandlePlayerSwitch()
-	{
-		GD.Print("  ▶ 请调用 PlayerSwitchAfterFaint(idx)");
-		LabelGameStatus.SetText("🔄 请选择替补精灵上场\nPlayerSwitchAfterFaint(idx)");
-	}
-
-	private void HandleEnemySwitch()
-	{
-		GD.Print("  └─ [敌方] 换宠完毕");
-		LabelGameStatus.SetText("🔄 敌方换宠完毕");
+		if (alive == 0)
+		{
+			GD.Print("  ❌ 我方全灭！战败！");
+			LabelGameStatus.SetText("❌ 我方全灭！战败！");
+			TransitionTo(FightState.BattleEnd);
+			return;
+		}
+		if (enemyDead)
+		{
+			GD.Print("  ✅ 敌方全灭！胜利！");
+			LabelGameStatus.SetText("✅ 敌方全灭！胜利！");
+			TransitionTo(FightState.BattleEnd);
+			return;
+		}
+		if (playerDead)
+		{
+			LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场");
+			EmitSignal(SignalPetFainted, EnumWho.My.ToString(), FightCenterUtil.GetCurrentPlayerPetIndex());
+			_needPlayerFaintSwitch = true;
+			TransitionTo(FightState.PlayerTurn);
+			return;
+		}
+		if (enemyDead)
+		{
+			// 敌方精灵濒死 — 敌方自动换宠（暂无多精灵，直接下一回合）
+			LabelGameStatus.SetText("💀 敌方精灵濒死，敌方换宠...");
+			EmitSignal(SignalPetFainted, EnumWho.You.ToString(), 0);
+			GD.Print("  └─ [敌方] 换宠完毕");
+			NextTurn();
+			return;
+		}
 		NextTurn();
 	}
 
@@ -290,5 +318,4 @@ public partial class FightCenterManger : Node2D
 		FightCenterUtil.ClearActionQueue(MyTurnActs);
 		FightCenterUtil.ClearActionQueue(YouTurnActs);
 	}
-
 }
