@@ -20,8 +20,7 @@ public partial class VBoxPetMsgContent : VBoxContainer
 		if (_btnSureGoFight == null)
 			GD.PrintErr("  ⚠ VBoxPetMsgContent 未找到 BtnSureGoFight");
 		else
-			_btnSureGoFight.Pressed += () => GD.Print("  🐾 精灵上场");
-
+			_btnSureGoFight.Pressed += OnSureGoFight;
 	}
 
 	void Check()
@@ -56,6 +55,42 @@ public partial class VBoxPetMsgContent : VBoxContainer
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+	}
+
+	private void OnSureGoFight()
+	{
+		if (_fightPetData == null)
+		{
+			GD.Print("  ⚠ VBoxPetMsgContent.OnSureGoFight _fightPetData 为 null");
+			return;
+		}
+
+		// 通过 Uuid 匹配要切换的精灵索引
+		var fightPets = PlayerLandMyStandPlayer.Instance?.FightPets;
+		if (fightPets == null || fightPets.Count == 0)
+		{
+			GD.Print("  ⚠ VBoxPetMsgContent.OnSureGoFight 玩家没有战斗精灵数据");
+			return;
+		}
+
+		int targetIndex = -1;
+		for (int i = 0; i < fightPets.Count; i++)
+		{
+			if (fightPets[i].PetUuid == _fightPetData.PetUuid)
+			{
+				targetIndex = i;
+				break;
+			}
+		}
+
+		if (targetIndex < 0)
+		{
+			GD.Print($"  ⚠ VBoxPetMsgContent.OnSureGoFight 未找到 Uuid={_fightPetData.PetUuid} 的精灵");
+			return;
+		}
+
+		GD.Print($"  🐾 VBoxPetMsgContent 确认上场: {_fightPetData.PetName} (Index={targetIndex})");
+		FightCenterManger.Instance?.PlayerSelectSwitch(targetIndex);
 	}
 
 	public void UpdatePetData(InsFightPetData petData)

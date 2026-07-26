@@ -52,6 +52,9 @@ public partial class FightLandMyStandPet : Node2D
 		{
 			UiHBoxSkillsManager.Instance?.SwitchSkills(FightPetData.FightSkills);
 		}
+
+		// 关闭 Choise Pan
+		PanFightPlayerPack.Instance?.Close();
 	}
 
 	public override void _ExitTree()

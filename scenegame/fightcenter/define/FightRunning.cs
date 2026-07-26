@@ -31,6 +31,9 @@ public class FightRunning
     /// <summary>应对的技能类型（None=无应对，ATTACK=应对攻击，DEFENSE=应对防御，STATUS=应对状态）</summary>
     public EnumSkillType BingoSkillType;
 
+    /// <summary>即将上场的宠物数据（切换宠物阶段使用）</summary>
+    public InsFightPetData SwitchPet;
+
     public FightRunning() { }
 
     public FightRunning(EnumFightRunningType type, EnumWho side, InsFightSkill sideFightSkill = null, InsFightSkill targetFightSkill = null)

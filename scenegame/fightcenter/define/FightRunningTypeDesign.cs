@@ -33,6 +33,8 @@ public enum EnumFightRunningType
     DoDefenseMy,
     /// <summary>执行状态阶段：我方实际执行状态，施加增益/减益效果</summary>
     DoStatusMy,
+    /// <summary>主动切换宠物阶段：我方主动切换场上精灵</summary>
+    SwitchPetMy,
     /// <summary>结束防御阶段：防御效果结算完毕，清除临时防御加成</summary>
     EndDefenseMy,
     /// <summary>结束攻击阶段：攻击效果结算完毕，清除临时攻击加成</summary>
@@ -68,6 +70,8 @@ public enum EnumFightRunningType
     DoDefenseYou,
     /// <summary>执行状态阶段：敌方实际执行状态，施加增益/减益效果</summary>
     DoStatusYou,
+    /// <summary>主动切换宠物阶段：敌方主动切换场上精灵</summary>
+    SwitchPetYou,
     /// <summary>结束防御阶段：防御效果结算完毕</summary>
     EndDefenseYou,
     /// <summary>结束攻击阶段：攻击效果结算完毕</summary>
@@ -97,6 +101,24 @@ public static class FightRunningTypeDesign
             || type == EnumFightRunningType.StartStatusYou
             || type == EnumFightRunningType.StartAttackYou
             || type == EnumFightRunningType.StartDefenseYou;
+    }
+
+    /// <summary>
+    /// 判断某个 EnumFightRunningType 是否为我方（My）类型
+    /// </summary>
+    public static bool IsMyType(EnumFightRunningType type)
+    {
+        string name = type.ToString();
+        return name.EndsWith("My");
+    }
+
+    /// <summary>
+    /// 判断某个 EnumFightRunningType 是否为敌方（You）类型
+    /// </summary>
+    public static bool IsYouType(EnumFightRunningType type)
+    {
+        string name = type.ToString();
+        return name.EndsWith("You");
     }
 
     /// <summary>

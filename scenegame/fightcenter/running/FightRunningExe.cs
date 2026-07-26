@@ -22,32 +22,19 @@ public static class FightRunningExe
         for (int i = 0; i < runnings.Length; i++)
         {
             FightRunning run = runnings[i];
-            if (run == null)
-                continue;
+            if (run == null) continue;
 
-            // 扣血环节：DoDamageMy / DoDamageYou → 执行扣血
-            if (run.RunningType == EnumFightRunningType.DoDamageMy
-                || run.RunningType == EnumFightRunningType.DoDamageYou)
+            // 使用 FightRunningTypeDesign 区分 My/You
+            bool isMy = FightRunningTypeDesign.IsMyType(run.RunningType);
+            bool isYou = FightRunningTypeDesign.IsYouType(run.RunningType);
+
+            if (isMy)
             {
-                FightRunningExeTool.ExecuteDamage(run, i);
+                ExecuteMy(run, i);
             }
-            // 执行攻击阶段：DoAttackMy / DoAttackYou → 执行攻击技能效果
-            else if (run.RunningType == EnumFightRunningType.DoAttackMy
-                || run.RunningType == EnumFightRunningType.DoAttackYou)
+            else if (isYou)
             {
-                FightRunningExeTool.ExecuteDoAttack(run, i);
-            }
-            // 执行防御阶段：DoDefenseMy / DoDefenseYou → 执行防御技能效果
-            else if (run.RunningType == EnumFightRunningType.DoDefenseMy
-                || run.RunningType == EnumFightRunningType.DoDefenseYou)
-            {
-                FightRunningExeTool.ExecuteDoDefense(run, i);
-            }
-            // 执行状态阶段：DoStatusMy / DoStatusYou → 执行状态技能效果
-            else if (run.RunningType == EnumFightRunningType.DoStatusMy
-                || run.RunningType == EnumFightRunningType.DoStatusYou)
-            {
-                FightRunningExeTool.ExecuteDoStatus(run, i);
+                ExecuteYou(run, i);
             }
             else
             {
@@ -58,6 +45,65 @@ public static class FightRunningExe
         GD.Print($"[FightRunningExe] FightRunning 执行完毕，==================");
     }
 
+    /// <summary>
+    /// 执行我方（My）阶段
+    /// </summary>
+    private static void ExecuteMy(FightRunning run, int index)
+    {
+        switch (run.RunningType)
+        {
+            case EnumFightRunningType.DoDamageMy:
+                FightRunningExeTool.ExecuteDamage(run, index);
+                break;
+            case EnumFightRunningType.DoAttackMy:
+                FightRunningExeTool.ExecuteDoAttack(run, index);
+                break;
+            case EnumFightRunningType.DoDefenseMy:
+                FightRunningExeTool.ExecuteDoDefense(run, index);
+                break;
+            case EnumFightRunningType.DoStatusMy:
+                FightRunningExeTool.ExecuteDoStatus(run, index);
+                break;
+            case EnumFightRunningType.SwitchPetMy:
+                bool canMy = FightRunningBetween.CheckHpNice(run);
+                if (canMy)
+                    FightRunningExeSysTool.ExecuteSwitchPet(run, index);
+                break;
+            default:
+                ExecuteSingle(run, index);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 执行敌方（You）阶段
+    /// </summary>
+    private static void ExecuteYou(FightRunning run, int index)
+    {
+        switch (run.RunningType)
+        {
+            case EnumFightRunningType.DoDamageYou:
+                FightRunningExeTool.ExecuteDamage(run, index);
+                break;
+            case EnumFightRunningType.DoAttackYou:
+                FightRunningExeTool.ExecuteDoAttack(run, index);
+                break;
+            case EnumFightRunningType.DoDefenseYou:
+                FightRunningExeTool.ExecuteDoDefense(run, index);
+                break;
+            case EnumFightRunningType.DoStatusYou:
+                FightRunningExeTool.ExecuteDoStatus(run, index);
+                break;
+            case EnumFightRunningType.SwitchPetYou:
+                bool canYou = FightRunningBetween.CheckHpNice(run);
+                if (canYou)
+                    FightRunningExeSysTool.ExecuteSwitchPet(run, index);
+                break;
+            default:
+                ExecuteSingle(run, index);
+                break;
+        }
+    }
 
     /// <summary>
     /// 执行单个 FightRunning 阶段（非扣血类型）

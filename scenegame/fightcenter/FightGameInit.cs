@@ -77,8 +77,8 @@ public partial class FightGameInit : Node2D
 	private void InitPvpMode()
 	{
 		IsBalanceMode = true;
-		MyFightLevel = 30; // DevPetIvTool.MaxLevelCap;
-		YouFightLevel = 30; // DevPetIvTool.MaxLevelCap;
+		MyFightLevel = DevPetIvTool.MaxLevelCap;
+		YouFightLevel = DevPetIvTool.MaxLevelCap;
 	}
 
 	private void LoadMyData()

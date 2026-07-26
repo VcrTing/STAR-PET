@@ -67,4 +67,21 @@ public static class FightRunningHouse
             }
         }
     }
+    
+    public static void AddRunningSys(EnumFightRunningType type, EnumWho side, InsFightSkill sideFightSkill, InsFightPetData switchPet, InsFightSkill targetFightSkill)
+    {
+        for (int i = 0; i < RunArrayLength; i++)
+        {
+            if (CurrentRunArray[i] == null)
+            {
+                CurrentRunArray[i] = new FightRunning(type, side)
+                {
+                    SwitchPet = switchPet,
+                    SideFightSkill = sideFightSkill,
+                    TargetFightSkill = targetFightSkill,
+                };
+                return;
+            }
+        }
+    }
 }

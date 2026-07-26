@@ -171,7 +171,7 @@ layout_mode = 2
 alignment = 1
 
 [node name="HBoxPetMsgSub" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxFightPetReadyPan/MarginContainer/HBoxContainer/VBoxPetMsgContent" unique_id=359154338]
-custom_minimum_size = Vector2(0, 90)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 alignment = 1
 

@@ -19,6 +19,8 @@ public static class DevPetLoadTool
 			scenePath = "res://scenepet/Gold/pet_0.tscn";
 		return scenePath;
 	}
+
+	// 用于切换宠物
 	public static PetFightWrapper SpawnPetFightWrapper(InsFightPetData FightPetData, Node parent, Vector2 position, bool isMy)
 	{
 		if (FightPetData == null) return null;
