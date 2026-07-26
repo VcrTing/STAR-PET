@@ -7,12 +7,25 @@ using System;
 /// </summary>
 public partial class UiHSkillBaseButton : TextureButton
 {
+	private static UiHSkillBaseButton _instance;
+	public static UiHSkillBaseButton Instance => _instance;
+
 	/// <summary>
 	/// 关联的战斗技能数据
 	/// </summary>
 	public InsFightSkill FightSkill { get; private set; }
 
 	private Label _labelPp;
+
+	public override void _EnterTree()
+	{
+		if (_instance != null)
+		{
+			QueueFree();
+			return;
+		}
+		_instance = this;
+	}
 
 	public override void _Ready()
 	{
@@ -69,5 +82,13 @@ public partial class UiHSkillBaseButton : TextureButton
 
 	public override void _Process(double delta)
 	{
+	}
+
+	public override void _ExitTree()
+	{
+		if (_instance == this)
+		{
+			_instance = null;
+		}
 	}
 }

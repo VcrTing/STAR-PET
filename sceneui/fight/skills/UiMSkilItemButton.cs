@@ -15,33 +15,6 @@ public partial class UiMSkilItemButton : TextureButton
 	public override void _Ready()
 	{
 		Pressed += OnClick;
-
-		// 鼠标悬停：淡蓝色边框发光效果
-		var borderBox = new StyleBoxFlat();
-		borderBox.BgColor = Colors.Transparent;
-		borderBox.BorderWidthLeft = 2;
-		borderBox.BorderWidthRight = 2;
-		borderBox.BorderWidthTop = 2;
-		borderBox.BorderWidthBottom = 2;
-		borderBox.CornerRadiusTopLeft = 6;
-		borderBox.CornerRadiusTopRight = 6;
-		borderBox.CornerRadiusBottomLeft = 6;
-		borderBox.CornerRadiusBottomRight = 6;
-
-		// 正常状态：透明边框
-		var normalBox = (StyleBoxFlat)borderBox.Duplicate();
-		normalBox.BorderColor = Colors.Transparent;
-		AddThemeStyleboxOverride("normal", normalBox);
-
-		// 悬停状态：淡蓝色发光边框
-		var hoverBox = (StyleBoxFlat)borderBox.Duplicate();
-		hoverBox.BorderColor = new Color(0.5f, 0.8f, 1.0f);
-		AddThemeStyleboxOverride("hover", hoverBox);
-
-		// 额外：按下状态稍微亮一点
-		var pressedBox = (StyleBoxFlat)borderBox.Duplicate();
-		pressedBox.BorderColor = new Color(0.3f, 0.6f, 0.9f);
-		AddThemeStyleboxOverride("pressed", pressedBox);
 	}
 
 	public override void _Process(double delta)
@@ -49,21 +22,42 @@ public partial class UiMSkilItemButton : TextureButton
 	}
 
 	/// <summary>
-	/// 点击处理：判断玩家能否行动，若能则选择技能
+	/// 设置按钮可用状态
+	/// true=禁用，false=启用
+	/// </summary>
+	/// <param name="disabled">是否禁用</param>
+	private void SetButtonDisabled(bool disabled)
+	{
+		Disabled = disabled;
+	}
+
+	/// <summary>
+	/// 点击处理：先同步技能栏数据，再判断玩家能否行动且 PP 充足，若满足则选择技能
 	/// </summary>
 	private void OnClick()
 	{
 		if (FightSkill?.Skill == null)
 			return;
 
+		// 点击前同步技能栏数据
+		var myPet = FightLandMyStandPet.Instance?.FightPetData;
+		if (myPet?.FightSkills != null && myPet.FightSkills.Count > 0)
+		{
+			UiHBoxSkillsManager.Instance?.UpdateSkills(myPet.FightSkills);
+		}
+
 		if (FightCenterManger.Instance.CanPlayerAct())
 		{
-			FightCenterManger.Instance.PlayerSelectSkill(FightSkill);
+			if (myPet != null && myPet.Pp >= FightSkill.ActualPpCost)
+			{
+				FightCenterManger.Instance.PlayerSelectSkill(FightSkill);
+			}
 		}
 	}
 
 	/// <summary>
 	/// 根据战斗技能数据刷新 UI 显示
+	/// 同时检查当前精灵 PP 是否足够，若不足则禁用按钮
 	/// </summary>
 	/// <param name="fightSkill">战斗技能数据</param>
 	public void Refresh(InsFightSkill fightSkill)
@@ -88,5 +82,18 @@ public partial class UiMSkilItemButton : TextureButton
 
 		if (_labelSkillCost != null)
 			_labelSkillCost.Text = fightSkill.ActualPpCost.ToString();
+
+		AsyncDisabled();
+	}
+
+	void AsyncDisabled()
+	{
+		// 检查当前精灵 PP 是否足够使用该技能
+		var myPet = FightLandMyStandPet.Instance?.FightPetData;
+		if (myPet != null)
+		{
+			bool insufficientPp = myPet.Pp < FightSkill.ActualPpCost;
+			SetButtonDisabled(insufficientPp);
+		}
 	}
 }

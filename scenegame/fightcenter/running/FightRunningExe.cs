@@ -19,6 +19,10 @@ public static class FightRunningExe
         FightRunning[] runnings = FightRunningHouse.CurrentRunArray;
         GD.Print($"[FightRunningExe] 开始执行 FightRunning，==================");
 
+        // 记录本回合开始时存活的精灵 Uuid（用于对比出本回合死亡的精灵）
+        var aliveMyUuids = FightAliveHouse.GetAlivePetUuids(EnumWho.My);
+        var aliveYouUuids = FightAliveHouse.GetAlivePetUuids(EnumWho.You);
+
         for (int i = 0; i < runnings.Length; i++)
         {
             FightRunning run = runnings[i];
@@ -49,6 +53,9 @@ public static class FightRunningExe
             }
         }
 
+        // 对比本回合前后的存活列表，收集本回合新死亡的精灵
+        FightAliveHouse.CollectDiePets(aliveMyUuids, aliveYouUuids);
+
         GD.Print($"[FightRunningExe] FightRunning 执行完毕，==================");
     }
 
@@ -58,7 +65,11 @@ public static class FightRunningExe
     /// </summary>
     private static void ExecuteMy(FightRunning run, int index)
     {
-        if (!FightRunningBetween.CheckHpNice(run)) return;
+        if (!FightRunningBetween.CheckHpNice(run))
+        {
+            GD.Print("My 没血，打断后续操作 ========================");
+            return;
+        }
 
         switch (run.RunningType)
         {
@@ -92,7 +103,11 @@ public static class FightRunningExe
     /// </summary>
     private static void ExecuteYou(FightRunning run, int index)
     {
-        if (!FightRunningBetween.CheckHpNice(run)) return;
+        if (!FightRunningBetween.CheckHpNice(run))
+        {
+            GD.Print("You 没血，打断后续操作 ========================");
+            return;
+        }
 
         switch (run.RunningType)
         {

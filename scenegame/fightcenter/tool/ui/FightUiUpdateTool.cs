@@ -15,16 +15,20 @@ public static class FightUiUpdateTool
     {
         var myPet = FightLandMyStandPet.Instance?.FightPetData;
 
-        // 1. 刷新顶部栏精灵信息（HP/MaxHp）
+        // 1. 刷新顶部栏精灵信息（HP/MaxHp）及精灵心数
         UiHTopBarPetInfoMy.Instance?.UpdatePetInfo(myPet);
+        UiHTopBarPetInfoMy.Instance?.UpdateHearts(FightAliveHouse.HeartMy);
 
-        // 2. 刷新技能栏：更新当前精灵的技能按钮显示（PP 消耗数值等）
+        // 2. 刷新聚能技能按钮 PP 显示（Pp / MaxPpMy）
+        UiHSkillBaseButton.Instance?.Update(myPet);
+
+        // 3. 刷新技能栏：更新当前精灵的技能按钮显示（PP 消耗数值等）
         if (myPet?.FightSkills != null && myPet.FightSkills.Count > 0)
         {
             UiHBoxSkillsManager.Instance?.UpdateSkills(myPet.FightSkills);
         }
 
-        // 3. 刷新背包列表：所有精灵的 PP/HP 显示
+        // 4. 刷新背包列表：所有精灵的 PP/HP 显示
         var fightPets = PlayerLandMyStandPlayer.Instance?.FightPets;
         if (fightPets != null && fightPets.Count > 0)
         {
@@ -40,5 +44,6 @@ public static class FightUiUpdateTool
     {
         var youPet = FightLandYouStandPet.Instance?.FightPetData;
         UiHTopBarPetInfoYou.Instance?.UpdatePetInfo(youPet);
+        UiHTopBarPetInfoYou.Instance?.UpdateHearts(FightAliveHouse.HeartYou);
     }
 }

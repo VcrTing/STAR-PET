@@ -304,6 +304,10 @@ public partial class FightCenterManger : Node2D
 			GD.Print($"╔══════════════════════════════════════╗\n║      第 {_turnNumber,2} 回合   🌅 回合开始      ║\n║      {info,-28} ║\n╚══════════════════════════════════════╝");
 			LabelGameStatus.SetText($"🌅 第 {_turnNumber} 回合开始\n{info}");
 		}
+
+		//
+		
+
 		TransitionTo(FightState.PlayerTurn);
 	}
 

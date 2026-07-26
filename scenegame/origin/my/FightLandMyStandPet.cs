@@ -39,6 +39,19 @@ public partial class FightLandMyStandPet : Node2D
 		return 50;
 	}
 
+	/// <summary>
+	/// 销毁场上精灵的视觉表现（精灵死亡时调用）
+	/// </summary>
+	public void DestroyPetWrapper()
+	{
+		if (PetWrapper != null)
+		{
+			PetWrapper.QueueFree();
+			PetWrapper = null;
+		}
+		FightPetData = null;
+	}
+
 	public void SwitchPet(InsFightPetData fightPetData)
 	{
 		if (fightPetData == null) return;

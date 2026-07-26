@@ -22,7 +22,7 @@ var hit_count := 1                  # 连击数（默认1，>1表示连击技能
 var is_hit_combo := false           # 是否连击技能（默认false）
 
 # ---- 能耗 ----
-var pp_cost := 2                    # PP能耗（默认2，范围0-50）
+var pp_cost := 0                    # PP能耗（默认2，范围0-50）
 
 # ---- 图标 ----
 var icon_path := "res://IMG/skill/Normal/attack/0_1_1.png"    # 技能图标图片地址

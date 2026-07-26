@@ -28,10 +28,14 @@ alignment = 1
 [node name="UiHBoxSkillBaseItem" parent="UiHSkillsTabContent/UiVBoxSkillBase" unique_id=2047672180 instance=ExtResource("1_env38")]
 layout_mode = 2
 
-[node name="UiHBoxSkillsManager" type="HBoxContainer" parent="UiHSkillsTabContent" unique_id=807029068]
+[node name="HBoxContainer" type="HBoxContainer" parent="UiHSkillsTabContent" unique_id=537993871]
 layout_mode = 2
 size_flags_horizontal = 3
-alignment = 2
+
+[node name="UiHBoxSkillsManager" type="HBoxContainer" parent="UiHSkillsTabContent/HBoxContainer" unique_id=807029068]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
 script = ExtResource("1_p3khl")
 
 [node name="UiVBoxSwitch" type="VBoxContainer" parent="UiHSkillsTabContent" unique_id=1590366901]

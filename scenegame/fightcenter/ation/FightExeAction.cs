@@ -156,6 +156,7 @@ public static class FightExeAction
 		InsFightPetData nowPet = side == EnumWho.My ? myPet : youPet;
 		InsFightPetData targetPet = side == EnumWho.My ? youPet : myPet;
 
+		if (skill == null || skill.Skill == null) return;
 		GD.Print($"      → [ExecSkill] {side} " + nowPet.PetName + " 使用技能：" + skill.Skill.SkillName);
 
 		// 根据技能类型分派执行

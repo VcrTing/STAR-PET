@@ -32,6 +32,19 @@ public partial class FightLandYouStandPet : Node2D
 	public override void _Process(double delta) { }
 
 	/// <summary>
+	/// 销毁场上精灵的视觉表现（精灵死亡时调用）
+	/// </summary>
+	public void DestroyPetWrapper()
+	{
+		if (PetWrapper != null)
+		{
+			PetWrapper.QueueFree();
+			PetWrapper = null;
+		}
+		FightPetData = null;
+	}
+
+	/// <summary>
 	/// 获取当前宠物速度值
 	/// 从 FinalStats 字典中读取 SPD，默认返回 50
 	/// </summary>

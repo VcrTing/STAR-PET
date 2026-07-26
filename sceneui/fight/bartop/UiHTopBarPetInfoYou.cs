@@ -2,7 +2,7 @@ using Godot;
 
 /// <summary>
 /// 敌方顶部栏精灵信息（单例）
-/// 提供敌方顶部栏精灵名称、等级、HP 信息的更新
+/// 提供敌方顶部栏精灵名称、等级、HP、精灵心数信息的更新
 /// 模仿 UiHTopBarPetInfoMy 的敌方版本
 /// </summary>
 public partial class UiHTopBarPetInfoYou : VBoxContainer
@@ -16,6 +16,8 @@ public partial class UiHTopBarPetInfoYou : VBoxContainer
 	private Label _hpText;
 	private Label _labelPetHealth;
 	private Label _labelPetName;
+	private HBoxContainer _heartsContent;
+	private PackedScene _heartItemScene;
 
 	public override void _EnterTree()
 	{
@@ -41,6 +43,55 @@ public partial class UiHTopBarPetInfoYou : VBoxContainer
 		// 缓存标签
 		_labelPetHealth = FindChild("LabelPetHealth", true, false) as Label;
 		_labelPetName = FindChild("LabelPetName", true, false) as Label;
+
+		// 缓存心数容器 HBoxHeartsContent
+		_heartsContent = FindChild("HBoxHeartsContent", true, false) as HBoxContainer;
+
+		// 缓存心数场景
+		_heartItemScene = ResourceLoader.Load<PackedScene>("res://sceneui/fight/players/alive/ui_fight_heart_item.tscn");
+		if (_heartItemScene == null)
+		{
+			GD.PrintErr("  ⚠ UiHTopBarPetInfoYou 加载 ui_fight_heart_item.tscn 失败");
+		}
+	}
+
+	/// <summary>
+	/// 更新精灵心数显示
+	/// 清除旧的心数展示项，根据 heartCount 生成新的 heart 展示项
+	/// </summary>
+	/// <param name="heartCount">心数数量</param>
+	public void UpdateHearts(int heartCount)
+	{
+		if (_heartsContent == null)
+		{
+			_heartsContent = FindChild("HBoxHeartsContent", true, false) as HBoxContainer;
+			if (_heartsContent == null) return;
+		}
+
+		if (_heartItemScene == null)
+		{
+			_heartItemScene = ResourceLoader.Load<PackedScene>("res://sceneui/fight/players/alive/ui_fight_heart_item.tscn");
+			if (_heartItemScene == null) return;
+		}
+
+		// 清空旧的心数项
+		foreach (Node child in _heartsContent.GetChildren())
+		{
+			_heartsContent.RemoveChild(child);
+			child.QueueFree();
+		}
+
+		if (heartCount <= 0) return;
+
+		// 生成新的 heart 展示项
+		for (int i = 0; i < heartCount; i++)
+		{
+			Node heartItem = _heartItemScene.Instantiate();
+			if (heartItem != null)
+			{
+				_heartsContent.AddChild(heartItem);
+			}
+		}
 	}
 
 	/// <summary>

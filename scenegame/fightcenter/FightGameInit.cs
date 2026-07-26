@@ -100,6 +100,7 @@ public partial class FightGameInit : Node2D
 		if (myStandPets != null && myStandPets.Count > 0)
 			DevFightPackPetTool.SetPackPetsPp(myStandPets.ToArray(), MaxPpMy);
 		PlayerLandMyStandPlayer.Instance?.InitFight(IsBalanceMode, MyFightLevel);
+		//
 		var fightPets = PlayerLandMyStandPlayer.Instance?.FightPets;
 		if (fightPets != null && fightPets.Count > 0)
 			FightLandMyStandPet.Instance?.SwitchPet(fightPets[0]);
@@ -115,6 +116,7 @@ public partial class FightGameInit : Node2D
 		if (youStandPets != null && youStandPets.Count > 0)
 			DevFightPackPetTool.SetPackPetsPp(youStandPets.ToArray(), MaxPpYou);
 		PlayerLandYouStandPlayer.Instance?.InitFight(IsBalanceMode, YouFightLevel);
+		//
 		var fightPets = PlayerLandYouStandPlayer.Instance?.FightPets;
 		if (fightPets != null && fightPets.Count > 0)
 			FightLandYouStandPet.Instance?.SwitchPet(fightPets[0]);

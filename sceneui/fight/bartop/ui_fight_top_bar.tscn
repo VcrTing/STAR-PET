@@ -71,12 +71,30 @@ layout_mode = 2
 [node name="HBoxInfo" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer" unique_id=159256057]
 layout_mode = 2
 
-[node name="LabelPetName" type="Label" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer/HBoxInfo" unique_id=53372477]
+[node name="VBoxPetName" type="VBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer/HBoxInfo" unique_id=489649423]
+layout_mode = 2
+alignment = 1
+
+[node name="LabelPetName" type="Label" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer/HBoxInfo/VBoxPetName" unique_id=53372477]
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 22
 text = "400"
 vertical_alignment = 1
+
+[node name="VBoxHearts" type="VBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer/HBoxInfo" unique_id=388711660]
+custom_minimum_size = Vector2(144, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer/HBoxInfo/VBoxHearts" unique_id=1800678694]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="HBoxHeartsContent" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer/HBoxInfo/VBoxHearts/MarginContainer" unique_id=2008511870]
+layout_mode = 2
 
 [node name="HBoxHealth" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMy/HBoxContainer/UiHTopBarPetInfoMy/HBoxContainer/MarginContainerInfo/VBoxContainer" unique_id=1305609227]
 layout_mode = 2
@@ -141,7 +159,25 @@ layout_mode = 2
 layout_mode = 2
 alignment = 2
 
-[node name="LabelPetName" type="Label" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer/HBoxInfo" unique_id=1099662284]
+[node name="VBoxHearts" type="VBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer/HBoxInfo" unique_id=148674215]
+custom_minimum_size = Vector2(144, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer/HBoxInfo/VBoxHearts" unique_id=878308418]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_right = 12
+
+[node name="HBoxHeartsContent" type="HBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer/HBoxInfo/VBoxHearts/MarginContainer" unique_id=1234057409]
+layout_mode = 2
+
+[node name="VBoxPetName" type="VBoxContainer" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer/HBoxInfo" unique_id=1181572941]
+layout_mode = 2
+alignment = 1
+
+[node name="LabelPetName" type="Label" parent="HBoxContainer/VBoxFighterMyYou/HBoxContainer/UiHTopBarPetInfoYou/HBoxContainer/MarginContainerInfo/HBoxContainer/VBoxContainer/HBoxInfo/VBoxPetName" unique_id=1099662284]
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 22

@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://dlw5fqrgyuvb0"]
+
+[ext_resource type="Texture2D" uid="uid://bqx64ipxo5aba" path="res://IMG/uigame/player/Heart.png" id="1_h1qrb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dkq5h"]
+atlas = ExtResource("1_h1qrb")
+region = Rect2(0, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_od5dd"]
+atlas = ExtResource("1_h1qrb")
+region = Rect2(60, 0, 60, 60)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cplhs"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dkq5h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_od5dd")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="UiFightHeartItem" type="VBoxContainer" unique_id=1634800108]
+custom_minimum_size = Vector2(30, 0)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=643799099]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MarginContainer" unique_id=1423906952]
+visible = false
+position = Vector2(15, 14)
+sprite_frames = SubResource("SpriteFrames_cplhs")
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer" unique_id=202405047]
+layout_mode = 2
+texture = ExtResource("1_h1qrb")
