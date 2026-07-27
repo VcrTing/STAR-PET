@@ -20,4 +20,10 @@ public class InsFightBuff
 
     // 存活回合数
     public int AliveNum;
+
+    // 所属精灵 UUID（标记此 Buff 归属于哪只精灵）
+    public string PetUuid;
+
+    // 生效模式（默认 ThisPetAppear = 5）
+    public EnumBuffActiveMode ActiveMode = EnumBuffActiveMode.ThisPetAppear;
 }

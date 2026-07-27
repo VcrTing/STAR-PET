@@ -17,6 +17,11 @@ public partial class VBoxViewBuffsContentMy : VBoxContainer
     private VBoxContainer _buffsContent;
 
     /// <summary>
+    /// 当前展示 Buff 所属的精灵数据
+    /// </summary>
+    public InsFightPetData CurrentPet { get; set; }
+
+    /// <summary>
     /// h_box_buff_view_item.tscn 场景资源（缓存）
     /// </summary>
     private PackedScene _buffItemScene;

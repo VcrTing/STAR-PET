@@ -163,13 +163,13 @@ public static class FightExeAction
 		switch (skill.Skill.SkillType)
 		{
 			case 1: // 攻击技能
-				FightSkillJudgeTool.ExecAttack(skill, nowPet, targetPet, side, otherOneActions);
+				FightSkillJudgeTool.ExecAttack(skill, side, otherOneActions);
 				break;
 			case 2: // 防御技能
-				FightSkillJudgeTool.ExecDefense(skill, nowPet, targetPet, side, otherOneActions);
+				FightSkillJudgeTool.ExecDefense(skill, side, otherOneActions);
 				break;
 			case 3: // 状态技能
-				FightSkillJudgeTool.ExecStatus(skill, nowPet, targetPet, side, otherOneActions);
+				FightSkillJudgeTool.ExecStatus(skill, side, otherOneActions);
 				break;
 			case 4: // 系统技能（选择切换宠物）
 				ExecSystemSkill(sideAct, nowPet, targetPet, side, otherOneActions);
@@ -195,7 +195,7 @@ public static class FightExeAction
 				GD.Print($"      → [系统技能] {side} 无效的换宠目标索引: {targetIndex}");
 				return;
 			}
-			FightSkillSystemTool.ExecSwitchPet(skill, nowPet, targetPet, side, targetIndex, otherOneActions);
+			FightSkillSystemTool.ExecSwitchPet(skill, side, targetIndex, otherOneActions);
 		}
 		else
 		{

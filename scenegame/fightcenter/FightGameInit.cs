@@ -19,6 +19,16 @@ public partial class FightGameInit : Node2D
 	/// </summary>
 	public const int MaxPpYou = 10;
 
+	/// <summary>
+	/// 聚能技能为我方补充的 PP 值
+	/// </summary>
+	public int GainPpMy = 5;
+
+	/// <summary>
+	/// 聚能技能为敌方补充的 PP 值
+	/// </summary>
+	public int GainPpYou = 5;
+
 	private int _initStep = -1;
 	private bool _initComplete = false;
 

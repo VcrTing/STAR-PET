@@ -36,12 +36,22 @@ public static class DevBuffTool
         int value = data.ContainsKey("value") ? (int)data["value"] : 0;
         bool isRatio = data.ContainsKey("is_ratio") && (bool)data["is_ratio"];
 
+        // 解析生效模式，默认 ThisPetAppear = 5
+        EnumBuffActiveMode activeMode = EnumBuffActiveMode.ThisPetAppear;
+        if (data.ContainsKey("active_mode"))
+        {
+            int modeVal = (int)data["active_mode"];
+            if (System.Enum.IsDefined(typeof(EnumBuffActiveMode), modeVal))
+                activeMode = (EnumBuffActiveMode)modeVal;
+        }
+
         return new InsFightBuff
         {
             Stat = (EnumPetBaseStats)statId,
             Layer = layer,
             Value = value,
             IsRatio = isRatio,
+            ActiveMode = activeMode,
         };
     }
 

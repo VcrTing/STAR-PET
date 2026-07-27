@@ -20,9 +20,23 @@ public static class FightSkillStatusRunTool
 
         string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
 
+        // 获取 Buff 所属的精灵 UUID
+        string petUuid = run.Side == EnumWho.My
+            ? FightLandMyStandPet.Instance?.FightPetData?.PetUuid
+            : FightLandYouStandPet.Instance?.FightPetData?.PetUuid;
+
         var buffs = DevBuffTool.CreateFromArray(buffSource);
         if (buffs != null && buffs.Count > 0)
         {
+            // 为每个 Buff 设置所属精灵 UUID
+            if (!string.IsNullOrWhiteSpace(petUuid))
+            {
+                foreach (var buff in buffs)
+                {
+                    buff.PetUuid = petUuid;
+                }
+            }
+
             // 根据 Side 判断保存到哪个 BuffManager
             if (run.Side == EnumWho.My)
             {
@@ -36,11 +50,15 @@ public static class FightSkillStatusRunTool
     }
 
     /// <summary>
-    /// 执行聚能效果：根据 side 判定是哪一方的精灵，补充 5 点能量（Pp）
+    /// 执行聚能效果：根据 side 判定是哪一方的精灵，从 FightGameInit 读取补充量补充能量（Pp）
     /// </summary>
     public static void ExecuteFocusEnergy(int index, FightRunning run)
     {
         string sideLabel = run.Side == EnumWho.My ? "我方" : "敌方";
+
+        int gainAmount = run.Side == EnumWho.My
+            ? FightGameInit.Instance.GainPpMy
+            : FightGameInit.Instance.GainPpYou;
 
         InsFightPetData petData = run.Side == EnumWho.My
             ? FightLandMyStandPet.Instance?.FightPetData
@@ -49,8 +67,8 @@ public static class FightSkillStatusRunTool
         if (petData != null)
         {
             int beforePp = petData.Pp;
-            petData.Pp += 5;
-            GD.Print($"      [{index}] ExecuteFocusEnergy | 聚能: [{sideLabel}] Pp {beforePp} → {petData.Pp}（+5）");
+            petData.Pp += gainAmount;
+            GD.Print($"      [{index}] ExecuteFocusEnergy | 聚能: [{sideLabel}] Pp {beforePp} → {petData.Pp}（+{gainAmount}）");
         }
         else
         {

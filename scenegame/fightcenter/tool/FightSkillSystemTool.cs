@@ -12,14 +12,10 @@ public static class FightSkillSystemTool
     /// 执行换宠操作
     /// </summary>
     /// <param name="sideSkill">系统技能（换宠技能）</param>
-    /// <param name="attacker">使用换宠方的当前宠物</param>
-    /// <param name="defender">对方宠物</param>
     /// <param name="side">使用方标识</param>
     /// <param name="targetIndex">要切换到的宠物索引</param>
     public static void ExecSwitchPet(
         InsFightSkill sideSkill,
-        InsFightPetData attacker,
-        InsFightPetData defender,
         EnumWho side,
         int targetIndex, TurnAction[] otherOneActions)
     {
@@ -48,7 +44,7 @@ public static class FightSkillSystemTool
                 FightRunningHouse.AddRunningSys(
                     side == EnumWho.My ? EnumFightRunningType.SwitchPetMy : EnumFightRunningType.SwitchPetYou,
                     side, sideSkill, willSwitchPet, null);
-                FightSkillJudge2Tool.SideSystemWhenOtherOneAttack(sideSkill, side, attacker, defender, otherOneSkill);
+                FightSkillJudge2Tool.SideSystemWhenOtherOneAttack(sideSkill, side, otherOneSkill);
             }
             // 应对防御
             else if (otherOneSkill.Skill.SkillType == (int)EnumSkillType.DEFENSE)

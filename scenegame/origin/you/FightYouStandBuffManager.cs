@@ -1,10 +1,10 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class FightMyStandBuffManager : Node2D
+public partial class FightYouStandBuffManager : Node2D
 {
-    private static FightMyStandBuffManager _instance;
-    public static FightMyStandBuffManager Instance => _instance;
+    private static FightYouStandBuffManager _instance;
+    public static FightYouStandBuffManager Instance => _instance;
 
     /// <summary>
     /// Buff 字典，key = 精灵 PetUuid，value = 属于该精灵的 Buff 列表
@@ -32,7 +32,7 @@ public partial class FightMyStandBuffManager : Node2D
         if (newBuffs == null || newBuffs.Length == 0)
             return;
 
-        GD.Print($"[FightMyStandBuffManager] AddBuffs: {newBuffs.Length} 个 Buff 加入");
+        GD.Print($"[FightYouStandBuffManager] AddBuffs: {newBuffs.Length} 个 Buff 加入");
 
         foreach (var buff in newBuffs)
         {
@@ -69,22 +69,22 @@ public partial class FightMyStandBuffManager : Node2D
     }
 
     /// <summary>
-    /// 获取当前我方场上精灵的所有 Buff
+    /// 获取当前敌方场上精灵的所有 Buff
     /// </summary>
     public InsFightBuff[] GetCurrentPetBuffs()
     {
-        string petUuid = FightLandMyStandPet.Instance?.FightPetData?.PetUuid;
+        string petUuid = FightLandYouStandPet.Instance?.FightPetData?.PetUuid;
         return GetBuffsByPetUuid(petUuid);
     }
 
     /// <summary>
-    /// 刷新 UI 视图，显示当前场上精灵的 Buff
+    /// 刷新 UI 视图，显示当前敌方场上精灵的 Buff
     /// </summary>
     public void RefreshCurrentView()
     {
-        if (VBoxViewBuffsContentMy.Instance != null)
+        if (VBoxViewBuffsContentYou.Instance != null)
         {
-            VBoxViewBuffsContentMy.Instance.UpdateBuffs(GetCurrentPetBuffs());
+            VBoxViewBuffsContentYou.Instance.UpdateBuffs(GetCurrentPetBuffs());
         }
     }
 
@@ -105,7 +105,7 @@ public partial class FightMyStandBuffManager : Node2D
 
         if (removed > 0)
         {
-            GD.Print($"[FightMyStandBuffManager] 精灵 [{pet.PetName}] 离场，清除 ThisPetAppear Buff {removed} 个");
+            GD.Print($"[FightYouStandBuffManager] 精灵 [{pet.PetName}] 离场，清除 ThisPetAppear Buff {removed} 个");
 
             // 如果该精灵的 Buff 列表为空，则删除该键
             if (list.Count == 0)

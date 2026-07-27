@@ -31,6 +31,17 @@ public enum TurnActionType
 	UseItem,     // 使用道具
 }
 
+/// <summary>Buff 生效模式枚举</summary>
+public enum EnumBuffActiveMode
+{
+    ThisTurn = 1,           // 本回合
+    NextTurn = 2,           // 下回合
+    OddTurn = 3,            // 奇数回合
+    EvenTurn = 4,           // 偶数回合
+    ThisPetAppear = 5,      // 本精灵本次登场
+    ThisPetPermanent = 6    // 本精灵永久
+}
+
 /// <summary>单次回合行动实例</summary>
 public class TurnAction
 {

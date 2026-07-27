@@ -22,15 +22,13 @@ public static class FightSkillJudgeTool
 	/// <summary>
 	/// 执行攻击技能
 	/// 计算伤害并扣除防守方血量
+	/// 根据 side 自动获取场上精灵数据
 	/// </summary>
 	/// <param name="skill">战斗技能实例</param>
-	/// <param name="attacker">攻击方宠物</param>
-	/// <param name="defender">防守方宠物</param>
 	/// <param name="side">攻击方标识</param>
-	public static void ExecAttack(InsFightSkill sideSkill, InsFightPetData attacker, InsFightPetData defender, 
-        EnumWho side, TurnAction[] otherOneActions)
+	public static void ExecAttack(InsFightSkill sideSkill, EnumWho side, TurnAction[] otherOneActions)
 	{
-		if (sideSkill?.Skill == null || attacker == null || defender == null)
+		if (sideSkill?.Skill == null)
 			return;
 
         // 提取应对
@@ -59,7 +57,7 @@ public static class FightSkillJudgeTool
                 {
                     // 应对攻击：扣除对面血量
                 }
-                FightSkillJudge2Tool.SideAttackWhenOtherOneAttack(sideSkill, side, attacker, defender);
+				FightSkillJudge2Tool.SideAttackWhenOtherOneAttack(sideSkill, side);
             }
             // 防御
             else if (otherOneSkill.Skill.SkillType == (int)EnumSkillType.DEFENSE)
@@ -120,15 +118,13 @@ public static class FightSkillJudgeTool
 	/// <summary>
 	/// 执行防御技能
 	/// 提升自身防御/魔防或附加护盾等
+	/// 根据 side 自动获取场上精灵数据
 	/// </summary>
 	/// <param name="skill">战斗技能实例</param>
-	/// <param name="attacker">使用技能方宠物（自身）</param>
-	/// <param name="defender">对方宠物</param>
 	/// <param name="side">使用方标识</param>
-	public static void ExecDefense(InsFightSkill sideSkill, InsFightPetData attacker, InsFightPetData defender, 
-        EnumWho side, TurnAction[] otherOneActions)
+	public static void ExecDefense(InsFightSkill sideSkill, EnumWho side, TurnAction[] otherOneActions)
 	{
-		if (sideSkill?.Skill == null || attacker == null)
+		if (sideSkill?.Skill == null)
 			return;
 
         // 提取应对
@@ -157,7 +153,7 @@ public static class FightSkillJudgeTool
                 FightRunningHouse.AddRunning2(
                     side == EnumWho.My ? EnumFightRunningType.DoDefenseMy : EnumFightRunningType.DoDefenseYou,
                     side, sideSkill, 0, otherOneSkill, isBingo ? EnumSkillType.ATTACK : EnumSkillType.None);
-                FightSkillJudge2Tool.SideDefenseWhenOtherOneAttack(sideSkill, side, attacker, defender, otherOneSkill);
+                FightSkillJudge2Tool.SideDefenseWhenOtherOneAttack(sideSkill, side, otherOneSkill);
             }
             // 应对防御
             else if (otherOneSkill.Skill.SkillType == (int)EnumSkillType.DEFENSE)
@@ -214,15 +210,13 @@ public static class FightSkillJudgeTool
 	/// <summary>
 	/// 执行状态技能
 	/// 施加异常状态、增益/减益、治疗等
+	/// 根据 side 自动获取场上精灵数据
 	/// </summary>
 	/// <param name="skill">战斗技能实例</param>
-	/// <param name="attacker">使用技能方宠物</param>
-	/// <param name="defender">对方宠物</param>
 	/// <param name="side">使用方标识</param>
-	public static void ExecStatus(InsFightSkill sideSkill, InsFightPetData attacker, InsFightPetData defender, 
-        EnumWho side, TurnAction[] otherOneActions)
+	public static void ExecStatus(InsFightSkill sideSkill, EnumWho side, TurnAction[] otherOneActions)
 	{
-		if (sideSkill?.Skill == null || attacker == null)
+		if (sideSkill?.Skill == null)
 			return;
 
         // 提取应对
@@ -249,7 +243,7 @@ public static class FightSkillJudgeTool
                 FightRunningHouse.AddRunning2(
                     side == EnumWho.My ? EnumFightRunningType.DoStatusMy : EnumFightRunningType.DoStatusYou,
                     side, sideSkill, 0, otherOneSkill, isBingo ? EnumSkillType.DEFENSE : EnumSkillType.None);
-                FightSkillJudge2Tool.SideStatusWhenOtherOneAttack(sideSkill, side, attacker, defender, otherOneSkill);
+                FightSkillJudge2Tool.SideStatusWhenOtherOneAttack(sideSkill, side, otherOneSkill);
             }
             // 应对防御
             else if (otherOneSkill.Skill.SkillType == (int)EnumSkillType.DEFENSE)
