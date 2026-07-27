@@ -16,6 +16,7 @@ public class InsSkill
 	public int SkillType;                                        // 技能类型（1=攻击,2=防御,3=状态）
 	public int SkillCode;                                        // 技能编号
 	public string SkillName;                                     // 技能名
+	public string ImplClass;                                     // 实现脚本路径（C#实现类）
 	public int AttackValue;                                      // 攻击数值/威力
 	public int AttackType;                                       // 攻击类型（2=物攻,3=魔攻,0=固伤）
 	public int PpCost;                                           // PP能耗
@@ -60,6 +61,7 @@ public class InsSkill
 			SkillType = res.Get("skill_type").AsInt32(),
 			SkillCode = res.Get("skill_code").AsInt32(),
 			SkillName = res.Get("skill_name").AsString(),
+			ImplClass = res.Get("impl_class").AsString(),
 			AttackValue = res.Get("attack_value").AsInt32(),
 			AttackType = res.Get("attack_type").AsInt32(),
 			PpCost = res.Get("pp_cost").AsInt32(),

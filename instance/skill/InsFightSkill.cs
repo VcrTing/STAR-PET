@@ -13,6 +13,11 @@ public class InsFightSkill
 	public InsSkill Skill { get; private set; }
 
 	/// <summary>
+	/// 实现脚本路径（从 InsSkill.ImplClass 复制）
+	/// </summary>
+	public string ImplClass => Skill?.ImplClass;
+
+	/// <summary>
 	/// 技能槽位索引（0=第一个技能，1=第二个，依此类推）
 	/// </summary>
 	public int SlotIndex { get; set; }
@@ -88,6 +93,7 @@ public class InsFightSkill
 			CooldownTurns = 0,
 			ActualPetType = skill.PetType,
 			ActualHitCount = skill.HitCount,
+			// ImplClass is accessed via property from Skill
 		};
 	}
 }

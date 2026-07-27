@@ -13,6 +13,9 @@ var skill_type := 3                 # 技能类型（对应SkillTypeDesign：1=�
 var skill_code := 2                 # 技能编号
 var skill_name := "加固"            # 技能名
 
+# 实现脚本
+var impl_class = "res://define/dataskill/Normal/status/cs/DuckSkill0_3_2.cs"
+
 # ---- 攻击数值 ----
 var attack_value := 0              # 攻击数值/威力（状态技能为0）
 var attack_type := 0               # 攻击类型（状态技能为0）

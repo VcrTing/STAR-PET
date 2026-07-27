@@ -13,6 +13,9 @@ var skill_type := 1                # 技能类型（对应SkillTypeDesign：1=�
 var skill_code := 1                 # 技能编号
 var skill_name := "拍击"            # 技能名
 
+# 实现脚本
+var impl_class = "res://define/dataskill/Normal/attack/cs/DuckSkill0_1_1.cs"
+
 # ---- 攻击数值 ----
 var attack_value := 40              # 攻击数值/威力
 var attack_type := 2                # 攻击类型（对应EnumPetBaseStats：2=物攻[ATK], 3=魔攻[MATK], 0=固伤）

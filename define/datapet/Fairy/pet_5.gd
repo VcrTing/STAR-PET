@@ -8,7 +8,7 @@ extends Resource
 # ---- 基础信息 ----
 var pet_id := 5                    # 图鉴编号
 var pet_name := "萤花仙"            # 精灵名称
-var pet_types := [3, 8]            # 系别数组（3=草 Grass, 8=妖精 Fairy）
+var pet_types := [8, 3]            # 系别数组（3=草 Grass, 8=妖精 Fairy）
 var pet_model := ""                # 模型资源路径（后续补充）
 var pet_fly_type := [4]            # 移动方式数组（4=走路，对应 EnumPetFly.Walk）
 var hostile_level := 1             # 对人类攻击等级（1=不主动攻击，对应 EnumPetHostileLevel.Passive）

@@ -1,4 +1,5 @@
 using Godot;
+using System;
 
 /// <summary>
 /// 回合运行执行工具
@@ -38,9 +39,26 @@ public static class FightRunningExeTool
     /// </summary>
     public static void ExecuteDoAttack(FightRunning run, int index)
     {
+        if (run == null) { GD.PrintErr("ExecuteDoAttack | run 为 null"); return; }
+
         // 执行前扣除 PP
         FightPpTool.DeductPp(run, index);
-        // 留空
+
+        string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
+
+        InsFightSkill sideSkill = run.SideFightSkill;
+        if (sideSkill == null) { GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | run.SideFightSkill 为 null"); return; }
+        if (sideSkill.Skill == null) { GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | sideSkill.Skill 为 null"); return; }
+
+        InsSkill skill = sideSkill.Skill;
+
+        if (string.IsNullOrWhiteSpace(sideSkill.ImplClass))
+        {
+            GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | 错误：技能 {skill.SkillName} 未配置 impl_class，缺少鸭子实现");
+            return;
+        }
+
+        DuckSkillLoader.ExecuteDuckSkill(sideSkill.ImplClass, index, run, sideSkill);
     }
 
     /// <summary>
@@ -48,55 +66,55 @@ public static class FightRunningExeTool
     /// </summary>
     public static void ExecuteDoDefense(FightRunning run, int index)
     {
-        // 执行前扣除 PP
-        FightPpTool.DeductPp(run, index);
-        // 留空
-    }
+        if (run == null) { GD.PrintErr("ExecuteDoDefense | run 为 null"); return; }
 
-    /// <summary>
-    /// 执行 DoStatus 阶段：处理 DoStatusMy / DoStatusYou 状态技能执行
-    /// 判断 BingoSkillType 是否是防御，是则根据 GainBuffBingo 生成 InsFightBuff 数组，否则根据 GainBuff 生成
-    /// </summary>
-    public static void ExecuteDoStatus(FightRunning run, int index)
-    {
         // 执行前扣除 PP
         FightPpTool.DeductPp(run, index);
 
         string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
 
         InsFightSkill sideSkill = run.SideFightSkill;
-        if (sideSkill?.Skill == null)
-        {
-            GD.Print($"      [{index}] {sideLabel} {run.RunningType} | 技能为空，跳过状态执行");
-            return;
-        }
+        if (sideSkill == null) { GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | run.SideFightSkill 为 null"); return; }
+        if (sideSkill.Skill == null) { GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | sideSkill.Skill 为 null"); return; }
 
         InsSkill skill = sideSkill.Skill;
 
-        // 判断 BingoSkillType 是否是防御
-        Godot.Collections.Array buffSource = run.BingoSkillType == EnumSkillType.DEFENSE
-            ? skill.GainBuffBingo
-            : skill.GainBuff;
-
-        if (buffSource != null && buffSource.Count > 0)
+        if (string.IsNullOrWhiteSpace(sideSkill.ImplClass))
         {
-            var buffs = DevBuffTool.CreateFromArray(buffSource);
-            if (buffs != null && buffs.Count > 0)
-            {
-                // 根据 Side 判断保存到哪个 BuffManager
-                if (run.Side == EnumWho.My)
-                {
-                    FightMyStandBuffManager.Instance?.AddBuffs(buffs.ToArray());
-                }
-
-                EnumWho targetSide = run.Side == EnumWho.My ? EnumWho.You : EnumWho.My;
-                GD.Print($"      [{index}] {sideLabel} {run.RunningType} | " +
-                         $"bingoSkillType={run.BingoSkillType} 生成 InsFightBuff {buffs.Count} 个 → 目标:{targetSide}");
-            }
+            GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | 错误：技能 {skill.SkillName} 未配置 impl_class，缺少鸭子实现");
+            return;
         }
+
+        DuckSkillLoader.ExecuteDuckSkill(sideSkill.ImplClass, index, run, sideSkill);
+    }
+
+    /// <summary>
+    /// 执行 DoStatus 阶段：处理 DoStatusMy / DoStatusYou 状态技能执行
+    /// </summary>
+    public static void ExecuteDoStatus(FightRunning run, int index)
+    {
+        if (run == null) { GD.PrintErr("ExecuteDoStatus | run 为 null"); return; }
+
+        // 执行前扣除 PP
+        FightPpTool.DeductPp(run, index);
+
+        string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
+
+        InsFightSkill sideSkill = run.SideFightSkill;
+        if (sideSkill == null) { GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | run.SideFightSkill 为 null"); return; }
+        if (sideSkill.Skill == null) { GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | sideSkill.Skill 为 null"); return; }
+
+        InsSkill skill = sideSkill.Skill;
+
+        if (string.IsNullOrWhiteSpace(sideSkill.ImplClass))
+        {
+            GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | 错误：技能 {skill.SkillName} 未配置 impl_class，缺少鸭子实现");
+            return;
+        }
+
+        DuckSkillLoader.ExecuteDuckSkill(sideSkill.ImplClass, index, run, sideSkill);
 
         GD.Print($"      [{index}] {sideLabel} {run.RunningType} | " +
                  $"skill={skill.SkillName} bingoSkillType={run.BingoSkillType} sideSkill={sideSkill.Skill.SkillName} completed={run.IsCompleted}");
     }
-
 }

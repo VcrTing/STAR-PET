@@ -15,7 +15,7 @@ public static class DefPackPet
 	public static List<InsPackPetData> testModeMyPackPets()
 	{
 		var zero = DevPackPetGeneraTool.InitSpecialStonePet(EnumPet.Zero, EnumPetType.Gold);
-		var five = DevPackPetGeneraTool.InitSpecialStonePet(EnumPet.Five, EnumPetType.Grass);
+		var five = DevPackPetGeneraTool.InitSpecialStonePet(EnumPet.Five, EnumPetType.Fairy);
 		return new List<InsPackPetData> { zero, five };
 	}
 
@@ -26,7 +26,7 @@ public static class DefPackPet
 	public static List<InsPackPetData> testModeYouPackPets()
 	{
 		var one = DevPackPetGeneraTool.InitSpecialStonePet(EnumPet.One, EnumPetType.Earth);
-		var five = DevPackPetGeneraTool.InitSpecialStonePet(EnumPet.Five, EnumPetType.Grass);
+		var five = DevPackPetGeneraTool.InitSpecialStonePet(EnumPet.Five, EnumPetType.Fairy);
 		return new List<InsPackPetData> { one, five };
 	}
 

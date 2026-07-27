@@ -13,6 +13,9 @@ var skill_type := 2                # 技能类型（对应SkillTypeDesign：1=�
 var skill_code := 1                 # 技能编号
 var skill_name := "防御"            # 技能名
 
+# 实现脚本
+var impl_class = "res://define/dataskill/Normal/defense/cs/DuckSkill0_2_1.cs"
+
 # ---- 攻击数值 ----
 var attack_value := 0              # 攻击数值/威力（防御技能为0）
 var attack_type := 0               # 攻击类型（防御技能为0）

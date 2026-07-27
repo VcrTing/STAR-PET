@@ -13,6 +13,9 @@ var skill_type := 4                 # 技能类型（对应SkillTypeDesign：4=�
 var skill_code := 1                 # 技能编号
 var skill_name := "选择切换宠物"      # 技能名
 
+# 实现脚本
+var impl_class = "res://define/dataskill/Normal/system/cs/DuckSkill0_4_1.cs"
+
 # ---- 攻击数值 ----
 var attack_value := 0               # 攻击数值/威力（系统技能为0）
 var attack_type := 0                # 攻击类型（系统技能为0）
