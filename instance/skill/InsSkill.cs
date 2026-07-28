@@ -25,6 +25,7 @@ public class InsSkill
 	public int Priority;                                         // 先手值
 	public int HiddenPriority;                                   // 隐藏先手判断
 	public float InstantKillRate;                                // 秒杀概率
+	public int InstantKillDamage;                                // 秒杀伤害值（0=不造成秒杀伤害，>0=触发秒杀时造成该数值的固伤）
 	public int TurnEndSpecialId;                                 // 回合结束特殊处理ID
 	public int BeforeActionSpecialId;                            // 释放前特殊处理ID
 	public int BingoSkillType;                                   // 应对类型（1=应对攻击, 0=无应对）
@@ -70,6 +71,7 @@ public class InsSkill
 			Priority = res.Get("priority").AsInt32(),
 			HiddenPriority = res.Get("hidden_priority").AsInt32(),
 			InstantKillRate = (float)res.Get("instant_kill_rate").AsDouble(),
+			InstantKillDamage = res.Get("instant_kill_damage").AsInt32(),
 			TurnEndSpecialId = res.Get("turn_end_special_id").AsInt32(),
 			BeforeActionSpecialId = res.Get("before_action_special_id").AsInt32(),
 			BingoSkillType = res.Get("bingo_skill_type").AsInt32(),

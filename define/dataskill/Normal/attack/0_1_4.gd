@@ -1,8 +1,8 @@
 extends Resource
 # ======================================================
 # 技能静态数据
-# 命名: 0_1_2.gd
-# 0 = 普通系, 1 = 攻击, 2 = code
+# 命名: 0_1_4.gd
+# 0 = 普通系, 1 = 攻击, 4 = code
 # ======================================================
 
 # ---- 系别信息 ----
@@ -10,14 +10,14 @@ var pet_type := 0                   # 系别（0=普通系，对应 EnumPetType.
 
 # ---- 基础信息 ----
 var skill_type := 1                # 技能类型（对应SkillTypeDesign：1=攻击, 2=防御, 3=状态）
-var skill_code := 2                 # 技能编号
-var skill_name := "先发制人"        # 技能名
+var skill_code := 4                 # 技能编号
+var skill_name := "夹击"            # 技能名
 
 # 实现脚本
-var impl_class = "res://define/dataskill/Normal/attack/cs/DuckSkill0_1_2.cs"
+var impl_class = "res://define/dataskill/Normal/attack/cs/DuckSkill0_1_4.cs"
 
 # ---- 攻击数值 ----
-var attack_value := 40             # 攻击数值/威力
+var attack_value := 100             # 攻击数值/威力
 var attack_type := 2               # 攻击类型（对应EnumPetBaseStats：2=物攻[ATK], 3=魔攻[MATK], 0=固伤）
 
 # ---- 连击 ----
@@ -28,12 +28,12 @@ var is_hit_combo := false           # 是否连击技能（默认false）
 var pp_cost := 2                    # PP能耗（默认2，范围0-50）
 
 # ---- 图标 ----
-var icon_path := "res://IMG/skill/Normal/attack/0_1_2.png"    # 技能图标图片地址
+var icon_path := "res://IMG/skill/Normal/attack/0_1_4.png"    # 技能图标图片地址
 
 # ---- 命中与先手 ----
-var hit_rate := 100.00              # 命中率（默认100.00）
-var priority := 1                   # 先手值（1=优先出手，比普通技能更快）
-var hidden_priority := 0            # 隐藏先手判断（0=不先手判断，普通先手值比较）
+var hit_rate := 80.00              # 命中率（80%）
+var priority := 0                   # 先手值（默认0）
+var hidden_priority := 0            # 隐藏先手判断（0=不先手判断，1=需根据对方释放的技能判断本技能是否先手）
 
 # ---- 应对与减伤 ----
 var bingo_skill_type = 0            # 1 = 应对攻击，0 = 无应对
@@ -63,19 +63,19 @@ var status_effects := []            # 异常状态（数组类型，每个元素
 
 # ---- 音效 ----
 var sound_effects := [
-	[0.0, "hit_fast", 1.0],
+	[0.0, "hit_medium", 1.0],
 ]  # 音效数组（数组类型，每个元素为[播放时间点(float), 音效名称(string), 音量(float)]）
 
 # ---- 特效 ----
 var particle_effects := [
-	[0.0, "strike_fast"],
+	[0.0, "strike_medium"],
 ]  # 特效数组（数组类型，每个元素为[播放时间点(float), 特效名称(string)]）
 
 # ---- 宠物动作 ----
 var pet_actions := [
-	[0.0, "attack_dash"],
+	[0.0, "attack_slap"],
 ]  # 宠物动作数组（数组类型，每个元素为[播放时间点(float), 动作名称(string)]）
 
 # ---- 描述 ----
-var main_description := ["在对手行动之前抢先发动攻击"]                    # 主描述（数组类型）
-var auxiliary_description := ["先手技能，必定比普通技能先出手"]        # 辅助描述（数组类型）
+var main_description := ["与对手夹击，从侧面发动突袭"]                    # 主描述（数组类型）
+var auxiliary_description := ["威力100的中等技能，命中率80%"]        # 辅助描述（数组类型）

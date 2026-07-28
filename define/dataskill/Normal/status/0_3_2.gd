@@ -41,6 +41,7 @@ var damage_reduction_rate = 0       # 减伤率（默认0，0-100范围，防御
 
 # ---- 特殊效果 ----
 var instant_kill_rate := 0.00       # 秒杀敌人概率（默认0.00）
+var instant_kill_damage := 0        # 秒杀伤害值（默认0，0=不造成秒杀伤害，>0=触发秒杀时造成该数值的固伤）
 
 # ---- 特殊处理 ----
 var turn_end_special_id := 0        # 回合结束特殊处理代码ID（默认0=无特殊处理）
@@ -50,11 +51,11 @@ var before_action_special_id := 1   # 回合内释放前特殊处理代码ID（1
 var gain_energy := 5                # 获得能量（默认2，聚能+2点能量）
 var gain_hp := 0                    # 获得血量（默认0，正数=获得，负数=扣除）
 var gain_buff := [
-	{"stat": 4, "layer": 7, "value": 10, "is_ratio": true, "active_mode": 6},
+	{"stat": 4, "layer": 7, "value": 10, "is_ratio": true, "active_mode": 5},
 ]
 # 获得 Buff（数组类型，每个元素为字典：stat=属性ID对应EnumPetBaseStats，4=DEF物防；num=层数；value=每层值；is_ratio=是否百分比，true=70%；active_mode=生效模式）
 var gain_buff_bingo := [
-	{"stat": 4, "layer": 10, "value": 10, "is_ratio": true, "active_mode": 6},
+	{"stat": 4, "layer": 10, "value": 10, "is_ratio": true, "active_mode": 5},
 ]
 # 应对成功后的 Buff（应对成功时替换 gain_buff 生效，value 翻倍）
 

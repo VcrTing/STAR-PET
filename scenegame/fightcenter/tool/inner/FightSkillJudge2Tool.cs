@@ -8,6 +8,37 @@ using System.Collections.Generic;
 /// </summary>
 public static class FightSkillJudge2Tool
 {
+    private static readonly Random _random = new();
+
+    /// <summary>
+    /// 检查技能是否命中（基于 HitRate）
+    /// </summary>
+    /// <param name="skill">战斗技能实例</param>
+    /// <returns>true=命中, false=未命中</returns>
+    private static bool IsHit(InsFightSkill skill)
+    {
+        if (skill?.Skill == null)
+            return true;
+
+        float hitRate = skill.Skill.HitRate;
+        // 命中率 >= 100 必定命中
+        if (hitRate >= 100.0f)
+            return true;
+
+        float roll = (float)_random.NextDouble() * 100.0f;
+        bool hit = roll < hitRate;
+        if (!hit)
+            GD.Print($"      [命中判定] 技能={skill.Skill.SkillName} 命中率={hitRate}% 掷骰={roll:F1}% → 未命中");
+        return hit;
+    }
+
+    /// <summary>
+    /// 检查技能是否命中，若未命中则将伤害置为 0
+    /// </summary>
+    private static int ApplyHitCheck(InsFightSkill skill, int damage)
+    {
+        return IsHit(skill) ? damage : 0;
+    }
     /// <summary>
     /// 从 TurnAction 数组中查找所有有效的 InsFightSkill，返回数组
     /// </summary>
@@ -38,7 +69,7 @@ public static class FightSkillJudge2Tool
             FightRunningHouse.AddRunning2(
                 side == EnumWho.My ? EnumFightRunningType.DoAttackMy : EnumFightRunningType.DoAttackYou,
                 side, sideSkill, 0, hit, EnumSkillType.None);
-            int basicDamag = FightDamageTool.CalcSkillFinalDamage(hit, side);
+            int basicDamag = ApplyHitCheck(hit, FightDamageTool.CalcSkillFinalDamage(hit, side));
             FightRunningHouse.AddRunning2(
                 side == EnumWho.My ? EnumFightRunningType.DoDamageYou : EnumFightRunningType.DoDamageMy,
                 targetSide, sideSkill, basicDamag, hit);
@@ -58,7 +89,7 @@ public static class FightSkillJudge2Tool
 
         for (int h = 0; h < hitSkills.Length; h++)
         {
-            int basicDamag = FightDamageTool.CalcSkillFinalDamage(hitSkills[h], attackerSide);
+            int basicDamag = ApplyHitCheck(hitSkills[h], FightDamageTool.CalcSkillFinalDamage(hitSkills[h], attackerSide));
             int finalDamage = DevSkillCompuTool.DamageBeDefense(basicDamag, sideSkill.Skill.DamageReductionRate);
             GD.Print($"      防御第{h + 1}击: 原始伤害={basicDamag}, 最终伤害={finalDamage}");
             FightRunningHouse.AddRunning2(
@@ -81,7 +112,7 @@ public static class FightSkillJudge2Tool
         for (int h = 0; h < hitSkills.Length; h++)
         {
             InsFightSkill otherHit = hitSkills[h];
-            int basicDamag = FightDamageTool.CalcSkillFinalDamage(otherHit, attackerSide);
+            int basicDamag = ApplyHitCheck(otherHit, FightDamageTool.CalcSkillFinalDamage(otherHit, attackerSide));
             GD.Print($"      被攻击第{h + 1}击: 原始伤害={basicDamag}, 最终伤害={basicDamag}");
             FightRunningHouse.AddRunning2(
                 side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,
@@ -103,7 +134,7 @@ public static class FightSkillJudge2Tool
         for (int h = 0; h < hitSkills.Length; h++)
         {
             InsFightSkill otherHit = hitSkills[h];
-            int basicDamag = FightDamageTool.CalcSkillFinalDamage(otherHit, attackerSide);
+            int basicDamag = ApplyHitCheck(otherHit, FightDamageTool.CalcSkillFinalDamage(otherHit, attackerSide));
             GD.Print($"      被攻击第{h + 1}击: 原始伤害={basicDamag}, 最终伤害={basicDamag}");
             FightRunningHouse.AddRunning2(
                 side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,

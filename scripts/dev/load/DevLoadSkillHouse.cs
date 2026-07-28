@@ -29,11 +29,24 @@ public static class DevLoadSkillHouse
 		{ "0_1_1", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 拍击
 		{ "0_1_2", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 先发制人
 		{ "0_1_3", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 后发制人
+		{ "0_1_4", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 夹击
 		// 防御
 		{ "0_2_1", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.DEFENSE } },  // 防御
 		// 状态
 		{ "0_3_1", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.STATUS } },   // 聚能
 		{ "0_3_2", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.STATUS } },   // 加固
+		{ "0_3_3", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.STATUS } },   // 力量增效
+		{ "0_3_4", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.STATUS } },   // 魔法增效
+	};
+
+	/// <summary>
+	/// 冰系（Ice）技能配置
+	/// </summary>
+	private static readonly Dictionary<string, int[]> IceSkills = new()
+	{
+		// 攻击
+		{ "6_1_1", new[] { (int)EnumPetType.Ice, (int)EnumSkillType.ATTACK } },   // 极度冰点
+		{ "6_1_2", new[] { (int)EnumPetType.Ice, (int)EnumSkillType.ATTACK } },   // 冰心
 	};
 
 
@@ -52,6 +65,7 @@ public static class DevLoadSkillHouse
 
 		// 按需添加各系别技能
 		MergeDict(NormalSkills);
+		MergeDict(IceSkills);
 		MergeDict(SystemSkills);
 
 		// 后续扩充示例：

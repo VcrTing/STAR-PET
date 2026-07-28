@@ -25,6 +25,7 @@ public partial class FightYouStandBuffManager : Node2D
     /// <summary>
     /// 传入一组 Buff，根据每个 Buff 的 PetUuid 存入对应精灵的 Buff 列表
     /// 无 PetUuid 的 Buff 跳过
+    /// 同类 Buff（相同 Stat、IsRatio、ActiveMode）自动叠加层数
     /// </summary>
     /// <param name="newBuffs">要添加的 Buff 数组</param>
     public void AddBuffs(InsFightBuff[] newBuffs)
@@ -42,13 +43,21 @@ public partial class FightYouStandBuffManager : Node2D
             if (!_buffsDict.ContainsKey(buff.PetUuid))
                 _buffsDict[buff.PetUuid] = new List<InsFightBuff>();
 
-            _buffsDict[buff.PetUuid].Add(buff);
-        }
+            // 查找是否已有同类 Buff（相同 Stat、Value、IsRatio）
+            InsFightBuff existing = _buffsDict[buff.PetUuid].Find(
+                b => b.Stat == buff.Stat && b.Value == buff.Value && b.IsRatio == buff.IsRatio);
 
-        // 合并相同 Stat 的 Buff（同一精灵内）
-        foreach (var kvp in _buffsDict)
-        {
-            kvp.Value.Sort((a, b) => a.Stat.CompareTo(b.Stat));
+            if (existing != null)
+            {
+                // 同类 Buff：叠加层数（Value 固定不变）
+                existing.Layer += buff.Layer;
+                GD.Print($"      [FightYouStandBuffManager] 同类 Buff 叠加: Stat={buff.Stat} Layer={existing.Layer} Value={existing.Value}");
+            }
+            else
+            {
+                // 不同类 Buff：直接添加
+                _buffsDict[buff.PetUuid].Add(buff);
+            }
         }
 
         // 更新当前场上精灵的 Buff 视图

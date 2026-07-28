@@ -41,6 +41,7 @@ var damage_reduction_rate = 0       # 减伤率（默认0，0-100范围）
 
 # ---- 特殊效果 ----
 var instant_kill_rate := 0.00       # 秒杀敌人概率（默认0.00）
+var instant_kill_damage := 0        # 秒杀伤害值（默认0，0=不造成秒杀伤害，>0=触发秒杀时造成该数值的固伤）
 
 # ---- 特殊处理 ----
 var turn_end_special_id := 0        # 回合结束特殊处理代码ID（默认0=无特殊处理）
