@@ -1,0 +1,22 @@
+
+聚能:
+  执行聚能:
+    # res://scenegame/fightcenter/tool/skill/FightSkillStatusRunTool.cs ExecuteFocusEnergy
+
+技能计算:
+  伤害计算公式:
+    # res://scenegame/fightcenter/tool/FightDamageTool.cs CalcBasicDamage
+  加入Buff的加成:
+    # res://scenegame/fightcenter/tool/buff/FightBuffTool.cs
+  计算结果返回使用:
+    # res://scenegame/fightcenter/tool/inner/FightSkillJudge2Tool.cs
+
+技能发起执行:
+  # res://scenegame/fightcenter/running/FightRunningExe.cs ExecuteMy
+
+技能执行:
+  # res://scenegame/fightcenter/tool/running/FightRunningExeTool.cs
+
+技能鸭子模型:
+  调用外部Tool地点:
+    # res://scenegame/fightcenter/tool/skill/*

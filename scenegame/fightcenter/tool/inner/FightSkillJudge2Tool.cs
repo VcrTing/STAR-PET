@@ -38,7 +38,7 @@ public static class FightSkillJudge2Tool
             FightRunningHouse.AddRunning2(
                 side == EnumWho.My ? EnumFightRunningType.DoAttackMy : EnumFightRunningType.DoAttackYou,
                 side, sideSkill, 0, hit, EnumSkillType.None);
-            int basicDamag = FightDamageTool.CalcBasicDamage(hit, side);
+            int basicDamag = FightDamageTool.CalcSkillFinalDamage(hit, side);
             FightRunningHouse.AddRunning2(
                 side == EnumWho.My ? EnumFightRunningType.DoDamageYou : EnumFightRunningType.DoDamageMy,
                 targetSide, sideSkill, basicDamag, hit);
@@ -58,7 +58,7 @@ public static class FightSkillJudge2Tool
 
         for (int h = 0; h < hitSkills.Length; h++)
         {
-            int basicDamag = FightDamageTool.CalcBasicDamage(hitSkills[h], attackerSide);
+            int basicDamag = FightDamageTool.CalcSkillFinalDamage(hitSkills[h], attackerSide);
             int finalDamage = DevSkillCompuTool.DamageBeDefense(basicDamag, sideSkill.Skill.DamageReductionRate);
             GD.Print($"      防御第{h + 1}击: 原始伤害={basicDamag}, 最终伤害={finalDamage}");
             FightRunningHouse.AddRunning2(
@@ -81,7 +81,7 @@ public static class FightSkillJudge2Tool
         for (int h = 0; h < hitSkills.Length; h++)
         {
             InsFightSkill otherHit = hitSkills[h];
-            int basicDamag = FightDamageTool.CalcBasicDamage(otherHit, attackerSide);
+            int basicDamag = FightDamageTool.CalcSkillFinalDamage(otherHit, attackerSide);
             GD.Print($"      被攻击第{h + 1}击: 原始伤害={basicDamag}, 最终伤害={basicDamag}");
             FightRunningHouse.AddRunning2(
                 side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,
@@ -103,7 +103,7 @@ public static class FightSkillJudge2Tool
         for (int h = 0; h < hitSkills.Length; h++)
         {
             InsFightSkill otherHit = hitSkills[h];
-            int basicDamag = FightDamageTool.CalcBasicDamage(otherHit, attackerSide);
+            int basicDamag = FightDamageTool.CalcSkillFinalDamage(otherHit, attackerSide);
             GD.Print($"      被攻击第{h + 1}击: 原始伤害={basicDamag}, 最终伤害={basicDamag}");
             FightRunningHouse.AddRunning2(
                 side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,

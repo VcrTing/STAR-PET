@@ -27,13 +27,16 @@ public static class FightPetLifeTool
             FightLandMyStandPet.Instance?.DestroyPetWrapper();
 
             // 清除该精灵的 ThisPetAppear Buff
-            FightMyStandBuffManager.Instance?.RemoveThisPetAppearBuffs(pet);
+            FightMyStandBuffManager.Instance?.WhenPetDisAppear(pet);
         }
         else
         {
             FightAliveHouse.YouDiePets.Add(pet);
             FightAliveHouse.HeartYou = Mathf.Max(FightAliveHouse.HeartYou - 1, 0);
             FightLandYouStandPet.Instance?.DestroyPetWrapper();
+
+            // 清除该精灵的 ThisPetAppear Buff
+            FightYouStandBuffManager.Instance?.WhenPetDisAppear(pet);
         }
     }
 

@@ -89,10 +89,27 @@ public partial class FightYouStandBuffManager : Node2D
     }
 
     /// <summary>
-    /// 精灵离场时调用，清除该精灵所有 ThisPetAppear 类型的 Buff
+    /// 精灵登场时调用，将传入的精灵所拥有的 Buff 更新到 UI 视图
+    /// </summary>
+    /// <param name="pet">登场精灵数据</param>
+    public void WhenPetAppear(InsFightPetData pet)
+    {
+        if (pet == null || string.IsNullOrWhiteSpace(pet.PetUuid))
+            return;
+
+        // 将该精灵的 Buff 更新到 UI
+        if (VBoxViewBuffsContentYou.Instance != null)
+        {
+            InsFightBuff[] buffs = GetBuffsByPetUuid(pet.PetUuid);
+            VBoxViewBuffsContentYou.Instance.UpdateBuffs(buffs);
+        }
+    }
+
+    /// <summary>
+    /// 精灵离场时调用，清除该精灵除 ThisPetPermanent（永久）之外的所有 Buff
     /// </summary>
     /// <param name="pet">离场精灵数据</param>
-    public void RemoveThisPetAppearBuffs(InsFightPetData pet)
+    public void WhenPetDisAppear(InsFightPetData pet)
     {
         if (pet == null || string.IsNullOrWhiteSpace(pet.PetUuid))
             return;
@@ -101,49 +118,18 @@ public partial class FightYouStandBuffManager : Node2D
             return;
 
         var list = _buffsDict[pet.PetUuid];
-        int removed = list.RemoveAll(buff => buff != null && buff.ActiveMode == EnumBuffActiveMode.ThisPetAppear);
+        int removed = list.RemoveAll(buff => buff != null && buff.ActiveMode != EnumBuffActiveMode.ThisPetPermanent);
 
         if (removed > 0)
         {
-            GD.Print($"[FightYouStandBuffManager] 精灵 [{pet.PetName}] 离场，清除 ThisPetAppear Buff {removed} 个");
+            GD.Print($"[FightYouStandBuffManager] 精灵 [{pet.PetName}] 离场，清除非永久 Buff {removed} 个");
 
-            // 如果该精灵的 Buff 列表为空，则删除该键
+            // 如果该精灵的 Buff 列表只剩永久 Buff 或为空，则删除该键（永久 Buff 随精灵永存，但效果保留到切换）
             if (list.Count == 0)
                 _buffsDict.Remove(pet.PetUuid);
 
             // 刷新当前场上精灵的 Buff 视图
             RefreshCurrentView();
         }
-    }
-
-    /// <summary>
-    /// 根据传入的精灵，计算所有 Buff 对该精灵各项个体值的总加成值
-    /// </summary>
-    /// <param name="pet">目标精灵数据</param>
-    /// <returns>stat -> 总加成值 的字典（纯加值，不含基础值）</returns>
-    public Dictionary<EnumPetBaseStats, int> CalculateBuffStats(InsFightPetData pet)
-    {
-        var result = new Dictionary<EnumPetBaseStats, int>();
-
-        if (pet == null || string.IsNullOrWhiteSpace(pet.PetUuid))
-            return result;
-
-        if (!_buffsDict.ContainsKey(pet.PetUuid))
-            return result;
-
-        foreach (var buff in _buffsDict[pet.PetUuid])
-        {
-            if (buff == null)
-                continue;
-
-            int totalValue = buff.Layer * buff.Value;
-
-            if (result.ContainsKey(buff.Stat))
-                result[buff.Stat] += totalValue;
-            else
-                result[buff.Stat] = totalValue;
-        }
-
-        return result;
     }
 }

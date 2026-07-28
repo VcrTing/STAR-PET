@@ -83,12 +83,27 @@ public static class FightDamageTool
 	/// <param name="attacker">攻击方宠物战斗数据</param>
 	/// <param name="defender">防守方宠物战斗数据</param>
 	/// <returns>计算后的最终伤害值</returns>
-	public static int CalcBasicDamage(InsFightSkill skill, InsFightPetData attacker, InsFightPetData defender)
+	public static int CalcSkillFinalDamage(InsFightSkill skill, InsFightPetData attacker, InsFightPetData defender)
 	{
 		if (skill?.Skill == null || attacker == null || defender == null)
 			return 0;
 
-		return CalcBasicDamage(skill, attacker.FinalStats, defender.FinalStats, attacker.Level, defender.PetTypes, skill.IsSameType(attacker));
+		// 干预 六维：基于基础 FinalStats，叠加 Buff 加成值
+		Dictionary<EnumPetBaseStats, int> attackStats = new(attacker.FinalStats);
+		Dictionary<EnumPetBaseStats, int> defenderStats = new(defender.FinalStats);
+
+		// 首先根据 Buff 进行干预
+		Dictionary<EnumPetBaseStats, int> buffAtk = FightBuffTool.CalculateBuffStats(attacker);
+		Dictionary<EnumPetBaseStats, int> buffDef = FightBuffTool.CalculateBuffStats(defender);
+		FightBuffTool.MergeBuffStats(attackStats, buffAtk);
+		FightBuffTool.MergeBuffStats(defenderStats, buffDef);
+
+		GD.Print($"[FightDamageTool] 攻击方 Buff 加成: {DictToString(buffAtk)}");
+		GD.Print($"[FightDamageTool] 防守方 Buff 加成: {DictToString(buffDef)}");
+		GD.Print($"[FightDamageTool] 攻击方叠加后: {DictToString(attackStats)}");
+		GD.Print($"[FightDamageTool] 防守方叠加后: {DictToString(defenderStats)}");
+
+		return CalcBasicDamage(skill, attackStats, defenderStats, attacker.Level, defender.PetTypes, skill.IsSameType(attacker));
 	}
 
 	/// <summary>
@@ -97,7 +112,7 @@ public static class FightDamageTool
 	/// <param name="skill">战斗技能实例</param>
 	/// <param name="side">攻击方标识</param>
 	/// <returns>计算后的最终伤害值</returns>
-	public static int CalcBasicDamage(InsFightSkill skill, EnumWho side)
+	public static int CalcSkillFinalDamage(InsFightSkill skill, EnumWho side)
 	{
 		InsFightPetData attacker, defender;
 		if (side == EnumWho.My)
@@ -111,7 +126,7 @@ public static class FightDamageTool
 			defender = FightLandMyStandPet.Instance?.FightPetData;
 		}
 
-		return CalcBasicDamage(skill, attacker, defender);
+		return CalcSkillFinalDamage(skill, attacker, defender);
 	}
 
 	/// <summary>
@@ -155,6 +170,20 @@ public static class FightDamageTool
 
 		EnumPetBaseStats defStat = skill.Skill.AttackType == 2 ? EnumPetBaseStats.DEF : EnumPetBaseStats.MDEF;
 		return StatOrDefault(defender.FinalStats, defStat, 30);
+	}
+
+	/// <summary>
+	/// 将属性字典格式化为字符串（用于日志输出）
+	/// </summary>
+	private static string DictToString(Dictionary<EnumPetBaseStats, int> dict)
+	{
+		if (dict == null || dict.Count == 0)
+			return "[]";
+
+		var parts = new System.Collections.Generic.List<string>();
+		foreach (var kvp in dict)
+			parts.Add($"{kvp.Key}={kvp.Value}");
+		return "[" + string.Join(", ", parts) + "]";
 	}
 
 	/// <summary>

@@ -51,6 +51,7 @@ public static class FightSkillStatusRunTool
 
     /// <summary>
     /// 执行聚能效果：根据 side 判定是哪一方的精灵，从 FightGameInit 读取补充量补充能量（Pp）
+    /// 补充后不超过 MaxPpMy / MaxPpYou 上限
     /// </summary>
     public static void ExecuteFocusEnergy(int index, FightRunning run)
     {
@@ -60,6 +61,10 @@ public static class FightSkillStatusRunTool
             ? FightGameInit.Instance.GainPpMy
             : FightGameInit.Instance.GainPpYou;
 
+        int maxPp = run.Side == EnumWho.My
+            ? FightGameInit.MaxPpMy
+            : FightGameInit.MaxPpYou;
+
         InsFightPetData petData = run.Side == EnumWho.My
             ? FightLandMyStandPet.Instance?.FightPetData
             : FightLandYouStandPet.Instance?.FightPetData;
@@ -67,8 +72,8 @@ public static class FightSkillStatusRunTool
         if (petData != null)
         {
             int beforePp = petData.Pp;
-            petData.Pp += gainAmount;
-            GD.Print($"      [{index}] ExecuteFocusEnergy | 聚能: [{sideLabel}] Pp {beforePp} → {petData.Pp}（+{gainAmount}）");
+            petData.Pp = Mathf.Min(petData.Pp + gainAmount, maxPp);
+            GD.Print($"      [{index}] ExecuteFocusEnergy | 聚能: [{sideLabel}] Pp {beforePp} → {petData.Pp}（+{gainAmount}，上限={maxPp}）");
         }
         else
         {
