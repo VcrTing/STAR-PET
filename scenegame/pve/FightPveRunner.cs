@@ -69,4 +69,17 @@ public static class FightPveRunner
 		// PVE 结束
 		mgr.SetPveActedAndExecute();
 	}
+
+	/// <summary>
+	/// PVE 换宠逻辑：宠物死亡后，调用 AI 获取下一只上场的宠物
+	/// </summary>
+	/// <returns>下一只上场的精灵，无可用精灵返回 null</returns>
+	public static InsFightPetData RunPveWhenPreDie()
+	{
+		GD.Print($"  └─ [FightPveRunner] 执行 PVE 换宠... (模式={_currentMode})");
+
+		// 使用当前模式对应的 AI 大脑获取下一只宠物
+		var ai = GetCurrentAi();
+		return ai.GetNextPetWhenPreDie();
+	}
 }

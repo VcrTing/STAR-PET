@@ -241,8 +241,57 @@ public partial class FightCenterManger : Node2D
 
 	private void HandleDoingDie()
 	{
-		// 暂时置空，后续实现死亡处理逻辑
-		GD.Print("  💀 [DoingDie] 处理死亡（暂未实现）");
+		GD.Print($"  💀 [DoingDie] 处理死亡：我方死亡 {FightAliveHouse.MyDiePets.Count} 只，敌方死亡 {FightAliveHouse.YouDiePets.Count} 只");
+
+		// ── 胜负判定：根据 AliveHouse 的心数判断 ──
+		if (!FightAliveHouse.Alive(EnumWho.My))
+		{
+			GD.Print("  ❌ 我方全灭！战败！");
+			LabelGameStatus.SetText("❌ 我方全灭！战败！");
+			TransitionTo(FightState.BattleEnd);
+			return;
+		}
+		if (!FightAliveHouse.Alive(EnumWho.You))
+		{
+			GD.Print("  ✅ 敌方全灭！胜利！");
+			LabelGameStatus.SetText("✅ 敌方全灭！胜利！");
+			TransitionTo(FightState.BattleEnd);
+			return;
+		}
+
+		// ── 我方精灵死亡 → 触发换宠信号 ──
+		if (FightAliveHouse.MyDiePets.Count > 0)
+		{
+			var myPet = FightLandMyStandPet.Instance?.FightPetData;
+			if (myPet == null || myPet.Hp <= 0)
+			{
+				GD.Print("  💀 [DoingDie] 我方精灵死亡，请求玩家换宠");
+				EmitSignal(SignalPetFainted, EnumWho.My.ToString(), FightCenterUtil.GetCurrentPlayerPetIndex());
+				_needPlayerFaintSwitch = true;
+				TransitionTo(FightState.PlayerTurn);
+				return;
+			}
+		}
+
+		// ── 敌方精灵死亡 → PVE 自动换宠 ──
+		if (FightAliveHouse.YouDiePets.Count > 0)
+		{
+			if (FightGameInit.Instance != null && !FightGameInit.Instance.IsPvp)
+			{
+				var nextPet = FightPveRunner.RunPveWhenPreDie();
+				if (nextPet != null)
+				{
+					GD.Print($"  💀 [DoingDie] 敌方换宠 → {nextPet.PetName}");
+					FightLandYouStandPet.Instance?.SwitchPet(nextPet);
+				}
+			}
+			else
+			{
+				GD.Print("  💀 [DoingDie] PVP 敌方换宠暂未实现");
+			}
+		}
+
+		// 死亡处理完毕，进入下一回合
 		NextTurn();
 	}
 

@@ -61,6 +61,17 @@ public static class FightAliveHouse
 	}
 
 	/// <summary>
+	/// 判断指定方是否还有心数（Heart > 0 表示还有可用精灵）
+	/// </summary>
+	/// <param name="side">阵营（我方/敌方）</param>
+	/// <returns>还有心数返回 true，心数为 0 返回 false</returns>
+	public static bool Alive(EnumWho side)
+	{
+		int heart = side == EnumWho.My ? HeartMy : HeartYou;
+		return heart > 0;
+	}
+
+	/// <summary>
 	/// 清空所有死亡列表
 	/// </summary>
 	public static void Clear()

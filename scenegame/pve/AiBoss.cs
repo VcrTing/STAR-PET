@@ -34,4 +34,16 @@ public class AiBoss : IPveAiRunnerImpl
 		GD.Print($"    └─ [AiBoss] BOSS 无可用技能，执行无行动");
 		return new TurnAction(TurnActionType.Charge, EnumWho.You);
 	}
+
+	public InsFightPetData GetNextPetWhenPreDie()
+	{
+		var alivePets = FightPetLifeTool.GetAlivePets(EnumWho.You);
+		if (alivePets.Count > 0)
+		{
+			GD.Print($"    └─ [AiBoss] BOSS换宠 → {alivePets[0].PetName}");
+			return alivePets[0];
+		}
+		GD.Print($"    └─ [AiBoss] BOSS 无可用精灵");
+		return null;
+	}
 }

@@ -77,6 +77,38 @@ public static class FightPetLifeTool
     }
 
     /// <summary>
+    /// 获取指定方的所有存活精灵列表（包含背包和场上）
+    /// </summary>
+    /// <param name="side">所属方</param>
+    /// <returns>存活精灵列表（不含场上已死亡精灵）</returns>
+    public static List<InsFightPetData> GetAlivePets(EnumWho side)
+    {
+        var alivePets = new List<InsFightPetData>();
+        List<InsFightPetData> pets = side == EnumWho.My
+            ? PlayerLandMyStandPlayer.Instance?.FightPets
+            : PlayerLandYouStandPlayer.Instance?.FightPets;
+
+        if (pets != null)
+        {
+            foreach (var pet in pets)
+            {
+                if (pet != null && pet.Hp > 0)
+                    alivePets.Add(pet);
+            }
+        }
+
+        // 场上精灵（可能不在背包列表中）
+        InsFightPetData standPet = side == EnumWho.My
+            ? FightLandMyStandPet.Instance?.FightPetData
+            : FightLandYouStandPet.Instance?.FightPetData;
+
+        if (standPet != null && standPet.Hp > 0 && !alivePets.Contains(standPet))
+            alivePets.Add(standPet);
+
+        return alivePets;
+    }
+
+    /// <summary>
     /// 获取指定方的所有存活精灵 Uuid（包含背包和场上）
     /// </summary>
     /// <param name="side">所属方</param>
@@ -119,13 +151,13 @@ public static class FightPetLifeTool
     {
         var newDiePets = new List<InsFightPetData>();
 
-        // 我方：检查所有精灵，若不在 aliveMyUuids 中且 Hp <= 0，则为本回合死亡
+        // 我方：检查所有精灵，若在 aliveMyUuids 中（回合开始时活着）且现 Hp <= 0，则为本回合死亡
         var myFightPets = PlayerLandMyStandPlayer.Instance?.FightPets;
         if (myFightPets != null)
         {
             foreach (var pet in myFightPets)
             {
-                if (pet != null && pet.Hp <= 0 && !aliveMyUuids.Contains(pet.PetUuid))
+                if (pet != null && pet.Hp <= 0 && aliveMyUuids.Contains(pet.PetUuid))
                 {
                     AddDiePet(pet, EnumWho.My);
                     newDiePets.Add(pet);
@@ -133,7 +165,7 @@ public static class FightPetLifeTool
             }
         }
         var myStandPet = FightLandMyStandPet.Instance?.FightPetData;
-        if (myStandPet != null && myStandPet.Hp <= 0 && !aliveMyUuids.Contains(myStandPet.PetUuid))
+        if (myStandPet != null && myStandPet.Hp <= 0 && aliveMyUuids.Contains(myStandPet.PetUuid))
         {
             AddDiePet(myStandPet, EnumWho.My);
             newDiePets.Add(myStandPet);
@@ -145,7 +177,7 @@ public static class FightPetLifeTool
         {
             foreach (var pet in youFightPets)
             {
-                if (pet != null && pet.Hp <= 0 && !aliveYouUuids.Contains(pet.PetUuid))
+                if (pet != null && pet.Hp <= 0 && aliveYouUuids.Contains(pet.PetUuid))
                 {
                     AddDiePet(pet, EnumWho.You);
                     newDiePets.Add(pet);
@@ -153,7 +185,7 @@ public static class FightPetLifeTool
             }
         }
         var youStandPet = FightLandYouStandPet.Instance?.FightPetData;
-        if (youStandPet != null && youStandPet.Hp <= 0 && !aliveYouUuids.Contains(youStandPet.PetUuid))
+        if (youStandPet != null && youStandPet.Hp <= 0 && aliveYouUuids.Contains(youStandPet.PetUuid))
         {
             AddDiePet(youStandPet, EnumWho.You);
             newDiePets.Add(youStandPet);
