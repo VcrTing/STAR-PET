@@ -2,7 +2,8 @@
 //  战斗中心管理器（单例）
 //  职责：控制战斗进程状态机
 //  状态流：None → BattleStart → TurnStart → PlayerTurn → YouTurn →
-//          ExecuteTurn → CheckFaint → (PlayerTurn/NextTurn) → ... → BattleEnd
+//          ExecuteTurn → (有死亡→DoingDie换宠→...) 
+//                       → (无死亡→TurnStart) → ... → BattleEnd
 //  ⚠ PlayerTurn 即包含正常选行动也包含濒死后强制换宠
 // ════════════════════════════════════════════════════════════════
 
@@ -175,7 +176,7 @@ public partial class FightCenterManger : Node2D
 			case FightState.PlayerTurn:   HandlePlayerTurn();   break;
 			case FightState.YouTurn:      HandleEnemyTurn();    break;
 			case FightState.ExecuteTurn:  HandleExecuteTurn();  break;
-			case FightState.CheckFaint:   HandleCheckFaint();   break;
+			case FightState.DoingDie:     HandleDoingDie();     break;
 			case FightState.BattleEnd:    HandleBattleEnd();    break;
 		}
 	}
@@ -221,54 +222,27 @@ public partial class FightCenterManger : Node2D
 	{
 		GD.Print($"─────────────────\n  ⚔️ 第 {_turnNumber} 回合执行\n─────────────────");
 
-		// 执行双方行动，接收回合结束效果
-		FightExeAction.ExecuteActions(MyTurnActs, YouTurnActs);
+		// 执行双方行动，获取本回合死亡精灵列表
+		var newDiePets = FightExeAction.ExecuteActions(MyTurnActs, YouTurnActs);
 
-		TransitionTo(FightState.CheckFaint);
+		if (newDiePets.Count > 0)
+		{
+			// 有精灵死亡 → 进入死亡检查流程
+			GD.Print($"  💀 [HandleExecuteTurn] 本回合有 {newDiePets.Count} 只精灵死亡，进入 DoingDie");
+			TransitionTo(FightState.DoingDie);
+		}
+		else
+		{
+			// 无精灵死亡 → 直接进入下一回合
+			GD.Print("  ✅ [HandleExecuteTurn] 本回合无精灵死亡，直接进入下一回合");
+			NextTurn();
+		}
 	}
 
-	private void HandleCheckFaint()
+	private void HandleDoingDie()
 	{
-		var playerPet = FightLandMyStandPet.Instance?.FightPetData;
-		var enemyPet = FightCenterUtil.GetEnemyActivePet();
-		bool playerDead = playerPet != null && playerPet.Hp <= 0;
-		bool enemyDead = enemyPet != null && enemyPet.Hp <= 0;
-
-		int alive = 0;
-		foreach (var p in PlayerLandMyStandPlayer.Instance.FightPets)
-			if (p.Hp > 0) alive++;
-
-		if (alive == 0)
-		{
-			GD.Print("  ❌ 我方全灭！战败！");
-			LabelGameStatus.SetText("❌ 我方全灭！战败！");
-			TransitionTo(FightState.BattleEnd);
-			return;
-		}
-		if (enemyDead)
-		{
-			GD.Print("  ✅ 敌方全灭！胜利！");
-			LabelGameStatus.SetText("✅ 敌方全灭！胜利！");
-			TransitionTo(FightState.BattleEnd);
-			return;
-		}
-		if (playerDead)
-		{
-			LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场");
-			EmitSignal(SignalPetFainted, EnumWho.My.ToString(), FightCenterUtil.GetCurrentPlayerPetIndex());
-			_needPlayerFaintSwitch = true;
-			TransitionTo(FightState.PlayerTurn);
-			return;
-		}
-		if (enemyDead)
-		{
-			// 敌方精灵濒死 — 敌方自动换宠（暂无多精灵，直接下一回合）
-			LabelGameStatus.SetText("💀 敌方精灵濒死，敌方换宠...");
-			EmitSignal(SignalPetFainted, EnumWho.You.ToString(), 0);
-			GD.Print("  └─ [敌方] 换宠完毕");
-			NextTurn();
-			return;
-		}
+		// 暂时置空，后续实现死亡处理逻辑
+		GD.Print("  💀 [DoingDie] 处理死亡（暂未实现）");
 		NextTurn();
 	}
 
@@ -295,20 +269,38 @@ public partial class FightCenterManger : Node2D
 
 		if (_turnNumber == 0)
 		{
-			GD.Print($"╔══════════════════════════════════════╗\n║      🌅 第 0 回合 · 系统初始化       ║\n║      {info,-28} ║\n║      ⏳ 战场准备中...                ║\n╚══════════════════════════════════════╝");
+			GD.Print("╔══════════════════════════════════════╗\n" +
+			         "║      🌅 第 0 回合 · 系统初始化        ║\n" +
+			        $"║  {info,-34}║\n" +
+			         "║       ⏳ 战场准备中...                 ║\n" +
+			         "╚══════════════════════════════════════╝");
 			LabelGameStatus.SetText("🌅 战场准备中...");
 			_turnNumber = 1;
 		}
 		else
 		{
-			GD.Print($"╔══════════════════════════════════════╗\n║      第 {_turnNumber,2} 回合   🌅 回合开始      ║\n║      {info,-28} ║\n╚══════════════════════════════════════╝");
+			GD.Print("╔══════════════════════════════════════╗\n" +
+			        $"║{DispCenter($"第 {_turnNumber} 回合  🌅 回合开始", 36)}║\n" +
+			        $"║{DispCenter(info, 36)}║\n" +
+			         "╚══════════════════════════════════════╝");
 			LabelGameStatus.SetText($"🌅 第 {_turnNumber} 回合开始\n{info}");
 		}
 
-		//
-		
-
 		TransitionTo(FightState.PlayerTurn);
+	}
+
+	/// <summary>
+	/// 中英混排居中辅助方法（中文按2个英文字符宽度计算）
+	/// </summary>
+	private static string DispCenter(string text, int totalWidth)
+	{
+		int len = 0;
+		foreach (char c in text)
+			len += (c > 127) ? 2 : 1;
+		int pad = totalWidth - len;
+		if (pad <= 0) return text;
+		int left = pad / 2;
+		return new string(' ', left) + text + new string(' ', pad - left);
 	}
 
 	private void DoPlayerSwitch(int idx)

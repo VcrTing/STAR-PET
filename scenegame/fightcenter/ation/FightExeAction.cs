@@ -17,12 +17,13 @@ public static class FightExeAction
 	/// </summary>
 	/// <param name="myTurnActs">我方行动数组（TurnAction[9]）</param>
 	/// <param name="youTurnActs">敌方行动数组（TurnAction[9]）</param>
-	public static void ExecuteActions(
+	/// <returns>本回合新死亡的精灵列表（包含双方），空列表表示本回合无精灵死亡</returns>
+	public static List<InsFightPetData> ExecuteActions(
 		TurnAction[] myTurnActs,
 		TurnAction[] youTurnActs)
 	{
 		if (myTurnActs == null || youTurnActs == null)
-			return;
+			return new List<InsFightPetData>();
 
 		// 步骤1：通过 FightExeAfter 进行技能优先级排序
 		FightExeAfter.SortActionsByPriority(myTurnActs, youTurnActs, out var sortedMy, out var sortedYou);
@@ -51,11 +52,13 @@ public static class FightExeAction
 		// 步骤5：加入血量检查 Running
 		FightRunningBuildTool.BuildCheckHp();
 
-		// 步骤6：最终执行 Running[]
-		FightRunningExe.ExecuteAll();
+		// 步骤6：最终执行 Running[]，获取本回合死亡精灵列表
+		var newDiePets = FightRunningExe.ExecuteAll();
 
 		// 步骤7：清空，开始下一个回合
 		FightRunningHouse.ClearRunArray();
+
+		return newDiePets;
 	}
 
 	/// <summary>

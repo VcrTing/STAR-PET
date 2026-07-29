@@ -4,6 +4,7 @@
 // ════════════════════════════════════════════════════════════════
 
 using Godot;
+using System.Collections.Generic;
 
 /// <summary>
 /// 回合运行执行器
@@ -14,7 +15,8 @@ public static class FightRunningExe
     /// <summary>
     /// 执行所有 FightRunning 阶段，并打印日志
     /// </summary>
-    public static void ExecuteAll()
+    /// <returns>本回合新死亡的精灵列表（包含双方），可用于判断是否需要进入死亡处理流程</returns>
+    public static List<InsFightPetData> ExecuteAll()
     {
         FightRunning[] runnings = FightRunningHouse.CurrentRunArray;
         GD.Print($"[FightRunningExe] 开始执行 FightRunning，==================");
@@ -54,9 +56,11 @@ public static class FightRunningExe
         }
 
         // 对比本回合前后的存活列表，收集本回合新死亡的精灵
-        FightAliveHouse.CollectDiePets(aliveMyUuids, aliveYouUuids);
+        var newDiePets = FightAliveHouse.CollectDiePets(aliveMyUuids, aliveYouUuids);
 
-        GD.Print($"[FightRunningExe] FightRunning 执行完毕，==================");
+        GD.Print($"[FightRunningExe] FightRunning 执行完毕，本回合死亡 {newDiePets.Count} 只精灵，==================");
+        
+        return newDiePets;
     }
 
     /// <summary>

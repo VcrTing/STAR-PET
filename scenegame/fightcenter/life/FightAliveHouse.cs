@@ -54,9 +54,10 @@ public static class FightAliveHouse
 	/// </summary>
 	/// <param name="aliveMyUuids">本回合开始时我方存活精灵 Uuid</param>
 	/// <param name="aliveYouUuids">本回合开始时敌方存活精灵 Uuid</param>
-	public static void CollectDiePets(HashSet<string> aliveMyUuids, HashSet<string> aliveYouUuids)
+	/// <returns>返回本回合新死亡的精灵列表（包含双方）</returns>
+	public static List<InsFightPetData> CollectDiePets(HashSet<string> aliveMyUuids, HashSet<string> aliveYouUuids)
 	{
-		FightPetLifeTool.CollectDiePets(aliveMyUuids, aliveYouUuids);
+		return FightPetLifeTool.CollectDiePets(aliveMyUuids, aliveYouUuids);
 	}
 
 	/// <summary>

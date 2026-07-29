@@ -11,7 +11,7 @@ public enum FightState
 	PlayerTurn,     // 🧑 玩家回合（含正常行动与濒死换宠）
 	YouTurn,        // 👹 敌方回合
 	ExecuteTurn,    // ⚔️ 回合执行
-	CheckFaint,     // 💀 濒死检查
+	DoingDie,       // 💀 处理死亡：本回合有精灵死亡，处理换宠/胜负判定
 	BattleEnd       // 🏁 战斗结束
 }
 

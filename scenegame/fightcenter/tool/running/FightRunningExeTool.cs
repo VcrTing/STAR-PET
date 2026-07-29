@@ -12,26 +12,19 @@ public static class FightRunningExeTool
     /// </summary>
     public static void ExecuteDamage(FightRunning run, int index)
     {
+        if (run == null) { GD.PrintErr("ExecuteDamage | run 为 null"); return; }
+
         string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
 
-        // 获取要扣血的精灵
-        InsFightPetData targetPet = run.Side == EnumWho.My
-            ? FightLandMyStandPet.Instance?.FightPetData
-            : FightLandYouStandPet.Instance?.FightPetData;
+        // 执行鸭子技能模型
+        InsFightSkill sideSkill = run.SideFightSkill;
+        InsFightSkill targetSkill = run.TargetFightSkill;
 
-        if (targetPet == null)
-        {
-            GD.Print($"      [{index}] {sideLabel} {run.RunningType} | 目标精灵为空，跳过扣血");
-            return;
-        }
-
-        // 执行扣血
-        int actualDamage = run.Damage;
-        targetPet.Hp = Mathf.Max(targetPet.Hp - actualDamage, 0);
+        // 使用 FightPetHpTool 执行扣血
+        int actualDamage = FightPetHpTool.DeductHp(run.Side, run.Damage, index);
 
         GD.Print($"      [{index}] {sideLabel} {run.RunningType} | " +
-                 $"damage={actualDamage} {targetPet.PetName} HP: {targetPet.Hp}/{targetPet.MaxHp} " +
-                 $"bingoSkillType={run.BingoSkillType}");
+                 $"damage={actualDamage} bingoSkillType={run.BingoSkillType}" + " 对方技能 =" + (targetSkill != null ? targetSkill.Skill.SkillName : "空"));
     }
 
     /// <summary>
@@ -51,7 +44,6 @@ public static class FightRunningExeTool
         if (sideSkill.Skill == null) { GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | sideSkill.Skill 为 null"); return; }
 
         InsSkill skill = sideSkill.Skill;
-
         if (string.IsNullOrWhiteSpace(sideSkill.ImplClass))
         {
             GD.PrintErr($"      [{index}] {sideLabel} {run.RunningType} | 错误：技能 {skill.SkillName} 未配置 impl_class，缺少鸭子实现");

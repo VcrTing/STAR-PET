@@ -41,6 +41,42 @@ public static class FightPetLifeTool
     }
 
     /// <summary>
+    /// 从死亡精灵列表中筛选出指定方的死亡精灵
+    /// </summary>
+    /// <param name="deadPets">死亡精灵列表（可能包含双方）</param>
+    /// <param name="side">要筛选的阵营</param>
+    /// <returns>属于该阵营的死亡精灵列表</returns>
+    public static List<InsFightPetData> FilterDeadBySide(List<InsFightPetData> deadPets, EnumWho side)
+    {
+        var result = new List<InsFightPetData>();
+        if (deadPets == null || deadPets.Count == 0)
+            return result;
+
+        // 获取该方所有 FightPets 的 Uuid 集合，用于判定归属
+        HashSet<string> sidePetUuids = new HashSet<string>();
+        List<InsFightPetData> sidePets = side == EnumWho.My
+            ? PlayerLandMyStandPlayer.Instance?.FightPets
+            : PlayerLandYouStandPlayer.Instance?.FightPets;
+
+        if (sidePets != null)
+        {
+            foreach (var p in sidePets)
+            {
+                if (p != null && !string.IsNullOrEmpty(p.PetUuid))
+                    sidePetUuids.Add(p.PetUuid);
+            }
+        }
+
+        foreach (var pet in deadPets)
+        {
+            if (pet != null && sidePetUuids.Contains(pet.PetUuid))
+                result.Add(pet);
+        }
+
+        return result;
+    }
+
+    /// <summary>
     /// 获取指定方的所有存活精灵 Uuid（包含背包和场上）
     /// </summary>
     /// <param name="side">所属方</param>
@@ -78,8 +114,11 @@ public static class FightPetLifeTool
     /// </summary>
     /// <param name="aliveMyUuids">本回合开始时我方存活精灵 Uuid</param>
     /// <param name="aliveYouUuids">本回合开始时敌方存活精灵 Uuid</param>
-    public static void CollectDiePets(HashSet<string> aliveMyUuids, HashSet<string> aliveYouUuids)
+    /// <returns>返回本回合新死亡的精灵列表（包含双方）</returns>
+    public static List<InsFightPetData> CollectDiePets(HashSet<string> aliveMyUuids, HashSet<string> aliveYouUuids)
     {
+        var newDiePets = new List<InsFightPetData>();
+
         // 我方：检查所有精灵，若不在 aliveMyUuids 中且 Hp <= 0，则为本回合死亡
         var myFightPets = PlayerLandMyStandPlayer.Instance?.FightPets;
         if (myFightPets != null)
@@ -89,6 +128,7 @@ public static class FightPetLifeTool
                 if (pet != null && pet.Hp <= 0 && !aliveMyUuids.Contains(pet.PetUuid))
                 {
                     AddDiePet(pet, EnumWho.My);
+                    newDiePets.Add(pet);
                 }
             }
         }
@@ -96,6 +136,7 @@ public static class FightPetLifeTool
         if (myStandPet != null && myStandPet.Hp <= 0 && !aliveMyUuids.Contains(myStandPet.PetUuid))
         {
             AddDiePet(myStandPet, EnumWho.My);
+            newDiePets.Add(myStandPet);
         }
 
         // 敌方：同样逻辑
@@ -107,6 +148,7 @@ public static class FightPetLifeTool
                 if (pet != null && pet.Hp <= 0 && !aliveYouUuids.Contains(pet.PetUuid))
                 {
                     AddDiePet(pet, EnumWho.You);
+                    newDiePets.Add(pet);
                 }
             }
         }
@@ -114,6 +156,9 @@ public static class FightPetLifeTool
         if (youStandPet != null && youStandPet.Hp <= 0 && !aliveYouUuids.Contains(youStandPet.PetUuid))
         {
             AddDiePet(youStandPet, EnumWho.You);
+            newDiePets.Add(youStandPet);
         }
+
+        return newDiePets;
     }
 }

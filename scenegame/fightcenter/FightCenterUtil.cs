@@ -39,12 +39,11 @@ public static class FightCenterUtil
 
 	/// <summary>
 	/// 获取敌方当前上场精灵
-	/// TODO: 接入敌方管理器后替换为真实数据
 	/// </summary>
-	/// <returns>敌方上场精灵的战斗数据，暂无实现返回 null</returns>
+	/// <returns>敌方上场精灵的战斗数据，暂无精灵返回 null</returns>
 	public static InsFightPetData GetEnemyActivePet()
 	{
-		return null;
+		return FightLandYouStandPet.Instance?.FightPetData;
 	}
 
 	// ───────────────────────────── 索引查找 ─────────────────────────
@@ -123,7 +122,7 @@ public static class FightCenterUtil
 		FightState.PlayerTurn => "🧑 玩家回合",
 		FightState.YouTurn => "👹 敌方回合",
 		FightState.ExecuteTurn => "⚔️ 回合执行",
-		FightState.CheckFaint => "💀 濒死检查",
+		FightState.DoingDie => "💀 处理死亡",
 		_ => "❓ " + s.ToString()
 	};
 }
