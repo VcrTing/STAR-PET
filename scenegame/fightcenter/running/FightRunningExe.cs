@@ -28,8 +28,14 @@ public static class FightRunningExe
         for (int i = 0; i < runnings.Length; i++)
         {
             if (runnings[i] != null)
+            {
                 queue.Enqueue(runnings[i]);
+            }
         }
+
+        // 收集你我的本次回合应对（执行前：清理并填充 MyCurrentBingo / YouCurrentBingo）
+        FightBingoHouse.RecordBeforeExecute(runnings, EnumWho.My);
+        FightBingoHouse.RecordBeforeExecute(runnings, EnumWho.You);
 
         // 记录本回合开始时存活的精灵 Uuid（用于对比出本回合死亡的精灵）
         var aliveMyUuids = FightAliveHouse.GetAlivePetUuids(EnumWho.My);
@@ -67,6 +73,10 @@ public static class FightRunningExe
 
             index++;
         }
+
+        // 收集你我的上次回合应对（执行结束后：清理并填充 MyLastBingo / YouLastBingo）
+        FightBingoHouse.RecordAfterExecute(runnings, EnumWho.My);
+        FightBingoHouse.RecordAfterExecute(runnings, EnumWho.You);
 
         // 对比本回合前后的存活列表，收集本回合新死亡的精灵
         var newDiePets = FightAliveHouse.CollectDiePets(aliveMyUuids, aliveYouUuids);
