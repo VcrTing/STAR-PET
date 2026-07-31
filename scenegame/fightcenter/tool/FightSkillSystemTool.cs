@@ -44,7 +44,7 @@ public static class FightSkillSystemTool
                 FightRunningHouse.AddRunningSys(
                     side == EnumWho.My ? EnumFightRunningType.SwitchPetMy : EnumFightRunningType.SwitchPetYou,
                     side, sideSkill, willSwitchPet, null);
-                FightSkillJudge2Tool.SideSystemWhenOtherOneAttack(sideSkill, side, otherOneSkill);
+                FightSkillJudge2Tool.SideSystemWhenOtherOneAttack(sideSkill, side, otherOneSkill, willSwitchPet);
             }
             // 应对防御
             else if (otherOneSkill.Skill.SkillType == (int)EnumSkillType.DEFENSE)

@@ -121,20 +121,36 @@ public static class FightSkillJudge2Tool
     }
 
     /// <summary>
-    /// Side 系统，对方攻击 — 连击拆分 + 伤害计算
-    /// 根据 side 自动获取场上精灵数据
+    /// Side 系统（换宠），对方攻击 — 连击拆分 + 伤害计算
+    /// 若正在换宠，使用将上场的精灵（switchingPet）作为防守方计算伤害；
+    /// 否则使用当前场上精灵数据
     /// </summary>
-    public static void SideSystemWhenOtherOneAttack(InsFightSkill sideSkill, EnumWho side, InsFightSkill otherOneSkill)
+    /// <param name="sideSkill">换宠方技能实例</param>
+    /// <param name="side">换宠方（被攻击方）标识</param>
+    /// <param name="otherOneSkill">对方攻击技能实例</param>
+    /// <param name="switchingPet">将上场的精灵（换宠目标），null 则用当前场上精灵</param>
+    public static void SideSystemWhenOtherOneAttack(InsFightSkill sideSkill, EnumWho side, InsFightSkill otherOneSkill, InsFightPetData switchingPet = null)
     {
         // side 是系统方（被攻击方），攻击方是对方
         EnumWho attackerSide = side == EnumWho.My ? EnumWho.You : EnumWho.My;
+
+        // 攻击方精灵
+        InsFightPetData attacker = attackerSide == EnumWho.My
+            ? FightLandMyStandPet.Instance?.FightPetData
+            : FightLandYouStandPet.Instance?.FightPetData;
+
+        // 防守方精灵：换宠中则使用将上场的精灵，否则用当前场上精灵
+        InsFightPetData defender = switchingPet != null ? switchingPet
+            : (side == EnumWho.My
+                ? FightLandMyStandPet.Instance?.FightPetData
+                : FightLandYouStandPet.Instance?.FightPetData);
 
         InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(otherOneSkill);
 
         for (int h = 0; h < hitSkills.Length; h++)
         {
             InsFightSkill otherHit = hitSkills[h];
-            int basicDamag = ApplyHitCheck(otherHit, FightDamageTool.CalcSkillFinalDamage(otherHit, attackerSide));
+            int basicDamag = ApplyHitCheck(otherHit, FightDamageTool.CalcSkillFinalDamage(otherHit, attacker, defender));
             GD.Print($"      被攻击第{h + 1}击: 原始伤害={basicDamag}, 最终伤害={basicDamag}");
             FightRunningHouse.AddRunning2(
                 side == EnumWho.My ? EnumFightRunningType.DoDamageMy : EnumFightRunningType.DoDamageYou,

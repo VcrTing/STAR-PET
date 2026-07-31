@@ -51,7 +51,10 @@ public static class FightDamageTool
 		level = Math.Max(level, 1);
 
 		// 1. 先算基础伤害（只取整一次）
-		float baseCalc = ((2.0f * level / 5.0f + 2.0f) * power * ((float)atkVal / defVal)) / 50.0f + 2.0f;
+		// 宝可梦官方伤害公式（Gen III+）：
+		//   Damage = ((((2 × Level / 5 + 2) × Power × A / D) / 50) + 2) × Modifiers
+		//   其中 A=攻击，D=防御，每次除法/乘法后向下取整
+		float baseCalc = CalcBaseDamageValue(level, power, atkVal, defVal);
 		int baseDamage = Math.Max((int)baseCalc, 1); 
 
 		// 2. 获取系别克制倍率（如果免疫直接返回0）
@@ -127,6 +130,25 @@ public static class FightDamageTool
 		}
 
 		return CalcSkillFinalDamage(skill, attacker, defender);
+	}
+
+	/// <summary>
+	/// 宝可梦基础伤害值计算（官方公式主体，不含倍率修正）
+	///   Damage = (((2 × Level / 5 + 2) × Power × A / D) / 50) + 2
+	/// 其中 A = 攻击方攻击/特攻，D = 防守方防御/特防
+	/// 返回 float 供调用方决定取整时机
+	/// </summary>
+	/// <param name="level">攻击方等级</param>
+	/// <param name="power">技能威力</param>
+	/// <param name="atkVal">攻击方攻击/特攻数值</param>
+	/// <param name="defVal">防守方防御/特防数值</param>
+	/// <returns>洛克王国手游公式基础伤害浮点值</returns>
+	private static float CalcBaseDamageValue(int level, int power, int atkVal, int defVal)
+	{
+		// float pokemonDamage = ((2.0f * level / 5.0f + 2.0f) * power * ((float)atkVal / defVal)) / 50.0f + 2.0f;
+
+		// TODO: 自创公式
+		return ((2.0f * level / 5.0f + 2.0f) * power * ((float)atkVal / defVal)) / 30f + 2.0f;
 	}
 
 	/// <summary>
