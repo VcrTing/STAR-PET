@@ -64,6 +64,14 @@ public class InsFightSkill
 	public int ComboIndex { get; set; }
 
 	/// <summary>
+	/// 是否应对（bingo）
+	/// 由 RebuildTurn 阶段检测到应对（如对方切换宠物）时置 true，
+	/// 可用于标记本技能被应对而临时增幅（如威力翻倍），
+	/// 在 DoSkill 执行完毕伤害结算后检查并还原。
+	/// </summary>
+	public bool IsBingo { get; set; }
+
+	/// <summary>
 	/// 判断技能是否为使用者的本系技能（STAB）
 	/// 即技能的 ActualPetType 是否存在于 PetData 的 PetTypes 中
 	/// </summary>
