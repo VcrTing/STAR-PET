@@ -57,9 +57,14 @@ public static class FightExeAction
 		// 步骤6：最终执行 Running[]，获取本回合死亡精灵列表
 		var newDiePets = FightRunningExe.ExecuteAll();
 
+        // 收集你我的上次回合应对（执行结束后：清理并填充 MyLastBingo / YouLastBingo）
+        FightBingoHouse.RecordAfterExecute(EnumWho.My);
+        FightBingoHouse.RecordAfterExecute(EnumWho.You);
+
 		// 步骤7：清空，开始下一个回合
 		FightRunningHouse.ClearRunArray();
 
+		// 结束返回
 		return newDiePets;
 	}
 

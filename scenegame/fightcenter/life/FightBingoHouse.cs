@@ -11,13 +11,13 @@ public static class FightBingoHouse
 
     /// <summary>
     /// 我方本次回合应对阶段类型数组
-    /// 记录本次回合我方产生的应对（如 BingoAttackMy / BingoDefenseMy / BingoStatusMy 等）
+    /// 记录本次回合我方产生的应对（如 BingoAttackMy / BingoDefenseMy / BingoStatusMy / BingoSwitchPetMy 等）
     /// </summary>
     public static List<EnumFightRunningType> MyCurrentBingo { get; private set; } = new();
 
     /// <summary>
     /// 敌方本次回合应对阶段类型数组
-    /// 记录本次回合敌方产生的应对（如 BingoAttackYou / BingoDefenseYou / BingoStatusYou 等）
+    /// 记录本次回合敌方产生的应对（如 BingoAttackYou / BingoDefenseYou / BingoStatusYou / BingoSwitchPetYou 等）
     /// </summary>
     public static List<EnumFightRunningType> YouCurrentBingo { get; private set; } = new();
 
@@ -62,6 +62,21 @@ public static class FightBingoHouse
             YouCurrentBingo.AddRange(types);
     }
 
+    /// <summary>
+    /// 添加"应对切换宠物"到指定方（side）的本场回合应对数组（MyCurrentBingo / YouCurrentBingo）
+    /// My 方应对切换宠物 => 加入 BingoSwitchPetMy
+    /// You 方应对切换宠物 => 加入 BingoSwitchPetYou
+    /// 由技能 RebuildTurn 检测到对方切换宠物时调用
+    /// </summary>
+    /// <param name="side">所属方（My/You）</param>
+    public static void AddSwitchPetBingo(EnumWho side)
+    {
+        if (side == EnumWho.My)
+            Add(EnumWho.My, EnumFightRunningType.BingoSwitchPetMy);
+        else
+            Add(EnumWho.You, EnumFightRunningType.BingoSwitchPetYou);
+    }
+
     // ════════════════════════ 查询方法 ════════════════════════
 
     /// <summary>
@@ -89,6 +104,19 @@ public static class FightBingoHouse
     }
 
     /// <summary>
+    /// 判断指定方本次回合是否"应对切换宠物成功"
+    /// 即 Current 应对数组中是否包含 BingoSwitchPetMy / BingoSwitchPetYou
+    /// </summary>
+    /// <param name="side">所属方（My/You）</param>
+    /// <returns>true=本次回合应对切换宠物成功</returns>
+    public static bool HasCurrentSwitchPetBingo(EnumWho side)
+    {
+        return side == EnumWho.My
+            ? MyCurrentBingo.Contains(EnumFightRunningType.BingoSwitchPetMy)
+            : YouCurrentBingo.Contains(EnumFightRunningType.BingoSwitchPetYou);
+    }
+
+    /// <summary>
     /// 判断指定方上次回合是否产生过某类应对
     /// </summary>
     public static bool HasLastBingo(EnumWho side, EnumFightRunningType type)
@@ -108,12 +136,6 @@ public static class FightBingoHouse
     /// <param name="side">要记录的所属方（My/You）</param>
     public static void RecordBeforeExecute(FightRunning[] runnings, EnumWho side)
     {
-        // 加入前先清空本方本次回合应对数组
-        if (side == EnumWho.My)
-            MyCurrentBingo.Clear();
-        else
-            YouCurrentBingo.Clear();
-
         if (runnings == null) return;
 
         foreach (FightRunning run in runnings)
@@ -126,43 +148,32 @@ public static class FightBingoHouse
 
             // 2. 对方切换宠物 => 本方应对切换宠物成功
             if (IsSwitchPetBingoFor(side, run.RunningType))
-            {
-                
-            }
+                Add(side, side == EnumWho.My ? EnumFightRunningType.BingoSwitchPetMy : EnumFightRunningType.BingoSwitchPetYou);
         }
     }
 
     /// <summary>
-    /// 回合执行结束后调用：扫描传入的 FightRunning 数组，收集指定方（side）的应对阶段
-    /// 1. 本方产生的 Bingo 应对阶段（BingoAttack/Defense/Status/SwitchPet，由 IsBingoType 判断）
-    /// 2. 对方切换宠物（SwitchPetMy/You）=> 本方应对切换宠物成功，加入 BingoSwitchPetMy/You
-    /// 先清空本方上次回合应对数组，再全部加入（供跨回合技能效果追溯使用）
+    /// 回合执行结束后调用：将本次回合应对数组移入上次回合应对数组，并清空本次回合应对
+    /// （不重新扫描 FightRunning，直接复用 RecordBeforeExecute 已填充的 Current 数组）
     /// </summary>
-    /// <param name="runnings">本次回合已执行的 FightRunning 数组</param>
+    /// <param name="runnings">本次回合已执行的 FightRunning 数组（此方法不再使用该参数）</param>
     /// <param name="side">要记录的所属方（My/You）</param>
-    public static void RecordAfterExecute(FightRunning[] runnings, EnumWho side)
+    public static void RecordAfterExecute(EnumWho side)
     {
-        // 加入前先清空本方上次回合应对数组
         if (side == EnumWho.My)
-            MyLastBingo.Clear();
-        else
-            YouLastBingo.Clear();
-
-        if (runnings == null) return;
-
-        foreach (FightRunning run in runnings)
         {
-            if (run == null) continue;
-
-            // 1. 本方产生的 Bingo 应对阶段（IsBingoType 带 side 精确区分 My/You）
-            if (run.Side == side && FightRunningTypeDesign.IsBingoType(side, run.RunningType))
-                AddLastBingo(side, run.RunningType);
-
-            // 2. 对方切换宠物 => 本方应对切换宠物成功
-            if (IsSwitchPetBingoFor(side, run.RunningType))
-            {
-                
-            }
+            // MyCurrentBingo → MyLastBingo，再清空 MyCurrentBingo
+            MyLastBingo.Clear();
+            MyLastBingo.AddRange(MyCurrentBingo);
+            MyCurrentBingo.Clear();
+        }
+        else
+        {
+            // YouCurrentBingo → YouLastBingo，再清空 YouCurrentBingo
+            YouLastBingo.Clear();
+            YouLastBingo.AddRange(YouCurrentBingo);
+            YouCurrentBingo.Clear();
+        }
     }
 
     /// <summary>
@@ -181,17 +192,6 @@ public static class FightBingoHouse
         if (side == EnumWho.My && runningType == EnumFightRunningType.SwitchPetYou)
             return true;
         return false;
-    }
-
-    /// <summary>
-    /// 按 side 向对应方上次回合应对数组添加一个应对阶段类型
-    /// </summary>
-    private static void AddLastBingo(EnumWho side, EnumFightRunningType type)
-    {
-        if (side == EnumWho.My)
-            MyLastBingo.Add(type);
-        else
-            YouLastBingo.Add(type);
     }
 
     // ════════════════════════ 回合切换 ════════════════════════

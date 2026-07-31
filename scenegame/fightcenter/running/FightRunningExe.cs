@@ -74,9 +74,6 @@ public static class FightRunningExe
             index++;
         }
 
-        // 收集你我的上次回合应对（执行结束后：清理并填充 MyLastBingo / YouLastBingo）
-        FightBingoHouse.RecordAfterExecute(runnings, EnumWho.My);
-        FightBingoHouse.RecordAfterExecute(runnings, EnumWho.You);
 
         // 对比本回合前后的存活列表，收集本回合新死亡的精灵
         var newDiePets = FightAliveHouse.CollectDiePets(aliveMyUuids, aliveYouUuids);

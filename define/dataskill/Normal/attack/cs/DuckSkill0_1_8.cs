@@ -7,29 +7,30 @@ public partial class DuckSkill0_1_8 : Resource
     /// 当头棒喝技能实现
     /// 挥出重棍猛击对手头部，若本回合敌方切换精灵，该技能威力直接翻倍。
     ///
-    /// 实现机制（通过 IsBingo 标记衔接伤害计算与技能执行）：
+    /// 实现机制（以 FightBingoHouse 的 Current 应对数组为核心判断）：
     /// 1. RebuildTurn 阶段（回合行动排序时调用，早于伤害计算）：
     ///    - 扫描对方行动数组，若对方使用了切换宠物技能（0_4_1）
+    ///      => 通过 FightBingoHouse.AddSwitchPetBingo(side) 把"应对切换宠物"登记到 Current 应对数组
     ///      => 将本技能数组位置移到对方切换技能 index 之后
-    ///      => IsBingo = true，且本技能实际威力 x2（影响 FightDamageTool 的伤害计算）
+    ///      => 本技能实际威力 x2（影响 FightDamageTool 的伤害计算）
     /// 2. DoSkill 阶段（回合执行时调用，晚于伤害计算）：
-    ///    - 检查 IsBingo == true，证明本次已应对切换而翻倍 → 还原技能威力，并清除 IsBingo
-    ///    - 还原后下一回合若敌方不再切换，则以基础威力正常计算，不会跨回合累积
+    ///    - 以 FightBingoHouse.HasCurrentSwitchPetBingo(side) 判断本次回合是否应对切换宠物成功
+    ///      （即以 Current 应对数组为核心，不再依赖 sideSkill.IsBingo 标记）
+    ///    - 是则证明本次伤害已按翻倍威力结算 → 还原技能威力（避免跨回合累积）
     /// </summary>
     public void DoSkill(int index, FightRunning run, InsFightSkill sideSkill)
     {
-        GD.Print($"      [{index}] DuckSkill0_1_8.DoSkill | 技能：当头棒喝 | 实际威力={sideSkill?.ActualAttackValue} | IsBingo={sideSkill?.IsBingo} | bingoSkillType={run.BingoSkillType}");
+        GD.Print($"      [{index}] DuckSkill0_1_8.DoSkill | 技能：当头棒喝 | 实际威力={sideSkill?.ActualAttackValue} | Current应对切换={FightBingoHouse.HasCurrentSwitchPetBingo(run.Side)} | bingoSkillType={run.BingoSkillType}");
 
         if (sideSkill?.Skill == null)
             return;
 
         // 伤害计算（Damage）与技能执行（DoSkill）是分开的：
-        // RebuildTurn 阶段已把威力翻倍并写入伤害计算，此处检查标记后还原技能威力
-        if (sideSkill.IsBingo)
+        // 以 FightBingoHouse Current 应对数组为核心判断本次是否应对切换宠物成功
+        if (FightBingoHouse.HasCurrentSwitchPetBingo(run.Side))
         {
             int doubledPower = sideSkill.ActualAttackValue;
             sideSkill.ActualAttackValue = sideSkill.Skill.AttackValue; // 还原基础威力
-            sideSkill.IsBingo = false;                                  // 清除应对标记
             GD.Print($"      [{index}] DuckSkill0_1_8.DoSkill | 还原当头棒喝威力（本回合应对切换已结算）: {doubledPower} → {sideSkill.ActualAttackValue}");
         }
     }
@@ -37,8 +38,8 @@ public partial class DuckSkill0_1_8 : Resource
     /// <summary>
     /// 重构 TurnAction 数组并返回
     /// 判断对方是否切换宠物（使用系统技能 0_4_1），
-    /// 是则：1. 把本技能放到对方切换宠物技能所在 index 之后；
-    ///       2. IsBingo = true；
+    /// 是则：1. 把"应对切换宠物"登记到 FightBingoHouse Current 应对数组；
+    ///       2. 把本技能放到对方切换宠物技能所在 index 之后；
     ///       3. 本技能实际威力 x2（供后续伤害计算使用）。
     /// </summary>
     public TurnAction[] RebuildTurn(TurnAction[] myTurnActions, TurnAction[] youTurnActions, EnumWho side)
@@ -78,8 +79,10 @@ public partial class DuckSkill0_1_8 : Resource
             return sideActions;
 
         // 4. 对方切换了宠物：
-        //    4.1 标记应对 + 本技能实际威力 x2（Damage 计算读取 ActualAttackValue）
-        selfAction.FightSkill.IsBingo = true;
+        //    4.1 到 FightBingoHouse 登记"本方应对切换宠物成功"（装入 Current 应对数组）
+        FightBingoHouse.AddSwitchPetBingo(side);
+
+        //    4.2 本技能实际威力 x2（Damage 计算读取 ActualAttackValue）
         selfAction.FightSkill.ActualAttackValue *= 2;
 
         //    4.2 把本技能放到对方切换宠物技能所在的数组 index 后面
@@ -96,7 +99,7 @@ public partial class DuckSkill0_1_8 : Resource
         int insertAt = Mathf.Min(enemySwitchIndex + 1, sideActions.Length - 1);
         rebuilt[insertAt] = selfAction;
 
-        GD.Print($"  └─ [DuckSkill0_1_8] RebuildTurn | 对方切换精灵！IsBingo=true，当头棒喝移动至 index {insertAt}（原 {selfIndex}），威力翻倍 => {selfAction.FightSkill.ActualAttackValue}");
+        GD.Print($"  └─ [DuckSkill0_1_8] RebuildTurn | 对方切换精灵！已登记应对切换宠物，当头棒喝移动至 index {insertAt}（原 {selfIndex}），威力翻倍 => {selfAction.FightSkill.ActualAttackValue}");
 
         return rebuilt;
     }
