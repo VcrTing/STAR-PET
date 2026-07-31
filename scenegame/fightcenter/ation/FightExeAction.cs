@@ -28,7 +28,9 @@ public static class FightExeAction
 		// 步骤1：通过 FightExeAfter 进行技能优先级排序
 		FightExeAfter.SortActionsByPriority(myTurnActs, youTurnActs, out var sortedMy, out var sortedYou);
 
-		//
+		// 步骤1.5：根据彼此的技能，再次调整顺序，然后返回赋值 sortedMy + sortedYou
+		FightExeAfter.RebuildTurnBySkills(ref sortedMy, ref sortedYou);
+
 		GD.Print("TurnAction 排序完成，开始进入 Running 环节。");
 		// 步骤2：按排序后的顺序，逐个索引执行双方行动
 		// 根据速度+应对，把行动做入 FightRunning[] 

@@ -57,4 +57,60 @@ public static class DuckSkillLoader
         dynamic dyn = skillObj;
         dyn.DoSkill(index, run, sideSkill);
     }
+
+    /// <summary>
+    /// 执行技能实现类的 RebuildTurn 鸭子方法
+    /// 传入双方行动数组与 side，调用 DuckSkill 类的 RebuildTurn(myTurnActions, youTurnActions, side) 返回重构后的行动数组
+    /// </summary>
+    /// <param name="implCsFilePath">实现脚本路径（res://define/dataskill/.../DuckSkillXxx.cs）</param>
+    /// <param name="myTurnActions">我方行动数组</param>
+    /// <param name="youTurnActions">敌方行动数组</param>
+    /// <param name="side">要返回的行动方</param>
+    /// <returns>重构后的 side 行动数组；脚本不存在/类找不到/异常时返回 null</returns>
+    public static TurnAction[] ExecuteRebuildTurn(string implCsFilePath, TurnAction[] myTurnActions, TurnAction[] youTurnActions, EnumWho side)
+    {
+        if (string.IsNullOrWhiteSpace(implCsFilePath) || !File.Exists(ProjectSettings.GlobalizePath(implCsFilePath)))
+        {
+            GD.PrintErr($"技能脚本文件不存在：{implCsFilePath}");
+            return null;
+        }
+
+        // 命中缓存直接拿实例
+        if (_skillInstanceCache.TryGetValue(implCsFilePath, out var cachedIns))
+        {
+            return CallRebuildTurn(cachedIns, myTurnActions, youTurnActions, side);
+        }
+
+        try
+        {
+            // 从文件路径提取类名：文件名叫 DuckSkill0_3_1.cs → 类名 DuckSkill0_3_1
+            string fileName = Path.GetFileNameWithoutExtension(implCsFilePath);
+            // 在当前程序集查找这个类
+            Type targetType = _gameAssembly.GetType(fileName);
+            if (targetType == null)
+            {
+                GD.PrintErr($"程序集中找不到类：{fileName} （脚本路径：{implCsFilePath}）");
+                return null;
+            }
+
+            // 无参构造实例化，并复用 DoSkill 的实例缓存
+            object skillObj = Activator.CreateInstance(targetType);
+            _skillInstanceCache[implCsFilePath] = skillObj;
+
+            // 鸭子调用方法
+            return CallRebuildTurn(skillObj, myTurnActions, youTurnActions, side);
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"加载/执行鸭子技能异常 {implCsFilePath}\n{ex.Message}\n{ex.StackTrace}");
+            return null;
+        }
+    }
+
+    /// 统一 RebuildTurn 鸭子调用封装
+    private static TurnAction[] CallRebuildTurn(object skillObj, TurnAction[] myTurnActions, TurnAction[] youTurnActions, EnumWho side)
+    {
+        dynamic dyn = skillObj;
+        return dyn.RebuildTurn(myTurnActions, youTurnActions, side);
+    }
 }

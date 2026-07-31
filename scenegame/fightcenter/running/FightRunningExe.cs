@@ -14,21 +14,32 @@ public static class FightRunningExe
 {
     /// <summary>
     /// 执行所有 FightRunning 阶段，并打印日志
+    /// 将 CurrentRunArray 中的有效阶段转为队列，逐个弹出（Dequeue）执行
     /// </summary>
     /// <returns>本回合新死亡的精灵列表（包含双方），可用于判断是否需要进入死亡处理流程</returns>
     public static List<InsFightPetData> ExecuteAll()
     {
-        FightRunning[] runnings = FightRunningHouse.CurrentRunArray;
         GD.Print($"[FightRunningExe] 开始执行 FightRunning，==================");
+
+        // 1. 将 CurrentRunArray 中所有有效阶段入队
+        //    队列保证严格先进先出，顺序与原数组一致
+        var queue = new Queue<FightRunning>();
+        FightRunning[] runnings = FightRunningHouse.CurrentRunArray;
+        for (int i = 0; i < runnings.Length; i++)
+        {
+            if (runnings[i] != null)
+                queue.Enqueue(runnings[i]);
+        }
 
         // 记录本回合开始时存活的精灵 Uuid（用于对比出本回合死亡的精灵）
         var aliveMyUuids = FightAliveHouse.GetAlivePetUuids(EnumWho.My);
         var aliveYouUuids = FightAliveHouse.GetAlivePetUuids(EnumWho.You);
 
-        for (int i = 0; i < runnings.Length; i++)
+        // 2. 从队列中逐个弹出执行（index 为原始顺序编号，用于日志）
+        int index = 0;
+        while (queue.Count > 0)
         {
-            FightRunning run = runnings[i];
-            if (run == null) continue;
+            FightRunning run = queue.Dequeue();
 
             // 使用 FightRunningTypeDesign 区分 My/You
             bool isMy = FightRunningTypeDesign.IsMyType(run.RunningType);
@@ -36,15 +47,15 @@ public static class FightRunningExe
 
             if (isMy)
             {
-                ExecuteMy(run, i);
+                ExecuteMy(run, index);
             }
             else if (isYou)
             {
-                ExecuteYou(run, i);
+                ExecuteYou(run, index);
             }
             else
             {
-                ExecuteSingle(run, i);
+                ExecuteSingle(run, index);
             }
 
             // 阶段执行结束后检查是否需要更新 UI（StartXXX 和 GenEndActsXXX）
@@ -53,6 +64,8 @@ public static class FightRunningExe
                 FightUiUpdateTool.UpdateMyUi();
                 FightUiUpdateTool.UpdateYouUi();
             }
+
+            index++;
         }
 
         // 对比本回合前后的存活列表，收集本回合新死亡的精灵

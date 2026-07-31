@@ -111,4 +111,72 @@ public static class FightExeAfter
 		}
 		return acts;
 	}
+
+	/// <summary>
+	/// 执行技能的 RebuildTurn 鸭子方法，重构指定方（side）的 TurnAction 数组
+	/// 委托 DuckSkillLoader.ExecuteRebuildTurn 调用技能实现类的 RebuildTurn 方法
+	/// </summary>
+	/// <param name="implCsFilePath">技能实现脚本路径（res://define/dataskill/.../DuckSkillXxx.cs）</param>
+	/// <param name="myTurnActions">我方行动数组</param>
+	/// <param name="youTurnActions">敌方行动数组</param>
+	/// <param name="side">要返回并重构的行动方</param>
+	/// <returns>重构后的 side 行动数组；脚本不存在/类找不到/异常时返回 null</returns>
+	public static TurnAction[] ExecuteRebuildTurn(string implCsFilePath, TurnAction[] myTurnActions, TurnAction[] youTurnActions, EnumWho side)
+	{
+		return DuckSkillLoader.ExecuteRebuildTurn(implCsFilePath, myTurnActions, youTurnActions, side);
+	}
+
+	/// <summary>
+	/// 根据彼此的技能，再次调整行动顺序
+	/// 分别拿出我方/敌方中心行动，若为技能行动（UseSkill），
+	/// 则通过 ExecuteRebuildTurn 调用技能实现类的 RebuildTurn 鸭子方法，
+	/// 让技能根据对方行动重构自己的 TurnAction[]，完成后重新赋值 sortedMy + sortedYou。
+	/// 调用失败（脚本缺失/非技能行动/返回 null）时保持原数组不变。
+	/// </summary>
+	/// <param name="sortedMy">我方行动数组（引用，可能被技能重构替换）</param>
+	/// <param name="sortedYou">敌方行动数组（引用，可能被技能重构替换）</param>
+	public static void RebuildTurnBySkills(ref TurnAction[] sortedMy, ref TurnAction[] sortedYou)
+	{
+		// 提取双方中心行动
+		TurnAction myCenter = GetCenterAction(sortedMy);
+		TurnAction youCenter = GetCenterAction(sortedYou);
+
+		// 我方技能重构
+		if (myCenter?.ActionType == TurnActionType.UseSkill && myCenter.FightSkill?.Skill != null)
+		{
+			TurnAction[] rebuiltMy = ExecuteRebuildTurn(
+				myCenter.FightSkill.ImplClass, sortedMy, sortedYou, EnumWho.My);
+			if (rebuiltMy != null)
+			{
+				GD.Print($"  └─ [FightExeAfter] RebuildTurnBySkills | 我方技能【{myCenter.FightSkill.Skill.SkillName}】重构行动完成");
+				sortedMy = rebuiltMy;
+			}
+		}
+
+		// 敌方技能重构（此时 sortedMy 可能已被替换，传入最新值）
+		if (youCenter?.ActionType == TurnActionType.UseSkill && youCenter.FightSkill?.Skill != null)
+		{
+			TurnAction[] rebuiltYou = ExecuteRebuildTurn(
+				youCenter.FightSkill.ImplClass, sortedMy, sortedYou, EnumWho.You);
+			if (rebuiltYou != null)
+			{
+				GD.Print($"  └─ [FightExeAfter] RebuildTurnBySkills | 敌方技能【{youCenter.FightSkill.Skill.SkillName}】重构行动完成");
+				sortedYou = rebuiltYou;
+			}
+		}
+	}
+
+	/// <summary>
+	/// 从行动数组中提取第一个非空行动（中心行动）
+	/// </summary>
+	private static TurnAction GetCenterAction(TurnAction[] actions)
+	{
+		if (actions == null) return null;
+		for (int i = 0; i < actions.Length; i++)
+		{
+			if (actions[i] != null)
+				return actions[i];
+		}
+		return null;
+	}
 }

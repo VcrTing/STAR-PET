@@ -36,4 +36,14 @@ public partial class DuckSkill0_1_5 : Resource
             GD.Print($"      [{index}] DuckSkill0_1_5.DoSkill | 未触发减物防效果（80%未命中）");
         }
     }
+
+    /// <summary>
+    /// 重构 TurnAction 数组并返回
+    /// 传入双方行动数组，返回 side 对应的行动数组
+    /// ⚠ 暂为占位实现：不做额外处理，直接返回 side 的行动数组
+    /// </summary>
+    public TurnAction[] RebuildTurn(TurnAction[] myTurnActions, TurnAction[] youTurnActions, EnumWho side)
+    {
+        return side == EnumWho.My ? myTurnActions : youTurnActions;
+    }
 }
