@@ -25,6 +25,8 @@ public static class DevBuffTool
         int statId = -1;
         if (data.ContainsKey("stat"))
             statId = (int)data["stat"];
+        else if (data.ContainsKey("target_stat"))
+            statId = (int)data["target_stat"];
 
         if (statId < 0 || !Enum.IsDefined(typeof(EnumPetBaseStats), statId))
         {
@@ -75,5 +77,46 @@ public static class DevBuffTool
                 list.Add(buff);
         }
         return list;
+    }
+
+    /// <summary>
+    /// 制作 Buff 并添加到敌方精灵身上（技能副作用通用方法）
+    /// 根据 run.Side 确定敌方：My -> 敌方 You 精灵，You -> 敌方 My 精灵。
+    /// 自动完成：创建 Buff -> 绑定敌方场上精灵 UUID -> 加入敌方 BuffManager。
+    /// </summary>
+    /// <param name="data">buff 配置字典（支持 stat/target_stat、num、layer、value、is_ratio、active_mode）</param>
+    /// <param name="run">当前回合运行数据（用于确定敌方与 Buff 归属）</param>
+    /// <returns>成功添加的 Buff 数量，失败返回 0</returns>
+    public static int AddBuffToTargetPet(Godot.Collections.Dictionary data, FightRunning run)
+    {
+        if (data == null || data.Count == 0 || run == null)
+            return 0;
+
+        InsFightBuff buff = CreateFromDict(data);
+        if (buff == null)
+            return 0;
+
+        // 确定敌方场上精灵 UUID
+        string enemyPetUuid = null;
+        if (run.Side == EnumWho.My)
+            enemyPetUuid = FightLandYouStandPet.Instance?.FightPetData?.PetUuid;
+        else
+            enemyPetUuid = FightLandMyStandPet.Instance?.FightPetData?.PetUuid;
+
+        if (string.IsNullOrWhiteSpace(enemyPetUuid))
+        {
+            GD.PrintErr($"      ❌ DevBuffTool.AddBuffToEnemy: 敌方场上精灵 UUID 为空，无法添加 Buff");
+            return 0;
+        }
+
+        buff.PetUuid = enemyPetUuid;
+
+        // 将 Buff 添加到敌方 BuffManager
+        if (run.Side == EnumWho.My)
+            FightYouStandBuffManager.Instance?.AddBuffs(new[] { buff });
+        else
+            FightMyStandBuffManager.Instance?.AddBuffs(new[] { buff });
+
+        return 1;
     }
 }

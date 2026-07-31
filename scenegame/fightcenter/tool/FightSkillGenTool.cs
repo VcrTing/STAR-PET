@@ -47,6 +47,8 @@ public static class FightSkillGenTool
             hitSkill.CooldownTurns = sourceSkill.CooldownTurns;
             hitSkill.ActualPetType = sourceSkill.ActualPetType;
             hitSkill.DisplayAttackValue = sourceSkill.DisplayAttackValue;
+            // 记录连击序号（0=第一击，>0=后续击），供技能实现按击次区分别逻辑
+            hitSkill.ComboIndex = i;
             // 每一个伤害都是连击伤害
             hitSkill.ActualAttackValue = sourceSkill.Skill.AttackValue;
             // 第一击消耗PP，后续连击不消耗PP

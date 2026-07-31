@@ -30,6 +30,10 @@ public static class DevLoadSkillHouse
 		{ "0_1_2", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 先发制人
 		{ "0_1_3", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 后发制人
 		{ "0_1_4", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 夹击
+		{ "0_1_5", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 冲撞
+		{ "0_1_6", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 冲撞
+		{ "0_1_7", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 乘胜追击
+		{ "0_1_8", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 当头棒喝
 		// 防御
 		{ "0_2_1", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.DEFENSE } },  // 防御
 		// 状态

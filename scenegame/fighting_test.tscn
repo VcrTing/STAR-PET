@@ -18,7 +18,7 @@
 size = Vector2(240, 120)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cplhs"]
-size = Vector2(600, 60)
+size = Vector2(800, 60)
 
 [node name="FightingTest" type="Node2D" unique_id=1362864298]
 
@@ -34,7 +34,7 @@ size = Vector2(600, 60)
 position = Vector2(0, 140)
 
 [node name="PlayerLandYouStandPlayer" type="Node2D" parent="FightLandYou" unique_id=1485403061]
-position = Vector2(800, 0)
+position = Vector2(1000, 0)
 script = ExtResource("2_3l0sp")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="FightLandYou/PlayerLandYouStandPlayer" unique_id=1284950194]
@@ -43,11 +43,11 @@ script = ExtResource("2_3l0sp")
 shape = SubResource("RectangleShape2D_ppfa1")
 
 [node name="FightLandYouStandPet" type="Node2D" parent="FightLandYou" unique_id=1604821880]
-position = Vector2(300, 0)
+position = Vector2(400, 0)
 script = ExtResource("3_5yix2")
 
 [node name="FightLandNewPetPoint" type="Node2D" parent="FightLandYou/FightLandYouStandPet" unique_id=1919880563]
-position = Vector2(90, -360)
+position = Vector2(90, -520)
 
 [node name="Land" type="StaticBody2D" parent="FightLandYou/FightLandYouStandPet" unique_id=872648738]
 
@@ -58,7 +58,7 @@ shape = SubResource("RectangleShape2D_cplhs")
 position = Vector2(0, 140)
 
 [node name="PlayerLandMyStandPlayer" type="Node2D" parent="FightLandMy" unique_id=1555606175]
-position = Vector2(-800, 0)
+position = Vector2(-1000, 0)
 script = ExtResource("4_n2bdn")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="FightLandMy/PlayerLandMyStandPlayer" unique_id=573683833]
@@ -67,11 +67,11 @@ script = ExtResource("4_n2bdn")
 shape = SubResource("RectangleShape2D_ppfa1")
 
 [node name="FightLandMyStandPet" type="Node2D" parent="FightLandMy" unique_id=1106155340]
-position = Vector2(-300, 0)
+position = Vector2(-400, 0)
 script = ExtResource("5_3l0sp")
 
 [node name="FightLandNewPetPoint" type="Node2D" parent="FightLandMy/FightLandMyStandPet" unique_id=238103423]
-position = Vector2(-90, -360)
+position = Vector2(-90, -520)
 
 [node name="Land" type="StaticBody2D" parent="FightLandMy/FightLandMyStandPet" unique_id=928271281]
 

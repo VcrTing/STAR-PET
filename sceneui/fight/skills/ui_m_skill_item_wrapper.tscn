@@ -8,6 +8,7 @@
 [ext_resource type="Theme" uid="uid://d0oqcytn4x6c0" path="res://sceneui/fight/__theme/fight_item_skill_sub.tres" id="5_xan5e"]
 
 [node name="UiMSkillItemWrapper" type="MarginContainer" unique_id=1093155557]
+custom_maximum_size = Vector2(270, -1)
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 6
 theme_override_constants/margin_top = 12

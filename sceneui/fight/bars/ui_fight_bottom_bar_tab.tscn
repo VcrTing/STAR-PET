@@ -19,6 +19,7 @@ current_tab = 0
 layout_mode = 2
 alignment = 1
 metadata/_tab_index = 0
+metadata/_tab_name = ""
 
 [node name="UiVBoxSkillBase" type="VBoxContainer" parent="UiHSkillsTabContent" unique_id=1636167411]
 custom_minimum_size = Vector2(120, 0)

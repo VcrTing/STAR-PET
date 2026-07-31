@@ -58,6 +58,12 @@ public class InsFightSkill
 	public int ActualHitCount { get; set; }
 
 	/// <summary>
+	/// 连击序号（0=第一击，>0=后续击；非连击技能始终为 0）
+	/// 由 FightSkillGenTool.GenerateHitCombo 在克隆时设置
+	/// </summary>
+	public int ComboIndex { get; set; }
+
+	/// <summary>
 	/// 判断技能是否为使用者的本系技能（STAB）
 	/// 即技能的 ActualPetType 是否存在于 PetData 的 PetTypes 中
 	/// </summary>
