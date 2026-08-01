@@ -113,4 +113,72 @@ public static class DuckSkillLoader
         dynamic dyn = skillObj;
         return dyn.RebuildTurn(myTurnActions, youTurnActions, side);
     }
+
+    /// <summary>
+    /// 执行技能实现类的 RealtimeSync 鸭子方法（实时刷新技能）
+    /// 参数由外部传入
+    /// </summary>
+    /// <param name="implCsFilePath">实现脚本路径</param>
+    /// <param name="side">阵营</param>
+    /// <param name="myPet">我方场上当前精灵</param>
+    /// <param name="youPet">敌方场上当前精灵</param>
+    /// <param name="myPackPet">我方背包精灵数组</param>
+    /// <param name="youPackPet">敌方背包精灵数组</param>
+    /// <param name="sideSkill">当前技能实例（通过它修改技能源头）</param>
+    public static void ExecuteRealtimeSync(string implCsFilePath, EnumWho side,
+        InsFightPetData myPet, InsFightPetData youPet,
+        InsFightPetData[] myPackPet, InsFightPetData[] youPackPet,
+        InsFightSkill sideSkill)
+    {
+        if (sideSkill == null)
+        {
+            GD.PrintErr("[DuckSkillLoader.ExecuteRealtimeSync] sideSkill 为空");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(implCsFilePath) || !File.Exists(ProjectSettings.GlobalizePath(implCsFilePath)))
+        {
+            GD.PrintErr($"技能脚本文件不存在：{implCsFilePath}");
+            return;
+        }
+
+        // 命中缓存直接拿实例
+        if (_skillInstanceCache.TryGetValue(implCsFilePath, out var cachedIns))
+        {
+            CallRealtimeSync(cachedIns, side, myPet, youPet, myPackPet, youPackPet, sideSkill);
+            return;
+        }
+
+        try
+        {
+            string fileName = Path.GetFileNameWithoutExtension(implCsFilePath);
+            Type targetType = _gameAssembly.GetType(fileName);
+            if (targetType == null)
+            {
+                GD.PrintErr($"程序集中找不到类：{fileName} （脚本路径：{implCsFilePath}）");
+                return;
+            }
+
+            object skillObj = Activator.CreateInstance(targetType);
+            _skillInstanceCache[implCsFilePath] = skillObj;
+
+            CallRealtimeSync(skillObj, side, myPet, youPet, myPackPet, youPackPet, sideSkill);
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"加载/执行鸭子技能 RealtimeSync 异常 {implCsFilePath}\n{ex.Message}\n{ex.StackTrace}");
+        }
+    }
+
+    /// <summary>
+    /// 统一 RealtimeSync 鸭子调用封装
+    /// </summary>
+    private static void CallRealtimeSync(object skillObj, EnumWho side,
+        InsFightPetData myPet, InsFightPetData youPet,
+        InsFightPetData[] myPackPet, InsFightPetData[] youPackPet,
+        InsFightSkill sideSkill)
+    {
+        dynamic dyn = skillObj;
+        dyn.RealtimeSync(side, myPet, youPet, myPackPet, youPackPet, sideSkill);
+    }
 }

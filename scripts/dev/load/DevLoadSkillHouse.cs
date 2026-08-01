@@ -35,6 +35,7 @@ public static class DevLoadSkillHouse
 		{ "0_1_7", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 乘胜追击
 		{ "0_1_8", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 当头棒喝
 		{ "0_1_9", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },   // 气势一击
+		{ "0_1_10", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },  // 垂死反击
 		// 防御
 		{ "0_2_1", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.DEFENSE } },  // 防御
 		// 状态

@@ -46,4 +46,14 @@ public partial class DuckSkill0_1_5 : Resource
     {
         return side == EnumWho.My ? myTurnActions : youTurnActions;
     }
+
+    /// <summary>
+    /// Real-time sync skill
+    /// 实时刷新技能状态
+    /// 通过 sideSkill 修改技能源头
+    /// </summary>
+    public void RealtimeSync(EnumWho side, InsFightPetData MyPet, InsFightPetData YouPet, InsFightPetData[] MyPackPet, InsFightPetData[] YouPackPet, InsFightSkill sideSkill)
+    {
+        // 通过 sideSkill 修改技能源头（留空待实现）
+    }
 }

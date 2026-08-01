@@ -313,6 +313,10 @@ public partial class FightCenterManger : Node2D
 		FightUiUpdateTool.UpdateMyUi();
 		FightUiUpdateTool.UpdateYouUi();
 
+		// 刷新技能
+		FightSkillAsyncTool.SyncAllSkills(EnumWho.My, FightLandMyStandPet.Instance.FightPetData);
+		FightSkillAsyncTool.SyncAllSkills(EnumWho.You, FightLandYouStandPet.Instance.FightPetData);
+
 		var pet = FightLandMyStandPet.Instance?.FightPetData;
 		string info = pet != null ? $"{pet.PetName} (HP={pet.Hp}/{pet.MaxHp})" : "无精灵";
 

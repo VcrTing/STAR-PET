@@ -14,9 +14,22 @@
 技能发起执行:
   # res://scenegame/fightcenter/running/FightRunningExe.cs ExecuteMy
 
-技能执行:
-  # res://scenegame/fightcenter/tool/running/FightRunningExeTool.cs
+技能:
+  开发定义的地方:
+    # res://scripts/dev/load/DevLoadSkillHouse.cs
+  执行:
+    # res://scenegame/fightcenter/tool/running/FightRunningExeTool.cs
 
 技能鸭子模型:
   调用外部Tool地点:
     # res://scenegame/fightcenter/tool/skill/*
+  鸭子模型读取+执行:
+    # res://scripts/dev/loader/DuckSkillLoader.cs
+  执行技能刷新的方法:
+    # res://scenegame/fightcenter/tool/skill/FightSkillAsyncTool.cs
+
+我的:
+  玩家+背包:
+    # res://scenegame/origin/my/PlayerLandMyStandPlayer.cs
+  现在登场的宠物:
+    # res://scenegame/origin/my/FightLandMyStandPet.cs
