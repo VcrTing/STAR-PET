@@ -63,6 +63,11 @@ public class InsFightSkill
 	public int UseCount { get; set; }
 
 	/// <summary>
+	/// 是否本回合特效生效（默认 false）
+	/// </summary>
+	public bool IsEffectActiveThisTurn { get; set; }
+
+	/// <summary>
 	/// 判断技能是否为使用者的本系技能（STAB）
 	/// 即技能的 ActualPetType 是否存在于 PetData 的 PetTypes 中
 	/// </summary>

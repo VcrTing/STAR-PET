@@ -118,13 +118,6 @@ public static class DuckSkillLoader
     /// 执行技能实现类的 RealtimeSync 鸭子方法（实时刷新技能）
     /// 参数由外部传入
     /// </summary>
-    /// <param name="implCsFilePath">实现脚本路径</param>
-    /// <param name="side">阵营</param>
-    /// <param name="myPet">我方场上当前精灵</param>
-    /// <param name="youPet">敌方场上当前精灵</param>
-    /// <param name="myPackPet">我方背包精灵数组</param>
-    /// <param name="youPackPet">敌方背包精灵数组</param>
-    /// <param name="sideSkill">当前技能实例（通过它修改技能源头）</param>
     public static void ExecuteRealtimeSync(string implCsFilePath, EnumWho side,
         InsFightPetData myPet, InsFightPetData youPet,
         InsFightPetData[] myPackPet, InsFightPetData[] youPackPet,
@@ -189,7 +182,8 @@ public static class DuckSkillLoader
     /// <param name="index">阶段索引号（仅用于日志）</param>
     /// <param name="run">战斗运行实例</param>
     /// <param name="sideSkill">当前技能实例</param>
-    public static void ExecuteStartSkill(string implCsFilePath, int index, FightRunning run, InsFightSkill sideSkill)
+    /// <param name="sideRunnings">本方的 FightRunning 数组</param>
+    public static void ExecuteStartSkill(string implCsFilePath, int index, FightRunning run, InsFightSkill sideSkill, FightRunning[] sideRunnings)
     {
         if (sideSkill == null)
         {
@@ -206,7 +200,7 @@ public static class DuckSkillLoader
         // 命中缓存直接拿实例
         if (_skillInstanceCache.TryGetValue(implCsFilePath, out var cachedIns))
         {
-            CallStartSkill(cachedIns, index, run, sideSkill);
+            CallStartSkill(cachedIns, index, run, sideSkill, sideRunnings);
             return;
         }
 
@@ -223,7 +217,7 @@ public static class DuckSkillLoader
             object skillObj = Activator.CreateInstance(targetType);
             _skillInstanceCache[implCsFilePath] = skillObj;
 
-            CallStartSkill(skillObj, index, run, sideSkill);
+            CallStartSkill(skillObj, index, run, sideSkill, sideRunnings);
         }
         catch (Exception ex)
         {
@@ -234,10 +228,10 @@ public static class DuckSkillLoader
     /// <summary>
     /// 统一 StartSkill 鸭子调用封装
     /// </summary>
-    private static void CallStartSkill(object skillObj, int index, FightRunning run, InsFightSkill sideSkill)
+    private static void CallStartSkill(object skillObj, int index, FightRunning run, InsFightSkill sideSkill, FightRunning[] sideRunnings)
     {
         dynamic dyn = skillObj;
-        dyn.StartSkill(index, run, sideSkill);
+        dyn.StartSkill(index, run, sideSkill, sideRunnings);
     }
 
     /// <summary>
@@ -247,7 +241,8 @@ public static class DuckSkillLoader
     /// <param name="index">阶段索引号（仅用于日志）</param>
     /// <param name="run">战斗运行实例</param>
     /// <param name="sideSkill">当前技能实例</param>
-    public static void ExecuteEndSkill(string implCsFilePath, int index, FightRunning run, InsFightSkill sideSkill)
+    /// <param name="sideRunnings">本方的 FightRunning 数组</param>
+    public static void ExecuteEndSkill(string implCsFilePath, int index, FightRunning run, InsFightSkill sideSkill, FightRunning[] sideRunnings)
     {
         if (sideSkill == null)
         {
@@ -264,7 +259,7 @@ public static class DuckSkillLoader
         // 命中缓存直接拿实例
         if (_skillInstanceCache.TryGetValue(implCsFilePath, out var cachedIns))
         {
-            CallEndSkill(cachedIns, index, run, sideSkill);
+            CallEndSkill(cachedIns, index, run, sideSkill, sideRunnings);
             return;
         }
 
@@ -281,7 +276,7 @@ public static class DuckSkillLoader
             object skillObj = Activator.CreateInstance(targetType);
             _skillInstanceCache[implCsFilePath] = skillObj;
 
-            CallEndSkill(skillObj, index, run, sideSkill);
+            CallEndSkill(skillObj, index, run, sideSkill, sideRunnings);
         }
         catch (Exception ex)
         {
@@ -292,9 +287,9 @@ public static class DuckSkillLoader
     /// <summary>
     /// 统一 EndSkill 鸭子调用封装
     /// </summary>
-    private static void CallEndSkill(object skillObj, int index, FightRunning run, InsFightSkill sideSkill)
+    private static void CallEndSkill(object skillObj, int index, FightRunning run, InsFightSkill sideSkill, FightRunning[] sideRunnings)
     {
         dynamic dyn = skillObj;
-        dyn.EndSkill(index, run, sideSkill);
+        dyn.EndSkill(index, run, sideSkill, sideRunnings);
     }
 }

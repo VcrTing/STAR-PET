@@ -243,12 +243,15 @@ public static class FightRunningExe
         InsFightSkill sideSkill = run.SideFightSkill;
         bool hasSkillImpl = sideSkill?.Skill != null && !string.IsNullOrWhiteSpace(sideSkill.ImplClass);
 
+        // 本方的 FightRunning 数组（传入技能实现类供 StartSkill/EndSkill 检测应对等阶段）
+        FightRunning[] sideRunnings = FightRunningHouse.CurrentRunArray;
+
         // 判断是否为 Start 技能类型，是则执行技能实现类的 StartSkill 鸭子方法
         if (FightRunningTypeDesign.IsStartType(run.RunningType))
         {
             if (hasSkillImpl)
             {
-                DuckSkillLoader.ExecuteStartSkill(sideSkill.ImplClass, index, run, sideSkill);
+                DuckSkillLoader.ExecuteStartSkill(sideSkill.ImplClass, index, run, sideSkill, sideRunnings);
             }
         }
         // 判断是否为 End 技能类型，是则执行技能实现类的 EndSkill 鸭子方法
@@ -256,7 +259,7 @@ public static class FightRunningExe
         {
             if (hasSkillImpl)
             {
-                DuckSkillLoader.ExecuteEndSkill(sideSkill.ImplClass, index, run, sideSkill);
+                DuckSkillLoader.ExecuteEndSkill(sideSkill.ImplClass, index, run, sideSkill, sideRunnings);
             }
         }
     }

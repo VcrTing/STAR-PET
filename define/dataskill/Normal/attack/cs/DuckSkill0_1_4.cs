@@ -21,7 +21,7 @@ public partial class DuckSkill0_1_4 : Resource
     /// <summary>
     /// 技能开始执行（Skill 阶段开始）
     /// </summary>
-    public void StartSkill(int index, FightRunning run, InsFightSkill sideSkill)
+    public void StartSkill(int index, FightRunning run, InsFightSkill sideSkill, FightRunning[] sideRunnings)
     {
         // 留空待实现
     }
@@ -29,7 +29,7 @@ public partial class DuckSkill0_1_4 : Resource
     /// <summary>
     /// 技能结束执行（Skill 阶段结束）
     /// </summary>
-    public void EndSkill(int index, FightRunning run, InsFightSkill sideSkill)
+    public void EndSkill(int index, FightRunning run, InsFightSkill sideSkill, FightRunning[] sideRunnings)
     {
         // 留空待实现
     }
