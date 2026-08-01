@@ -181,4 +181,120 @@ public static class DuckSkillLoader
         dynamic dyn = skillObj;
         dyn.RealtimeSync(side, myPet, youPet, myPackPet, youPackPet, sideSkill);
     }
+
+    /// <summary>
+    /// 执行技能实现类的 StartSkill 鸭子方法（技能阶段开始）
+    /// </summary>
+    /// <param name="implCsFilePath">实现脚本路径</param>
+    /// <param name="index">阶段索引号（仅用于日志）</param>
+    /// <param name="run">战斗运行实例</param>
+    /// <param name="sideSkill">当前技能实例</param>
+    public static void ExecuteStartSkill(string implCsFilePath, int index, FightRunning run, InsFightSkill sideSkill)
+    {
+        if (sideSkill == null)
+        {
+            GD.PrintErr("[DuckSkillLoader.ExecuteStartSkill] sideSkill 为空");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(implCsFilePath) || !File.Exists(ProjectSettings.GlobalizePath(implCsFilePath)))
+        {
+            GD.PrintErr($"技能脚本文件不存在：{implCsFilePath}");
+            return;
+        }
+
+        // 命中缓存直接拿实例
+        if (_skillInstanceCache.TryGetValue(implCsFilePath, out var cachedIns))
+        {
+            CallStartSkill(cachedIns, index, run, sideSkill);
+            return;
+        }
+
+        try
+        {
+            string fileName = Path.GetFileNameWithoutExtension(implCsFilePath);
+            Type targetType = _gameAssembly.GetType(fileName);
+            if (targetType == null)
+            {
+                GD.PrintErr($"程序集中找不到类：{fileName} （脚本路径：{implCsFilePath}）");
+                return;
+            }
+
+            object skillObj = Activator.CreateInstance(targetType);
+            _skillInstanceCache[implCsFilePath] = skillObj;
+
+            CallStartSkill(skillObj, index, run, sideSkill);
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"加载/执行鸭子技能 StartSkill 异常 {implCsFilePath}\n{ex.Message}\n{ex.StackTrace}");
+        }
+    }
+
+    /// <summary>
+    /// 统一 StartSkill 鸭子调用封装
+    /// </summary>
+    private static void CallStartSkill(object skillObj, int index, FightRunning run, InsFightSkill sideSkill)
+    {
+        dynamic dyn = skillObj;
+        dyn.StartSkill(index, run, sideSkill);
+    }
+
+    /// <summary>
+    /// 执行技能实现类的 EndSkill 鸭子方法（技能阶段结束）
+    /// </summary>
+    /// <param name="implCsFilePath">实现脚本路径</param>
+    /// <param name="index">阶段索引号（仅用于日志）</param>
+    /// <param name="run">战斗运行实例</param>
+    /// <param name="sideSkill">当前技能实例</param>
+    public static void ExecuteEndSkill(string implCsFilePath, int index, FightRunning run, InsFightSkill sideSkill)
+    {
+        if (sideSkill == null)
+        {
+            GD.PrintErr("[DuckSkillLoader.ExecuteEndSkill] sideSkill 为空");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(implCsFilePath) || !File.Exists(ProjectSettings.GlobalizePath(implCsFilePath)))
+        {
+            GD.PrintErr($"技能脚本文件不存在：{implCsFilePath}");
+            return;
+        }
+
+        // 命中缓存直接拿实例
+        if (_skillInstanceCache.TryGetValue(implCsFilePath, out var cachedIns))
+        {
+            CallEndSkill(cachedIns, index, run, sideSkill);
+            return;
+        }
+
+        try
+        {
+            string fileName = Path.GetFileNameWithoutExtension(implCsFilePath);
+            Type targetType = _gameAssembly.GetType(fileName);
+            if (targetType == null)
+            {
+                GD.PrintErr($"程序集中找不到类：{fileName} （脚本路径：{implCsFilePath}）");
+                return;
+            }
+
+            object skillObj = Activator.CreateInstance(targetType);
+            _skillInstanceCache[implCsFilePath] = skillObj;
+
+            CallEndSkill(skillObj, index, run, sideSkill);
+        }
+        catch (Exception ex)
+        {
+            GD.PrintErr($"加载/执行鸭子技能 EndSkill 异常 {implCsFilePath}\n{ex.Message}\n{ex.StackTrace}");
+        }
+    }
+
+    /// <summary>
+    /// 统一 EndSkill 鸭子调用封装
+    /// </summary>
+    private static void CallEndSkill(object skillObj, int index, FightRunning run, InsFightSkill sideSkill)
+    {
+        dynamic dyn = skillObj;
+        dyn.EndSkill(index, run, sideSkill);
+    }
 }

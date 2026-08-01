@@ -30,6 +30,22 @@ public partial class DuckSkill0_1_1 : Resource
     /// 实时刷新技能状态
     /// 通过 sideSkill 修改技能源头
     /// </summary>
+    /// <summary>
+    /// 技能开始执行（Skill 阶段开始）
+    /// </summary>
+    public void StartSkill(int index, FightRunning run, InsFightSkill sideSkill)
+    {
+        // 留空待实现
+    }
+
+    /// <summary>
+    /// 技能结束执行（Skill 阶段结束）
+    /// </summary>
+    public void EndSkill(int index, FightRunning run, InsFightSkill sideSkill)
+    {
+        // 留空待实现
+    }
+
     public void RealtimeSync(EnumWho side, InsFightPetData MyPet, InsFightPetData YouPet, InsFightPetData[] MyPackPet, InsFightPetData[] YouPackPet, InsFightSkill sideSkill)
     {
         // 通过 sideSkill 修改技能源头（留空待实现）

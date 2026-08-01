@@ -21,13 +21,26 @@ public partial class DuckSkill0_1_9 : Resource
         if (sideSkill?.Skill == null)
             return;
 
-        // 使用次数 +1
-        sideSkill.UseCount += 1;
-
         // 伤害计算与技能执行分离：RebuildTurn 已把威力 +80 并写入伤害计算，此处检查标记后还原技能威力
         int boostedPower = sideSkill.ActualAttackValue;
         sideSkill.ActualAttackValue = sideSkill.Skill.AttackValue; // 还原基础威力（100）
         GD.Print($"      [{index}] DuckSkill0_1_9.DoSkill | 还原气势一击威力（上回合应对已结算）: {boostedPower} → {sideSkill.ActualAttackValue}");
+    }
+
+    /// <summary>
+    /// 技能开始执行（Skill 阶段开始）
+    /// </summary>
+    public void StartSkill(int index, FightRunning run, InsFightSkill sideSkill)
+    {
+        // 留空待实现
+    }
+
+    /// <summary>
+    /// 技能结束执行（Skill 阶段结束）
+    /// </summary>
+    public void EndSkill(int index, FightRunning run, InsFightSkill sideSkill)
+    {
+        // 留空待实现
     }
 
     /// <summary>

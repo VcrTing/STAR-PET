@@ -161,11 +161,35 @@ public static class FightRunningExe
 
     /// <summary>
     /// 执行单个 FightRunning 阶段（非扣血类型）
+    /// 若为 Start 技能类型（StartStatusMy/StartAttackMy/StartDefenseMy/...），
+    /// 则调用 DuckSkillLoader.ExecuteStartSkill 执行技能实现类的 StartSkill 鸭子方法；
+    /// 若为 End 技能类型（EndStatusMy/EndAttackMy/EndDefenseMy/...），
+    /// 则调用 DuckSkillLoader.ExecuteEndSkill 执行技能实现类的 EndSkill 鸭子方法
     /// </summary>
     private static void ExecuteSingle(FightRunning run, int index)
     {
         string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
         GD.Print($"      [{index}] {sideLabel} {run.RunningType} | " +
                  $"damage={run.Damage} bingoSkillType={run.BingoSkillType} completed={run.IsCompleted}");
+
+        InsFightSkill sideSkill = run.SideFightSkill;
+        bool hasSkillImpl = sideSkill?.Skill != null && !string.IsNullOrWhiteSpace(sideSkill.ImplClass);
+
+        // 判断是否为 Start 技能类型，是则执行技能实现类的 StartSkill 鸭子方法
+        if (FightRunningTypeDesign.IsStartType(run.RunningType))
+        {
+            if (hasSkillImpl)
+            {
+                DuckSkillLoader.ExecuteStartSkill(sideSkill.ImplClass, index, run, sideSkill);
+            }
+        }
+        // 判断是否为 End 技能类型，是则执行技能实现类的 EndSkill 鸭子方法
+        else if (FightRunningTypeDesign.IsEndType(run.RunningType))
+        {
+            if (hasSkillImpl)
+            {
+                DuckSkillLoader.ExecuteEndSkill(sideSkill.ImplClass, index, run, sideSkill);
+            }
+        }
     }
 }

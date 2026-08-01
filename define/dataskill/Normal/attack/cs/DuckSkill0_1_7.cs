@@ -27,6 +27,22 @@ public partial class DuckSkill0_1_7 : Resource
     }
 
     /// <summary>
+    /// 技能开始执行（Skill 阶段开始）
+    /// </summary>
+    public void StartSkill(int index, FightRunning run, InsFightSkill sideSkill)
+    {
+        // 留空待实现
+    }
+
+    /// <summary>
+    /// 技能结束执行（Skill 阶段结束）
+    /// </summary>
+    public void EndSkill(int index, FightRunning run, InsFightSkill sideSkill)
+    {
+        // 留空待实现
+    }
+
+    /// <summary>
     /// Real-time sync skill
     /// 实时刷新技能状态
     /// 通过 sideSkill 修改技能源头
@@ -40,6 +56,6 @@ public partial class DuckSkill0_1_7 : Resource
         // 每一次释放本技能，连击层数叠加1层，同步的连击数= UseCount + 初始1
         sideSkill.ActualHitCount = Mathf.Min(1 + sideSkill.UseCount, 99);
 
-        GD.Print($"      [RealtimeSync] DuckSkill0_1_7 | 技能：乘胜追击 | UseCount={sideSkill.UseCount} | 连击层数: {beforeHitCount} → {sideSkill.ActualHitCount}");
+        GD.Print($"      [RealtimeSync] DuckSkill0_1_7 | 技能：乘胜追击 | UseCount={sideSkill.UseCount} | 连击层数: {sideSkill.ActualHitCount}");
     }
 }

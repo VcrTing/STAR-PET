@@ -1,12 +1,15 @@
 战斗代码流程:
   1. 执行鸭子 同步双方技能参数 RealtimeSync
-  2. 排序TurnAction
+  2. 排序 TurnAction
   3. 执行鸭子 重构TurnAction RebuildTurn
-  4. 生成Running
+  4. 生成 Running
   5. 技能使用 + 1、完成伤害计算
-  6. 执行Running，包含扣血
-  7. 执行鸭子 DoSkill，连击执行时 DoSkill 会多次调用
-  8. 收集死亡宠物，结束回合
+  6. 进入执行 Running
+  7. 检测Start，执行鸭子，StartSkill
+  8. 执行扣血
+  9. 执行鸭子 DoSkill，连击执行时 DoSkill 会多次调用
+  10. 检测End，执行鸭子，EndSkill
+  11. 收集死亡宠物，结束回合
 
 技能计算:
   伤害计算公式:

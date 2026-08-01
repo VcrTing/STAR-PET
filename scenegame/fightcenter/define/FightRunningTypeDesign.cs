@@ -108,6 +108,19 @@ public static class FightRunningTypeDesign
     }
 
     /// <summary>
+    /// 判断某个 EnumFightRunningType 是否为 EndXXX 类型（结束阶段）
+    /// </summary>
+    public static bool IsEndType(EnumFightRunningType type)
+    {
+        return type == EnumFightRunningType.EndStatusMy
+            || type == EnumFightRunningType.EndAttackMy
+            || type == EnumFightRunningType.EndDefenseMy
+            || type == EnumFightRunningType.EndStatusYou
+            || type == EnumFightRunningType.EndAttackYou
+            || type == EnumFightRunningType.EndDefenseYou;
+    }
+
+    /// <summary>
     /// 判断某个 EnumFightRunningType 是否为我方（My）类型
     /// </summary>
     public static bool IsMyType(EnumFightRunningType type)
