@@ -22,6 +22,8 @@ public static class FightSkillSystemTool
         if (sideSkill?.Skill == null) return;
         // 提取应对
         int bingoType = sideSkill.Skill.BingoSkillType;
+        // 使用次数 + 1
+        sideSkill.UseCount += 1;
 
         string label = side == EnumWho.My ? "🧑我方" : "👹敌方";
         GD.Print($"      → [FightSkillSystemTool.ExecSwitchPet] {label} 准备换宠");

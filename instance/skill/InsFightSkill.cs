@@ -58,18 +58,9 @@ public class InsFightSkill
 	public int ActualHitCount { get; set; }
 
 	/// <summary>
-	/// 连击序号（0=第一击，>0=后续击；非连击技能始终为 0）
-	/// 由 FightSkillGenTool.GenerateHitCombo 在克隆时设置
+	/// 使用次数（记录该技能在战斗中已使用的次数）
 	/// </summary>
-	public int ComboIndex { get; set; }
-
-	/// <summary>
-	/// 是否应对（bingo）
-	/// 由 RebuildTurn 阶段检测到应对（如对方切换宠物）时置 true，
-	/// 可用于标记本技能被应对而临时增幅（如威力翻倍），
-	/// 在 DoSkill 执行完毕伤害结算后检查并还原。
-	/// </summary>
-	public bool IsBingo { get; set; }
+	public int UseCount { get; set; }
 
 	/// <summary>
 	/// 判断技能是否为使用者的本系技能（STAB）

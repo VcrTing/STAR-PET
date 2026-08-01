@@ -16,19 +16,18 @@ public partial class DuckSkill0_1_9 : Resource
     /// </summary>
     public void DoSkill(int index, FightRunning run, InsFightSkill sideSkill)
     {
-        GD.Print($"      [{index}] DuckSkill0_1_9.DoSkill | 技能：气势一击 | 实际威力={sideSkill?.ActualAttackValue} | IsBingo={sideSkill?.IsBingo} | bingoSkillType={run.BingoSkillType}");
+        GD.Print($"      [{index}] DuckSkill0_1_9.DoSkill | 技能：气势一击 | 实际威力={sideSkill?.ActualAttackValue} | UseCount={sideSkill?.UseCount} | bingoSkillType={run.BingoSkillType}");
 
         if (sideSkill?.Skill == null)
             return;
 
+        // 使用次数 +1
+        sideSkill.UseCount += 1;
+
         // 伤害计算与技能执行分离：RebuildTurn 已把威力 +80 并写入伤害计算，此处检查标记后还原技能威力
-        if (sideSkill.IsBingo)
-        {
-            int boostedPower = sideSkill.ActualAttackValue;
-            sideSkill.ActualAttackValue = sideSkill.Skill.AttackValue; // 还原基础威力（100）
-            sideSkill.IsBingo = false;                                  // 清除应对标记
-            GD.Print($"      [{index}] DuckSkill0_1_9.DoSkill | 还原气势一击威力（上回合应对已结算）: {boostedPower} → {sideSkill.ActualAttackValue}");
-        }
+        int boostedPower = sideSkill.ActualAttackValue;
+        sideSkill.ActualAttackValue = sideSkill.Skill.AttackValue; // 还原基础威力（100）
+        GD.Print($"      [{index}] DuckSkill0_1_9.DoSkill | 还原气势一击威力（上回合应对已结算）: {boostedPower} → {sideSkill.ActualAttackValue}");
     }
 
     /// <summary>
@@ -69,11 +68,10 @@ public partial class DuckSkill0_1_9 : Resource
         }
 
         // 4. 上回合应对成功：
-        //    4.1 标记应对 + 本技能实际威力 +80（Damage 计算读取 ActualAttackValue）
-        selfAction.FightSkill.IsBingo = true;
+        //    4.1 标记使用次数 + 本技能实际威力 +80（Damage 计算读取 ActualAttackValue）
         selfAction.FightSkill.ActualAttackValue = selfAction.FightSkill.Skill.AttackValue + 80;
 
-        GD.Print($"  └─ [DuckSkill0_1_9] RebuildTurn | 上回合应对成功！IsBingo=true，气势一击威力 +80 => {selfAction.FightSkill.ActualAttackValue}");
+        GD.Print($"  └─ [DuckSkill0_1_9] RebuildTurn | 上回合应对成功！气势一击威力 +80 => {selfAction.FightSkill.ActualAttackValue}");
 
         return sideActions;
     }

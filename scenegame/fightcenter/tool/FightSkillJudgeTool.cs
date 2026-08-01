@@ -33,6 +33,8 @@ public static class FightSkillJudgeTool
 
         // 提取应对
         int bingoType = sideSkill.Skill.BingoSkillType;
+        // 使用次数 + 1
+        sideSkill.UseCount += 1;
 
         // 1. side 开始攻击，FightRunning 加入CurrentRunArray
         FightRunningHouse.AddRunning2(
@@ -129,6 +131,9 @@ public static class FightSkillJudgeTool
 
         // 提取应对
         int bingoType = sideSkill.Skill.BingoSkillType;
+
+        // 使用次数 + 1
+        sideSkill.UseCount += 1;
     
         // 1. side 开始防御，FightRunning 加入CurrentRunArray
         FightRunningHouse.AddRunning2(
@@ -221,6 +226,9 @@ public static class FightSkillJudgeTool
 
         // 提取应对
         int bingoType = sideSkill.Skill.BingoSkillType;
+
+        // 使用次数 + 1
+        sideSkill.UseCount += 1;
 
         // 1. side 开始状态，FightRunning 加入CurrentRunArray
         FightRunningHouse.AddRunning2(
