@@ -1,18 +1,29 @@
-
-聚能:
-  执行聚能:
-    # res://scenegame/fightcenter/tool/skill/FightSkillStatusRunTool.cs ExecuteFocusEnergy
+战斗代码流程:
+  1. 执行鸭子 同步双方技能参数 RealtimeSync
+  2. 排序TurnAction
+  3. 执行鸭子 重构TurnAction RebuildTurn
+  4. 生成Running
+  5. 技能使用 + 1、完成伤害计算
+  6. 执行Running，包含扣血
+  7. 执行鸭子 DoSkill，连击执行时 DoSkill 会多次调用
+  8. 收集死亡宠物，结束回合
 
 技能计算:
   伤害计算公式:
-    # res://scenegame/fightcenter/tool/FightDamageTool.cs CalcBasicDamage
+    # res://scenegame/fightcenter/tool/ppndamage/FightDamageTool.cs CalcBasicDamage
+  PP能耗相关:
+    # res://scenegame/fightcenter/tool/ppndamage/FightPpTool.cs
   加入Buff的加成:
     # res://scenegame/fightcenter/tool/buff/FightBuffTool.cs
   计算结果返回使用:
     # res://scenegame/fightcenter/tool/inner/FightSkillJudge2Tool.cs
 
 技能发起执行:
-  # res://scenegame/fightcenter/running/FightRunningExe.cs ExecuteMy
+  # res://scenegame/fightcenter/running/FightRunningExe.cs ExecuteMy聚能:
+  执行状态技能——聚能:
+    # res://scenegame/fightcenter/tool/skill/FightSkillStatusRunTool.cs ExecuteFocusEnergy
+  执行系统技能——切换宠物:
+    # res://scenegame/fightcenter/tool/running/FightRunningExeSysTool.cs ExecuteSwitchPet
 
 技能:
   开发定义的地方:
