@@ -72,15 +72,25 @@ public partial class ScrollPetsContent : ScrollContainer
 	public void AsyncPetItems(InsFightPetData[] pets)
 	{
 		if (pets == null) return;
-
+		GD.Print("AsyncPetItems Running.");
+		
 		var children = _vBoxPetsContent.GetChildren();
 		int count = Mathf.Min(children.Count, pets.Length);
 		for (int i = 0; i < count; i++)
 		{
-			if (children[i] is BtnPackPetItem item)
+			// 子节点是 btn_pack_pet_item.tscn 的根节点 MarginContainer，
+			// BtnPackPetItem 是其子节点，需 FindChild 获取后刷新
+			var container = children[i];
+			if (container == null) continue;
+
+			BtnPackPetItem item = container.FindChild("BtnPackPetItem", true, false) as BtnPackPetItem;
+			if (item == null)
 			{
-				item.SetPetData(pets[i]);
+				item = container as BtnPackPetItem;
+				if (item == null) continue;
 			}
+
+			item.SetPetData(pets[i]);
 		}
 	}
 
@@ -89,12 +99,36 @@ public partial class ScrollPetsContent : ScrollContainer
 	/// 子节点为空或宠物数量与子节点数量不一致时调用 InitPetItems 重新创建，
 	/// 否则调用 AsyncPetItems 直接刷新数据
 	/// </summary>
-	public void RefreshPetItems(InsFightPetData[] pets)
+	public void RefreshPackPetItems(InsFightPetData[] pets)
 	{
 		var children = _vBoxPetsContent.GetChildren();
 		if (children.Count == 0 || children.Count != pets.Length)
 			InitPetItems(pets);
 		else
+		{
 			AsyncPetItems(pets);
+		}
+
+		// 刷新详情面板：读取 pets 中血量大于 0 的第一个精灵
+		VBoxPetMsgContent.Instance?.UpdatePetData(GetFirstAlivePet(pets));
+	}
+
+	/// <summary>
+	/// 获取宠物数组中血量大于 0 的第一个存活精灵（未找到返回 null）
+	/// </summary>
+	/// <param name="pets">宠物数据数组</param>
+	/// <returns>第一只存活精灵，无存活时返回 null</returns>
+	private InsFightPetData GetFirstAlivePet(InsFightPetData[] pets)
+	{
+		if (pets == null) return null;
+
+		for (int i = 0; i < pets.Length; i++)
+		{
+			if (pets[i] != null && pets[i].Hp > 0)
+			{
+				return pets[i];
+			}
+		}
+		return null;
 	}
 }

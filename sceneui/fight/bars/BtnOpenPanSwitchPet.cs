@@ -25,6 +25,6 @@ public partial class BtnOpenPanSwitchPet : TextureButton
 			GD.Print("[BtnOpenPanSwitchPet] 当前不可切换宠物");
 			return;
 		}
-		PanFightPlayerPack.Instance?.Open();
+		PanFightPlayerPack.Instance?.OpenForLimit(PlayerLandMyStandPlayer.Instance.GetCanSiwtchFightPets(false));
 	}
 }

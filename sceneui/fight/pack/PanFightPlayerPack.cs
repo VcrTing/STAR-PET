@@ -22,19 +22,43 @@ public partial class PanFightPlayerPack : PanelContainer
 	{
 	}
 
-	public void Open()
+	public void OpenForLimit(InsFightPetData[] fightPetDatas)
 	{
 		Visible = true;
-
-		var pets = PlayerLandMyStandPlayer.Instance?.FightPets;
-		if (pets != null && pets.Count > 0)
-		{
-			ScrollPetsContent.Instance?.RefreshPetItems(pets.ToArray());
-		}
+		// 刷新关闭按钮状态：强制换宠时隐藏（不允许关闭），允许关闭时显示
+		RefreshCloseBtnState();
+		ScrollPetsContent.Instance?.RefreshPackPetItems(fightPetDatas);
+	}
+	public void Open()
+	{
+		OpenForLimit(PlayerLandMyStandPlayer.Instance?.FightPets.ToArray());
 	}
 
 	public void Close()
 	{
+		// 强制换宠状态（My 精灵濒死）下不允许关闭切换宠物 Pan
+		if (FightCenterManger.Instance?.NeedPlayerFaintSwitch == true)
+		{
+			GD.Print("[PanFightPlayerPack.Close] 强制换宠状态，禁止关闭切换宠物面板");
+			return;
+		}
+
 		Visible = false;
+	}
+
+	/// <summary>
+	/// 刷新关闭按钮状态：
+	/// 强制换宠状态（不允许关闭）→ 隐藏关闭按钮；
+	/// 允许关闭 → 显示关闭按钮。
+	/// 通过 BtnCloseFightPlayerPack 单例刷新。
+	/// </summary>
+	private void RefreshCloseBtnState()
+	{
+		var btnClose = BtnCloseFightPlayerPack.Instance;
+		if (btnClose == null)
+			return;
+
+		bool forced = FightCenterManger.Instance?.NeedPlayerFaintSwitch == true;
+		btnClose.Visible = !forced;
 	}
 }

@@ -25,7 +25,7 @@ public partial class VBoxFightPlayerPetsPack : VBoxContainer
 	{
 		if (pets == null) return;
 
-		ScrollPetsContent.Instance?.RefreshPetItems(pets);
+		ScrollPetsContent.Instance?.RefreshPackPetItems(pets);
 
 		// 默认选中当前上场精灵，没找到就不展示
 		var defaultPet = FightLandMyStandPet.Instance?.FightPetData;

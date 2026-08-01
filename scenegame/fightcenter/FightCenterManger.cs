@@ -31,6 +31,9 @@ public partial class FightCenterManger : Node2D
 	/// <summary>玩家当前上场精灵濒死，需强制选择替补上场</summary>
 	private bool _needPlayerFaintSwitch = false;
 
+	/// <summary>是否处于强制换宠状态（My 精灵濒死需强制选择替补）</summary>
+	public bool NeedPlayerFaintSwitch => _needPlayerFaintSwitch;
+
 	// ─── 信号 ───
 	public const string SignalFightStateChanged = "OnFightStateChanged";
 	public const string SignalDamageDealt = "OnDamageDealt";
@@ -109,8 +112,10 @@ public partial class FightCenterManger : Node2D
 		// ── 濒死强制换宠 ──
 		if (_needPlayerFaintSwitch)
 		{
-			DoPlayerSwitch(targetIndex);
+			// 先解除强制换宠状态，再执行换宠（SwitchPet 内部会调用 Pan.Close()，
+			// 若此时仍处于强制换宠状态，Close 会被拦截无法关闭）
 			_needPlayerFaintSwitch = false;
+			DoPlayerSwitch(targetIndex);
 			GD.Print($"  └─ [玩家] 濒死后换宠 → {allPets[targetIndex].PetName}");
 
 			// 把换宠作为玩家行动记录（加载系统换宠技能 0_4_1），
@@ -205,6 +210,13 @@ public partial class FightCenterManger : Node2D
 		{
 			LabelGameStatus.SetText("💀 我方精灵濒死，请选择替补上场\nPlayerSelectSwitch(idx)");
 			GD.Print("  ▶ 我方精灵濒死，请调用 PlayerSelectSwitch(idx) 选择替补");
+				
+			// 回合开始时先更新 UI 显示
+			FightUiUpdateTool.UpdateMyUi();
+			FightUiUpdateTool.UpdateYouUi();
+
+			// 打开切换宠物的 Pan（强制换宠状态，不允许关闭）
+			PanFightPlayerPack.Instance?.OpenForLimit(PlayerLandMyStandPlayer.Instance.GetCanSiwtchFightPets(false));
 			return;
 		}
 

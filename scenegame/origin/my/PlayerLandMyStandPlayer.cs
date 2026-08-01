@@ -40,6 +40,38 @@ public partial class PlayerLandMyStandPlayer : Node2D
 	}
 
 	/// <summary>
+	/// 获取我方战斗精灵数组
+	/// </summary>
+	/// <param name="excludeStanding">是否排除本次上场宠物；
+	/// =true 则排除 FightLandMyStandPet.FightPetData 已上场的宠物后返回；
+	/// =false 返回原数组</param>
+	/// <returns>战斗精灵数组</returns>
+	public InsFightPetData[] GetCanSiwtchFightPets(bool excludeStanding)
+	{
+		if (FightPets == null || FightPets.Count == 0)
+			return new InsFightPetData[0];
+
+		// =false 返回原数组
+		if (!excludeStanding)
+			return FightPets.ToArray();
+
+		// =true 排除已上场宠物
+		var standingPet = FightLandMyStandPet.Instance?.FightPetData;
+		var result = new System.Collections.Generic.List<InsFightPetData>();
+		for (int i = 0; i < FightPets.Count; i++)
+		{
+			var pet = FightPets[i];
+			if (pet == null)
+				continue;
+			// 排除当前场上宠物（按 Uuid 匹配）
+			if (standingPet != null && pet.PetUuid == standingPet.PetUuid)
+				continue;
+			result.Add(pet);
+		}
+		return result.ToArray();
+	}
+
+	/// <summary>
 	/// 判断当前是否可以切换宠物
 	/// PlayerTurn 状态下允许切换（含正常回合和濒死强制换宠）
 	/// </summary>

@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://btjby1aginqih" path="res://sceneui/fight/pack/VBoxPetMsgContent.cs" id="4_hck4m"]
 [ext_resource type="Theme" uid="uid://cnosdvdh3h7sj" path="res://sceneui/__theme/theme_button_def.tres" id="5_547r2"]
 [ext_resource type="Texture2D" uid="uid://d8dltmavolkt" path="res://icon.svg" id="5_md54p"]
-[ext_resource type="Script" uid="uid://dchpd48aliwr4" path="res://sceneui/__common/BtnClosePan.cs" id="6_ajoen"]
+[ext_resource type="Script" uid="uid://b1k1mxx7x25xr" path="res://sceneui/fight/pack/BtnCloseFightPlayerPack.cs" id="8_33cl8"]
 
 [node name="PanFightPlayerPack" type="PanelContainer" unique_id=1813670500]
 anchors_preset = 15
@@ -238,8 +238,7 @@ alignment = 2
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 theme = ExtResource("5_547r2")
-script = ExtResource("6_ajoen")
-PanName = 1
+script = ExtResource("8_33cl8")
 
 [node name="Label" type="Label" parent="HBoxWrapper/VBoxContainer/HBoxBottom/VBoxContainer/HBoxPetMsgSub/MarginContainer/HBoxContainer/BtnClosePan" unique_id=1279049864]
 layout_mode = 1

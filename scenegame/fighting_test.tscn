@@ -204,6 +204,7 @@ size_flags_horizontal = 3
 layout_mode = 2
 
 [node name="PanFightPlayerPack" parent="PlayerUi/FightCanvasLayer" unique_id=1813670500 instance=ExtResource("10_nues3")]
+visible = false
 
 [node name="FightOriginManager" parent="." unique_id=1944409961 instance=ExtResource("11_x64ax")]
 

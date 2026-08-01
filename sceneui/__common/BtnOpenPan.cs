@@ -18,12 +18,6 @@ public partial class BtnOpenPan : TextureButton
 
 		switch (PanName)
 		{
-			case EnumPanName.FightPetPack:
-				if (PanFightPlayerPack.Instance == null)
-					GD.PrintErr("  ❌ PanFightPlayerPack.Instance 为 null！请在场景中添加 PanFightPlayerPack 节点");
-				else
-					PanFightPlayerPack.Instance.Open();
-				break;
 		}
 	}
 
