@@ -112,7 +112,21 @@ public partial class FightCenterManger : Node2D
 			DoPlayerSwitch(targetIndex);
 			_needPlayerFaintSwitch = false;
 			GD.Print($"  └─ [玩家] 濒死后换宠 → {allPets[targetIndex].PetName}");
-			TransitionTo(FightState.YouTurn);
+
+			// 把换宠作为玩家行动记录（加载系统换宠技能 0_4_1），
+			// 确保状态机正常流转（TryExecute 能检测玩家已行动）
+			InsSkill faintSwitchSkill = DevSkillLoadTool.LoadSwitchPetSkill();
+			if (faintSwitchSkill != null)
+			{
+				var faintFightSkill = InsFightSkill.FromInsSkill(faintSwitchSkill);
+				var faintAction = new TurnAction(EnumWho.My, faintFightSkill);
+				faintAction.SwitchTargetIndex = targetIndex;
+				MyTurnActs[4] = faintAction;
+				_playerActedThisTurn = true;
+			}
+
+			// 换宠成功后，直接进入新回合（TurnStart）
+			TransitionTo(FightState.TurnStart);
 			return;
 		}
 
@@ -222,6 +236,16 @@ public partial class FightCenterManger : Node2D
 	{
 		GD.Print($"─────────────────\n  ⚔️ 第 {_turnNumber} 回合执行\n─────────────────");
 
+		// 防御校验：双方场上精灵数据必须完整，否则跳过本回合执行，
+		// 避免精灵死亡/换宠流程中残留行动标记导致二次执行时访问 null
+		if (FightLandMyStandPet.Instance?.FightPetData == null ||
+			FightLandYouStandPet.Instance?.FightPetData == null)
+		{
+			GD.Print("  ⚠ [HandleExecuteTurn] 场上精灵数据不完整，跳过本回合执行");
+			NextTurn();
+			return;
+		}
+
 		// 执行双方行动，获取本回合死亡精灵列表
 		var newDiePets = FightExeAction.ExecuteActions(MyTurnActs, YouTurnActs);
 
@@ -268,6 +292,10 @@ public partial class FightCenterManger : Node2D
 				GD.Print("  💀 [DoingDie] 我方精灵死亡，请求玩家换宠");
 				EmitSignal(SignalPetFainted, EnumWho.My.ToString(), FightCenterUtil.GetCurrentPlayerPetIndex());
 				_needPlayerFaintSwitch = true;
+				// 重置双方行动标记，避免上一回合残留的 _playerActedThisTurn=true
+				// 导致 TryExecute 在换宠流程中误判"双方已行动"而二次触发回合执行
+				_playerActedThisTurn = false;
+				_youActedThisTurn = false;
 				TransitionTo(FightState.PlayerTurn);
 				return;
 			}
@@ -309,14 +337,15 @@ public partial class FightCenterManger : Node2D
 
 	private void HandleTurnStart()
 	{
-		// 回合开始时先更新 UI 显示
-		FightUiUpdateTool.UpdateMyUi();
-		FightUiUpdateTool.UpdateYouUi();
 
 		// 刷新技能
 		FightSkillAsyncTool.SyncAllSkills(EnumWho.My, FightLandMyStandPet.Instance.FightPetData);
 		FightSkillAsyncTool.SyncAllSkills(EnumWho.You, FightLandYouStandPet.Instance.FightPetData);
 
+		// 回合开始时先更新 UI 显示
+		FightUiUpdateTool.UpdateMyUi();
+		FightUiUpdateTool.UpdateYouUi();
+		
 		var pet = FightLandMyStandPet.Instance?.FightPetData;
 		string info = pet != null ? $"{pet.PetName} (HP={pet.Hp}/{pet.MaxHp})" : "无精灵";
 

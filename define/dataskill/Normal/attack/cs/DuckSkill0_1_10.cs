@@ -51,12 +51,36 @@ public partial class DuckSkill0_1_10 : Resource
     /// <summary>
     /// Real-time sync skill
     /// 实时刷新技能状态
-    /// 通过 sideSkill 修改技能源头
+    /// 垂死反击：血量濒危时迸发反击力量，自身当前血量每降低10%，技能威力永久提升8点。
+    /// 通过 sideSkill 干预伤害（写入 ActualAttackValue 供伤害计算读取）。
     /// </summary>
     public void RealtimeSync(EnumWho side, InsFightPetData MyPet, InsFightPetData YouPet, InsFightPetData[] MyPackPet, InsFightPetData[] YouPackPet, InsFightSkill sideSkill)
     {
-        // 通过 sideSkill 修改技能源头（留空待实现）
-        // 
-        GD.Print("刷新垂死反击伤害");
+        if (sideSkill?.Skill == null)
+            return;
+
+        // 根据 side 确定自身的精灵数据
+        InsFightPetData selfPet = side == EnumWho.My ? MyPet : YouPet;
+        if (selfPet == null)
+            return;
+
+        // 计算血量损失百分比：自身当前血量每降低10%，技能威力永久提升8点
+        int currentHp = selfPet.Hp;
+        int maxHp = selfPet.MaxHp;
+        if (maxHp <= 0)
+            return;
+
+        // 血量损失百分比，取整到10%向下（例如损失35% => 3档 => +24）
+        int lostPercent = (int)(((float)(maxHp - currentHp) / maxHp) * 100.0f);
+        int lostTens = lostPercent / 10;
+
+        // 最终威力 = 基础威力 + 档数 * 8，干预 sideSkill 伤害值
+        int basePower = sideSkill.Skill.AttackValue;
+        int finalPower = basePower + lostTens * 8;
+
+        int beforePower = sideSkill.ActualAttackValue;
+        sideSkill.ActualAttackValue = finalPower;
+
+        GD.Print($"      [RealtimeSync] DuckSkill0_1_10 | 垂死反击 | {selfPet.PetName} HP={currentHp}/{maxHp} | 损失{lostPercent}%（{lostTens}档） | 威力: {beforePower} → {finalPower}");
     }
 }

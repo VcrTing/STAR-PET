@@ -13,16 +13,10 @@ public static class FightPetHpTool
     /// <param name="side">阵营（我方/敌方）</param>
     /// <param name="damage">要扣除的伤害值（正数）</param>
     /// <param name="index">阶段索引号（仅用于日志，默认0）</param>
-    /// <returns>实际扣除的伤害值</returns>
+    /// <returns>扣血后该宠物的当前血量（精灵不存在时返回 0）</returns>
     public static int DeductHp(EnumWho side, int damage, int index = 0)
     {
         string sideLabel = side == EnumWho.My ? "🧑我方" : "👹敌方";
-
-        if (damage <= 0)
-        {
-            GD.Print($"      [{index}] {sideLabel} DeductHp | damage={damage}，无需扣血");
-            return 0;
-        }
 
         InsFightPetData pet = side == EnumWho.My
             ? FightLandMyStandPet.Instance?.FightPetData
@@ -34,6 +28,12 @@ public static class FightPetHpTool
             return 0;
         }
 
+        if (damage <= 0)
+        {
+            GD.Print($"      [{index}] {sideLabel} DeductHp | damage={damage}，无需扣血");
+            return pet.Hp;
+        }
+
         int beforeHp = pet.Hp;
         int actualDamage = Mathf.Min(damage, pet.Hp);
         pet.Hp = Mathf.Max(pet.Hp - damage, 0);
@@ -41,7 +41,8 @@ public static class FightPetHpTool
         GD.Print($"      [{index}] {sideLabel} DeductHp | " +
                  $"damage={actualDamage} {pet.PetName} HP: {beforeHp} → {pet.Hp}/{pet.MaxHp}");
 
-        return actualDamage;
+        // 返回扣血后该宠物的当前血量
+        return pet.Hp;
     }
 
     /// <summary>

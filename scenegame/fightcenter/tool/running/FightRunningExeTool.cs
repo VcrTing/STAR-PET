@@ -10,21 +10,22 @@ public static class FightRunningExeTool
     /// <summary>
     /// 执行扣血阶段：根据 FightRunning.Damage 扣除对应方精灵的 HP
     /// </summary>
-    public static void ExecuteDamage(FightRunning run, int index)
+    public static int ExecuteDamage(FightRunning run, int index)
     {
-        if (run == null) { GD.PrintErr("ExecuteDamage | run 为 null"); return; }
+        if (run == null) { GD.PrintErr("ExecuteDamage | run 为 null"); return 0; }
 
         string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
 
         // 执行鸭子技能模型
-        InsFightSkill sideSkill = run.SideFightSkill;
         InsFightSkill targetSkill = run.TargetFightSkill;
 
-        // 使用 FightPetHpTool 执行扣血
-        int actualDamage = FightPetHpTool.DeductHp(run.Side, run.Damage, index);
+        // 使用 FightPetHpTool 执行扣血，返回扣血后该宠物的当前血量
+        int currentHp = FightPetHpTool.DeductHp(run.Side, run.Damage, index);
 
         GD.Print($"      [{index}] {sideLabel} {run.RunningType} | " +
-                 $"damage={actualDamage} bingoSkillType={run.BingoSkillType}" + " 对方技能 =" + (targetSkill != null ? targetSkill.Skill.SkillName : "空"));
+                 $"currentHp={currentHp} bingoSkillType={run.BingoSkillType}" + " 对方技能 =" + (targetSkill != null ? targetSkill.Skill.SkillName : "空"));
+        //
+        return currentHp;
     }
 
     /// <summary>

@@ -22,17 +22,6 @@ public partial class DuckSkill0_1_8 : Resource
     {
         GD.Print($"      [{index}] DuckSkill0_1_8.DoSkill | 技能：当头棒喝 | 实际威力={sideSkill?.ActualAttackValue} | Current应对切换={FightBingoHouse.HasCurrentSwitchPetBingo(run.Side)} | bingoSkillType={run.BingoSkillType}");
 
-        if (sideSkill?.Skill == null)
-            return;
-
-        // 伤害计算（Damage）与技能执行（DoSkill）是分开的：
-        // 以 FightBingoHouse Current 应对数组为核心判断本次是否应对切换宠物成功
-        if (FightBingoHouse.HasCurrentSwitchPetBingo(run.Side))
-        {
-            int doubledPower = sideSkill.ActualAttackValue;
-            sideSkill.ActualAttackValue = sideSkill.Skill.AttackValue; // 还原基础威力
-            GD.Print($"      [{index}] DuckSkill0_1_8.DoSkill | 还原当头棒喝威力（本回合应对切换已结算）: {doubledPower} → {sideSkill.ActualAttackValue}");
-        }
     }
 
     /// <summary>
@@ -117,7 +106,17 @@ public partial class DuckSkill0_1_8 : Resource
     /// </summary>
     public void EndSkill(int index, FightRunning run, InsFightSkill sideSkill)
     {
-        // 留空待实现
+        if (sideSkill?.Skill == null)
+            return;
+
+        // 伤害计算（Damage）与技能执行（DoSkill）是分开的：
+        // 以 FightBingoHouse Current 应对数组为核心判断本次是否应对切换宠物成功
+        if (FightBingoHouse.HasCurrentSwitchPetBingo(run.Side))
+        {
+            int doubledPower = sideSkill.ActualAttackValue;
+            sideSkill.ActualAttackValue = sideSkill.Skill.AttackValue; // 还原基础威力
+            GD.Print($"      [{index}] DuckSkill0_1_8.DoSkill | 还原当头棒喝威力（本回合应对切换已结算）: {doubledPower} → {sideSkill.ActualAttackValue}");
+        }
     }
 
     /// <summary>

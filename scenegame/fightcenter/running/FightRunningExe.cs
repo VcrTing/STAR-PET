@@ -13,6 +13,12 @@ using System.Collections.Generic;
 public static class FightRunningExe
 {
     /// <summary>
+    /// 阶段执行队列（类内字段，ExecuteAll 执行完成后清空）
+    /// 队列保证严格先进先出，顺序与原数组一致
+    /// </summary>
+    private static readonly Queue<FightRunning> _queue = new();
+
+    /// <summary>
     /// 执行所有 FightRunning 阶段，并打印日志
     /// 将 CurrentRunArray 中的有效阶段转为队列，逐个弹出（Dequeue）执行
     /// </summary>
@@ -21,15 +27,14 @@ public static class FightRunningExe
     {
         GD.Print($"[FightRunningExe] 开始执行 FightRunning，==================");
 
-        // 1. 将 CurrentRunArray 中所有有效阶段入队
-        //    队列保证严格先进先出，顺序与原数组一致
-        var queue = new Queue<FightRunning>();
+        // 1. 清空上一次队列，将 CurrentRunArray 中所有有效阶段入队
+        _queue.Clear();
         FightRunning[] runnings = FightRunningHouse.CurrentRunArray;
         for (int i = 0; i < runnings.Length; i++)
         {
             if (runnings[i] != null)
             {
-                queue.Enqueue(runnings[i]);
+                _queue.Enqueue(runnings[i]);
             }
         }
 
@@ -43,9 +48,9 @@ public static class FightRunningExe
 
         // 2. 从队列中逐个弹出执行（index 为原始顺序编号，用于日志）
         int index = 0;
-        while (queue.Count > 0)
+        while (_queue.Count > 0)
         {
-            FightRunning run = queue.Dequeue();
+            FightRunning run = _queue.Dequeue();
 
             // 使用 FightRunningTypeDesign 区分 My/You
             bool isMy = FightRunningTypeDesign.IsMyType(run.RunningType);
@@ -78,9 +83,60 @@ public static class FightRunningExe
         // 对比本回合前后的存活列表，收集本回合新死亡的精灵
         var newDiePets = FightAliveHouse.CollectDiePets(aliveMyUuids, aliveYouUuids);
 
+        // 执行完成后清空队列
+        _queue.Clear();
+
         GD.Print($"[FightRunningExe] FightRunning 执行完毕，本回合死亡 {newDiePets.Count} 只精灵，==================");
         
         return newDiePets;
+    }
+
+    /// <summary>
+    /// 获取 run.Side 方当前精灵的血量（用于实时监听 HP）
+    /// </summary>
+    private static int GetNowHp(FightRunning run)
+    {
+        if (FightLandMyStandPet.Instance.FightPetData != null && FightLandYouStandPet.Instance.FightPetData != null)
+        {
+            return run.Side == EnumWho.My ? FightLandMyStandPet.Instance.FightPetData.Hp : FightLandYouStandPet.Instance.FightPetData.Hp;
+        }
+        return 0;
+    }
+
+    /// <summary>
+    /// 处理某方 HP 归零（公共逻辑，My/You 通用）：
+    /// 1. 清空 CurrentRunArray 中关于本 side 的后续所有 running；
+    /// 2. 同时清空执行队列中本 side 尚未执行的 running（另一边的 running 保留继续执行）；
+    /// 3. 为本 side 添加对应的回合结束阶段（My → GenEndActsMy，You → GenEndActsYou）。
+    /// </summary>
+    private static void HandleSideDead(FightRunning run)
+    {
+        // 1. 清空 CurrentRunArray 中关于本 side 的后续所有 running
+        for (int i = 0; i < FightRunningHouse.RunArrayLength; i++)
+        {
+            FightRunning r = FightRunningHouse.CurrentRunArray[i];
+            if (r != null && r.Side == run.Side)
+            {
+                FightRunningHouse.CurrentRunArray[i] = null;
+            }
+        }
+        // 同时清空执行队列中本 side 尚未执行的 running，
+        // 另一边的 running 保留继续执行（队列已提取为类内字段）
+        var remaining = _queue.ToArray();
+        _queue.Clear();
+        for (int i = 0; i < remaining.Length; i++)
+        {
+            if (remaining[i] != null && remaining[i].Side != run.Side)
+            {
+                _queue.Enqueue(remaining[i]);
+            }
+        }
+        // 2. 然后为本 side 添加对应的回合结束阶段 running
+        //    （My 方 → GenEndActsMy，You 方 → GenEndActsYou）
+        EnumFightRunningType genEndType = run.Side == EnumWho.My
+            ? EnumFightRunningType.GenEndActsMy
+            : EnumFightRunningType.GenEndActsYou;
+        FightRunningHouse.AddRunningEasy(genEndType, run.Side);
     }
 
     /// <summary>
@@ -94,11 +150,12 @@ public static class FightRunningExe
             GD.Print("My 没血，打断后续操作 ========================");
             return;
         }
-
+        int nowHp = GetNowHp(run);
+        // 
         switch (run.RunningType)
         {
             case EnumFightRunningType.DoDamageMy:
-                FightRunningExeTool.ExecuteDamage(run, index);
+                nowHp = FightRunningExeTool.ExecuteDamage(run, index);
                 break;
             case EnumFightRunningType.DoAttackMy:
                 FightRunningExeTool.ExecuteDoAttack(run, index);
@@ -119,6 +176,11 @@ public static class FightRunningExe
                 ExecuteSingle(run, index);
                 break;
         }
+
+        if (nowHp <= 0)
+        {
+            HandleSideDead(run);
+        }
     }
 
     /// <summary>
@@ -132,11 +194,12 @@ public static class FightRunningExe
             GD.Print("You 没血，打断后续操作 ========================");
             return;
         }
-
+        int nowHp = GetNowHp(run);
+        // 
         switch (run.RunningType)
         {
             case EnumFightRunningType.DoDamageYou:
-                FightRunningExeTool.ExecuteDamage(run, index);
+                nowHp = FightRunningExeTool.ExecuteDamage(run, index);
                 break;
             case EnumFightRunningType.DoAttackYou:
                 FightRunningExeTool.ExecuteDoAttack(run, index);
@@ -156,6 +219,11 @@ public static class FightRunningExe
             default:
                 ExecuteSingle(run, index);
                 break;
+        }
+
+        if (nowHp <= 0)
+        {
+            HandleSideDead(run);
         }
     }
 
