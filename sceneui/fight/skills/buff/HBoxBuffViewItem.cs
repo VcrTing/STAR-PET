@@ -52,7 +52,7 @@ public partial class HBoxBuffViewItem : HBoxContainer
             return;
         }
 
-        _labelValue.Text = DevBuffHelpTool.BuffToText(buff);
+        _labelValue.Text = DevBuffDesign.BuffToText(buff);
     }
 
 }

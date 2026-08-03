@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://b7yomklq6xlw0" path="res://sceneui/fight/bartop/ui_fight_top_bar.tscn" id="9_5yix2"]
 [ext_resource type="PackedScene" uid="uid://btbms5rgup6yp" path="res://sceneui/fight/pack/pan_fight_player_pack.tscn" id="10_nues3"]
 [ext_resource type="Script" uid="uid://da54yavlkvkaj" path="res://sceneui/fight/skills/content/VBoxViewBuffsContentMy.cs" id="11_3l0sp"]
+[ext_resource type="Theme" uid="uid://gm7voldghoxo" path="res://sceneui/fight/skills/buff/theme_fight_buff_view.tres" id="11_d74j3"]
 [ext_resource type="PackedScene" uid="uid://bvnck5flu1dha" path="res://scenegame/fightcenter/fight_origin_manager.tscn" id="11_x64ax"]
 [ext_resource type="Script" uid="uid://d2jniwvlol464" path="res://sceneui/fight/skills/content/VBoxViewBuffsContentYou.cs" id="12_5yix2"]
 
@@ -163,6 +164,32 @@ script = ExtResource("11_3l0sp")
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="PowersContent" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy" unique_id=672741798]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxPowerViewItem" type="HBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy/PowersContent" unique_id=254948688]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy/PowersContent/HBoxPowerViewItem" unique_id=1202581089]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy/PowersContent/HBoxPowerViewItem/MarginContainer" unique_id=1396492292]
+layout_mode = 2
+
+[node name="LabelName" type="Label" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy/PowersContent/HBoxPowerViewItem/MarginContainer/HBoxContainer" unique_id=812668948]
+layout_mode = 2
+theme = ExtResource("11_d74j3")
+vertical_alignment = 1
+
+[node name="LabelValue" type="Label" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy/PowersContent/HBoxPowerViewItem/MarginContainer/HBoxContainer" unique_id=628308808]
+layout_mode = 2
+theme = ExtResource("11_d74j3")
+vertical_alignment = 1
+
 [node name="BuffViewYou" type="Control" parent="PlayerUi/FightCanvasLayer" unique_id=1869446298]
 custom_minimum_size = Vector2(120, 420)
 layout_mode = 3
@@ -202,6 +229,10 @@ size_flags_horizontal = 3
 
 [node name="SkillContent" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewYou/MarginContainer/ScrollContainer/VBoxViewBuffsContentYou" unique_id=609743959]
 layout_mode = 2
+
+[node name="PowersContent" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewYou/MarginContainer/ScrollContainer/VBoxViewBuffsContentYou" unique_id=1867959927]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="PanFightPlayerPack" parent="PlayerUi/FightCanvasLayer" unique_id=1813670500 instance=ExtResource("10_nues3")]
 visible = false

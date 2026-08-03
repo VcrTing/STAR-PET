@@ -40,22 +40,18 @@ public partial class DuckSkill0_2_2 : Resource
     /// 技能结束执行（Skill 阶段结束）
     /// 扫描 sideRunnings 中本方的应对攻击阶段（BingoAttackMy / BingoAttackYou），
     /// 判断本回合是否成功抵挡攻击：
-    /// 成功 => IsEffectActiveThisTurn = true（下回合先手值+1）；
+    /// 成功 => IsEffectActiveThisTurn = true，并给本侧宠物设置下回合先手值 +1；
     /// 失败 => IsEffectActiveThisTurn = false
+    /// 注意：先手值 +1 只加一回合——排序消费完会在 FightExeAction.ExecuteActions 步骤1.6 统一重置
     /// </summary>
     public void EndSkill(int index, FightRunning run, InsFightSkill sideSkill, FightRunning[] sideRunnings)
     {
         if (sideSkill?.Skill == null)
             return;
 
-        // 已经生效完成
-        if (sideSkill.IsEffectActiveThisTurn)
-        {
-            // 重置先手值
-            FightLandMyStandPet.Instance.SetRoundPriorityIntervene(0);
-        }
-
         EnumWho side = run.Side;
+        string sideLabel = side == EnumWho.My ? "🧑我方" : "👹敌方";
+
         EnumFightRunningType bingoAttackType = side == EnumWho.My
             ? EnumFightRunningType.BingoAttackMy
             : EnumFightRunningType.BingoAttackYou;
@@ -78,15 +74,20 @@ public partial class DuckSkill0_2_2 : Resource
         // 成功抵挡 => 本回合特效生效（下回合先手值+1）；否则不生效
         sideSkill.IsEffectActiveThisTurn = bingoSuccess;
 
-        // 应对成功
-        
         if (bingoSuccess)
         {
-            // 先手值 + 1
-            FightLandMyStandPet.Instance.SetRoundPriorityIntervene(1);
+            // 应对攻击成功 => 给本侧宠物加下回合先手值 + 1（只加一回合，排序消费后由 FightExeAction 重置）
+            if (side == EnumWho.My)
+                FightLandMyStandPet.Instance?.SetRoundPriorityIntervene(1);
+            else
+                FightLandYouStandPet.Instance?.SetRoundPriorityIntervene(1);
         }
 
-        GD.Print($"      [{index}] DuckSkill0_2_2.EndSkill | 特意防守 | 本回合抵挡攻击={bingoSuccess} | IsEffectActiveThisTurn={sideSkill.IsEffectActiveThisTurn}");
+        int nowIntervene = side == EnumWho.My
+            ? (FightLandMyStandPet.Instance?.GetRoundPriorityIntervene() ?? 0)
+            : (FightLandYouStandPet.Instance?.GetRoundPriorityIntervene() ?? 0);
+
+        GD.Print($"      [{index}] DuckSkill0_2_2.EndSkill | {sideLabel} 特意防守 | 本回合抵挡攻击={bingoSuccess} | 下回合先手值+1={(bingoSuccess ? 1 : 0)} | 当前干预先手值={nowIntervene} | IsEffectActiveThisTurn={sideSkill.IsEffectActiveThisTurn}");
     }
 
     /// <summary>

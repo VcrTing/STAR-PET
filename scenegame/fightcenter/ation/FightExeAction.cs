@@ -31,7 +31,10 @@ public static class FightExeAction
 		// 步骤1.5：根据彼此的技能，再次调整顺序，然后返回赋值 sortedMy + sortedYou
 		FightExeAfter.RebuildTurnBySkills(ref sortedMy, ref sortedYou);
 
-		GD.Print("TurnAction 排序完成，开始进入 Running 环节。");
+		// 步骤1.6：排序已消费完本回合干预先手值，立即重置（保证"只加一回合"）
+		FightLandMyStandPet.Instance?.SetRoundPriorityIntervene(0);
+		FightLandYouStandPet.Instance?.SetRoundPriorityIntervene(0);
+		GD.Print("TurnAction 排序完成（本回合干预先手值已消费并重置），开始进入 Running 环节。");
 		// 步骤2：按排序后的顺序，逐个索引执行双方行动
 		// 根据速度+应对，把行动做入 FightRunning[] 
 		int len = Math.Max(sortedMy.Length, sortedYou.Length);

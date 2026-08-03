@@ -48,6 +48,10 @@
   现在登场的宠物:
     # res://scenegame/origin/my/FightLandMyStandPet.cs
 
+加成:
+  BUFF，对种族值影响:
+    # res://scripts/toolskill/inner/DevBuffTool.cs
+
 回合动作:
   动作优先级排序:
     # res://scenegame/fightcenter/ation/FightExeAfter.cs

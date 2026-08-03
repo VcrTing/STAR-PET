@@ -4,7 +4,7 @@ using Godot;
 /// 开发期 Buff 辅助工具
 /// 提供 Buff 数组合并/叠加的静态方法
 /// </summary>
-public static class DevBuffHelpTool
+public static class DevBuffDesign
 {
     /// <summary>
     /// 将 newBuffs 合并到 oldBuffs 中，相同 buff（Stat + Value + IsRatio 相同）会叠加：

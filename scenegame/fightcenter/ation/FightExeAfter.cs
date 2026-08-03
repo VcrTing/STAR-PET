@@ -89,9 +89,9 @@ public static class FightExeAfter
 		if (myCenterAction != null)
 		{
 			int slotIndex = ResolveSlotIndex(myCenterAction);
-
+			GD.Print("我的 原slotIndex =" + slotIndex + " 我的优先值加成 = " + (FightLandMyStandPet.Instance?.GetRoundPriorityIntervene() ?? 0));
 			// 与自身先手值加减
-			slotIndex += FightLandMyStandPet.Instance?.GetRoundPriorityIntervene() ?? 0;
+ 			slotIndex += FightLandMyStandPet.Instance?.GetRoundPriorityIntervene() ?? 0;
 
 			acts[slotIndex] = myCenterAction;
 			GD.Print($"  └─ [FightExeAfter] 我方行动={myCenterAction.ActionType} → 放入 Slot[{slotIndex}]");
@@ -110,6 +110,7 @@ public static class FightExeAfter
 		if (youCenterAction != null)
 		{
 			int slotIndex = ResolveSlotIndex(youCenterAction);
+			GD.Print("我的 原slotIndex =" + slotIndex + " 我的优先值加成 = " + (FightLandMyStandPet.Instance?.GetRoundPriorityIntervene() ?? 0));
 			// 与自身先手值加减
 			slotIndex += FightLandYouStandPet.Instance?.GetRoundPriorityIntervene() ?? 0;
 

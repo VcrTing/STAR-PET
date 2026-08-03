@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://bcm7uk3g06g6h"]
+
+[ext_resource type="Script" uid="uid://cctd3odu20uaw" path="res://sceneui/fight/skills/power/HBoxPowerViewItem.cs" id="1_fn0al"]
+[ext_resource type="Theme" uid="uid://gm7voldghoxo" path="res://sceneui/fight/skills/buff/theme_fight_buff_view.tres" id="2_j554a"]
+
+[node name="HBoxPowerViewItem" type="HBoxContainer" unique_id=179075117]
+script = ExtResource("1_fn0al")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1316058738]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1825911865]
+layout_mode = 2
+
+[node name="LabelName" type="Label" parent="MarginContainer/HBoxContainer" unique_id=551388486]
+layout_mode = 2
+theme = ExtResource("2_j554a")
+vertical_alignment = 1
+
+[node name="LabelValue" type="Label" parent="MarginContainer/HBoxContainer" unique_id=620941262]
+layout_mode = 2
+theme = ExtResource("2_j554a")
+vertical_alignment = 1
