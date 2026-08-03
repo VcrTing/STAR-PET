@@ -52,6 +52,8 @@ var gain_energy := 0                # 获得能量（默认0）
 var gain_hp := 0                    # 获得血量（默认0，正数=获得，负数=扣除）
 var gain_buff := []                 # 获得 Buff（默认空数组）
 var gain_buff_bingo := []           # 应对成功后的 Buff（默认空数组）
+var gain_power := []                # 获得 Power（能力，默认空数组）
+var gain_power_bingo := []          # 应对成功后的 Power（默认空数组）
 
 # ---- 印记 ----
 var marks := []                     # 印记（默认空数组）

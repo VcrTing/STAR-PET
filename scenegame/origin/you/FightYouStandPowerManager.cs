@@ -63,6 +63,9 @@ public partial class FightYouStandPowerManager : Node2D
                 _powersDict[power.PetUuid].Add(power);
             }
         }
+
+        // 更新当前场上精灵的 Power 视图
+        RefreshCurrentView();
     }
 
     /// <summary>
@@ -88,13 +91,55 @@ public partial class FightYouStandPowerManager : Node2D
     }
 
     /// <summary>
-    /// 精灵登场时调用（预留：后续可在此刷新能力 UI 视图）
+    /// 获取指定精灵的连击数 Power 加成（ComboCount 层数之和）
+    /// 用于连击技能生成时叠加连击次数
+    /// </summary>
+    /// <param name="petUuid">精灵 UUID</param>
+    /// <returns>连击数加成（无则返回0）</returns>
+    public int GetComboCount(string petUuid)
+    {
+        if (string.IsNullOrWhiteSpace(petUuid) || !_powersDict.ContainsKey(petUuid))
+            return 0;
+
+        int totalCombo = 0;
+        var list = _powersDict[petUuid];
+        for (int i = 0; i < list.Count; i++)
+        {
+            InsFightPower power = list[i];
+            if (power != null && power.PowerType == EnumFightPowerType.ComboCount)
+            {
+                totalCombo += power.Layer * power.Value;
+            }
+        }
+        return totalCombo;
+    }
+
+    /// <summary>
+    /// 刷新 UI 视图，显示当前场上精灵的 Power
+    /// </summary>
+    public void RefreshCurrentView()
+    {
+        if (VBoxViewBuffsContentYou.Instance != null)
+        {
+            VBoxViewBuffsContentYou.Instance.UpdatePowers(GetCurrentPetPowers());
+        }
+    }
+
+    /// <summary>
+    /// 精灵登场时调用，将传入的精灵所拥有的 Power 更新到 UI 视图
     /// </summary>
     /// <param name="pet">登场精灵数据</param>
     public void WhenPetAppear(InsFightPetData pet)
     {
         if (pet == null || string.IsNullOrWhiteSpace(pet.PetUuid))
             return;
+
+        // 将该精灵的 Power 更新到 UI
+        if (VBoxViewBuffsContentYou.Instance != null)
+        {
+            InsFightPower[] powers = GetPowersByPetUuid(pet.PetUuid);
+            VBoxViewBuffsContentYou.Instance.UpdatePowers(powers);
+        }
     }
 
     /// <summary>
@@ -118,6 +163,9 @@ public partial class FightYouStandPowerManager : Node2D
 
             if (list.Count == 0)
                 _powersDict.Remove(pet.PetUuid);
+
+            // 刷新当前场上精灵的 Power 视图
+            RefreshCurrentView();
         }
     }
 }

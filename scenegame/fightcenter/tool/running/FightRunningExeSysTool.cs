@@ -48,18 +48,24 @@ public static class FightRunningExeSysTool
         string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
         GD.Print($"      [{index}] {sideLabel} 切换宠物 → {run.SwitchPet.PetName}");
 
-        // 1. 【Buff 清理】旧精灵离场，清除其除 ThisPetPermanent 之外的所有 Buff
+        // 1. 【Buff/Power 清理】旧精灵离场，清除其除 ThisPetPermanent 之外的所有 Buff 与 Power
         if (run.Side == EnumWho.My)
         {
             InsFightPetData oldPet = FightLandMyStandPet.Instance?.FightPetData;
             if (oldPet != null)
+            {
                 FightMyStandBuffManager.Instance?.WhenPetDisAppear(oldPet);
+                FightMyStandPowerManager.Instance?.WhenPetDisAppear(oldPet);
+            }
         }
         else
         {
             InsFightPetData oldPet = FightLandYouStandPet.Instance?.FightPetData;
             if (oldPet != null)
+            {
                 FightYouStandBuffManager.Instance?.WhenPetDisAppear(oldPet);
+                FightYouStandPowerManager.Instance?.WhenPetDisAppear(oldPet);
+            }
         }
 
         // 2. 执行切换宠物
@@ -68,10 +74,16 @@ public static class FightRunningExeSysTool
         else
             FightLandYouStandPet.Instance?.SwitchPet(run.SwitchPet);
 
-        // 3. 【Buff 恢复】新精灵上场后，刷新该精灵的 Buff UI 视图
+        // 3. 【Buff/Power 恢复】新精灵上场后，刷新该精灵的 Buff/Power UI 视图
         if (run.Side == EnumWho.My)
+        {
             FightMyStandBuffManager.Instance?.WhenPetAppear(run.SwitchPet);
+            FightMyStandPowerManager.Instance?.WhenPetAppear(run.SwitchPet);
+        }
         else
+        {
             FightYouStandBuffManager.Instance?.WhenPetAppear(run.SwitchPet);
+            FightYouStandPowerManager.Instance?.WhenPetAppear(run.SwitchPet);
+        }
     }
 }

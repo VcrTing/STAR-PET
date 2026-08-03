@@ -5,13 +5,15 @@
 [ext_resource type="Script" uid="uid://d08w6mqd00s60" path="res://scenegame/origin/you/FightLandYouStandPet.cs" id="3_5yix2"]
 [ext_resource type="Script" uid="uid://btj8i42x4ajcr" path="res://scenegame/origin/my/PlayerLandMyStandPlayer.cs" id="4_n2bdn"]
 [ext_resource type="Script" uid="uid://d1xutegydv2ti" path="res://scenegame/origin/my/FightLandMyStandPet.cs" id="5_3l0sp"]
+[ext_resource type="Script" uid="uid://bondyfphhb63p" path="res://scenegame/origin/you/FightYouStandBuffManager.cs" id="5_igxn0"]
 [ext_resource type="Script" uid="uid://dl58r7mdsroc" path="res://scenegame/origin/my/FightMyStandBuffManager.cs" id="6_d74j3"]
+[ext_resource type="Script" uid="uid://b6itarj5p7pet" path="res://scenegame/origin/my/FightMyStandPowerManager.cs" id="6_d74j4"]
+[ext_resource type="Script" uid="uid://bso505pbqw2pv" path="res://scenegame/origin/you/FightYouStandPowerManager.cs" id="6_d74j5"]
 [ext_resource type="Script" uid="uid://bl8r1jwep8x6f" path="res://scenegame/origin/FightCanvasLayer.cs" id="6_igxn0"]
 [ext_resource type="PackedScene" uid="uid://btf86142sy52" path="res://sceneui/fight/bars/ui_fight_bottom_bar_tab.tscn" id="7_h78vf"]
 [ext_resource type="PackedScene" uid="uid://b7yomklq6xlw0" path="res://sceneui/fight/bartop/ui_fight_top_bar.tscn" id="9_5yix2"]
 [ext_resource type="PackedScene" uid="uid://btbms5rgup6yp" path="res://sceneui/fight/pack/pan_fight_player_pack.tscn" id="10_nues3"]
 [ext_resource type="Script" uid="uid://da54yavlkvkaj" path="res://sceneui/fight/skills/content/VBoxViewBuffsContentMy.cs" id="11_3l0sp"]
-[ext_resource type="Theme" uid="uid://gm7voldghoxo" path="res://sceneui/fight/skills/buff/theme_fight_buff_view.tres" id="11_d74j3"]
 [ext_resource type="PackedScene" uid="uid://bvnck5flu1dha" path="res://scenegame/fightcenter/fight_origin_manager.tscn" id="11_x64ax"]
 [ext_resource type="Script" uid="uid://d2jniwvlol464" path="res://sceneui/fight/skills/content/VBoxViewBuffsContentYou.cs" id="12_5yix2"]
 
@@ -55,6 +57,12 @@ position = Vector2(90, -520)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FightLandYou/FightLandYouStandPet/Land" unique_id=12261181]
 shape = SubResource("RectangleShape2D_cplhs")
 
+[node name="FightYouStandBuffManager" type="Node2D" parent="FightLandYou/FightLandYouStandPet" unique_id=576271390]
+script = ExtResource("5_igxn0")
+
+[node name="FightYouStandPowerManager" type="Node2D" parent="FightLandYou/FightLandYouStandPet" unique_id=1489733168]
+script = ExtResource("6_d74j5")
+
 [node name="FightLandMy" type="Node2D" parent="." unique_id=615089864]
 position = Vector2(0, 140)
 
@@ -81,6 +89,9 @@ shape = SubResource("RectangleShape2D_cplhs")
 
 [node name="FightMyStandBuffManager" type="Node2D" parent="FightLandMy/FightLandMyStandPet" unique_id=1489733166]
 script = ExtResource("6_d74j3")
+
+[node name="FightMyStandPowerManager" type="Node2D" parent="FightLandMy/FightLandMyStandPet" unique_id=1489733167]
+script = ExtResource("6_d74j4")
 
 [node name="PlayerUi" type="Node2D" parent="." unique_id=214073081]
 
@@ -167,28 +178,6 @@ size_flags_horizontal = 3
 [node name="PowersContent" type="VBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy" unique_id=672741798]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="HBoxPowerViewItem" type="HBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy/PowersContent" unique_id=254948688]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy/PowersContent/HBoxPowerViewItem" unique_id=1202581089]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_top = 3
-theme_override_constants/margin_bottom = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy/PowersContent/HBoxPowerViewItem/MarginContainer" unique_id=1396492292]
-layout_mode = 2
-
-[node name="LabelName" type="Label" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy/PowersContent/HBoxPowerViewItem/MarginContainer/HBoxContainer" unique_id=812668948]
-layout_mode = 2
-theme = ExtResource("11_d74j3")
-vertical_alignment = 1
-
-[node name="LabelValue" type="Label" parent="PlayerUi/FightCanvasLayer/BuffViewMy/MarginContainer/ScrollContainer/VBoxViewBuffsContentMy/PowersContent/HBoxPowerViewItem/MarginContainer/HBoxContainer" unique_id=628308808]
-layout_mode = 2
-theme = ExtResource("11_d74j3")
-vertical_alignment = 1
 
 [node name="BuffViewYou" type="Control" parent="PlayerUi/FightCanvasLayer" unique_id=1869446298]
 custom_minimum_size = Vector2(120, 420)

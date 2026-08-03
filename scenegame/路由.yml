@@ -20,6 +20,8 @@
     # res://scenegame/fightcenter/tool/buff/FightBuffTool.cs
   计算结果返回使用:
     # res://scenegame/fightcenter/tool/inner/FightSkillJudge2Tool.cs
+  技能生成连击技能:
+    # res://scenegame/fightcenter/tool/FightSkillGenTool.cs
 
 技能发起执行:
   # res://scenegame/fightcenter/running/FightRunningExe.cs ExecuteMy聚能:

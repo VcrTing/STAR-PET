@@ -46,6 +46,7 @@ public static class DevLoadSkillHouse
 		{ "0_3_2", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.STATUS } },   // 加固
 		{ "0_3_3", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.STATUS } },   // 力量增效
 		{ "0_3_4", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.STATUS } },   // 魔法增效
+		{ "0_3_5", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.STATUS } },   // 连续热身
 	};
 
 	/// <summary>

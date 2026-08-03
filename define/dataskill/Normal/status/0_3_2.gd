@@ -59,6 +59,12 @@ var gain_buff_bingo := [
 ]
 # 应对成功后的 Buff（应对成功时替换 gain_buff 生效，value 翻倍）
 
+# ---- 能力（Power） ----
+var gain_power := []  
+# 获得 Power（数组类型，每个元素为字典：power_type=能力类型ID对应EnumFightPowerType；layer=层数；value=每层值；is_ratio=是否百分比；active_mode=生效模式）
+var gain_power_bingo := []  
+# 应对成功后的 Power（应对成功时替换 gain_power 生效）
+
 # ---- 印记 ----
 var marks := []                     # 印记（数组类型，每个元素为印记ID对应SkillMarkDesign，默认空数组。精灵下场印记不消失）
 

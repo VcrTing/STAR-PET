@@ -50,6 +50,52 @@ public static class FightSkillStatusRunTool
     }
 
     /// <summary>
+    /// 执行状态技能的 Power 生成逻辑
+    /// 根据传入的 powerSource 数组生成 InsFightPower 并添加到对应阵营的 PowerManager
+    /// </summary>
+    /// <param name="run">战斗运行实例</param>
+    /// <param name="index">索引</param>
+    /// <param name="powerSource">Power 源数组（由调用方决定使用 GainPower 还是 GainPowerBingo）</param>
+    public static void ExecuteStatusPower(FightRunning run, int index, Godot.Collections.Array powerSource)
+    {
+        if (powerSource == null || powerSource.Count <= 0)
+            return;
+
+        string sideLabel = run.Side == EnumWho.My ? "🧑我方" : "👹敌方";
+
+        // 获取 Power 所属的精灵 UUID
+        string petUuid = run.Side == EnumWho.My
+            ? FightLandMyStandPet.Instance?.FightPetData?.PetUuid
+            : FightLandYouStandPet.Instance?.FightPetData?.PetUuid;
+
+        var powers = DevPowerTool.CreateFromArray(powerSource);
+        if (powers != null && powers.Count > 0)
+        {
+            // 为每个 Power 设置所属精灵 UUID
+            if (!string.IsNullOrWhiteSpace(petUuid))
+            {
+                foreach (var power in powers)
+                {
+                    power.PetUuid = petUuid;
+                }
+            }
+
+            // 根据 Side 判断保存到哪个 PowerManager
+            if (run.Side == EnumWho.My)
+            {
+                FightMyStandPowerManager.Instance?.AddPowers(powers.ToArray());
+            }
+            else
+            {
+                FightYouStandPowerManager.Instance?.AddPowers(powers.ToArray());
+            }
+
+            GD.Print($"      [{index}] {sideLabel} {run.RunningType} | " +
+                     $"生成 InsFightPower {powers.Count} 个");
+        }
+    }
+
+    /// <summary>
     /// 执行聚能效果：根据 side 判定是哪一方的精灵，从 FightGameInit 读取补充量补充能量（Pp）
     /// 补充后不超过 MaxPpMy / MaxPpYou 上限
     /// </summary>

@@ -1,34 +1,34 @@
 extends Resource
 # ======================================================
 # 技能静态数据
-# 命名: 0_1_8.gd
-# 0 = 普通系, 1 = 攻击, 8 = code
+# 命名: 0_3_5.gd
+# 0 = 普通系, 3 = 状态, 5 = code
 # ======================================================
 
 # ---- 系别信息 ----
 var pet_type := 0                   # 系别（0=普通系，对应 EnumPetType.Normal）
 
 # ---- 基础信息 ----
-var skill_type := 1                # 技能类型（对应SkillTypeDesign：1=攻击, 2=防御, 3=状态）
-var skill_code := 8                 # 技能编号
-var skill_name := "当头棒喝"        # 技能名
+var skill_type := 3                 # 技能类型（对应SkillTypeDesign：1=攻击, 2=防御, 3=状态）
+var skill_code := 5                 # 技能编号
+var skill_name := "连续热身"        # 技能名
 
 # 实现脚本
-var impl_class = "res://define/dataskill/Normal/attack/cs/DuckSkill0_1_8.cs"
+var impl_class = "res://define/dataskill/Normal/status/cs/DuckSkill0_3_5.cs"
 
 # ---- 攻击数值 ----
-var attack_value := 80              # 攻击数值/威力
-var attack_type := 2               # 攻击类型（对应EnumPetBaseStats：2=物攻[ATK], 3=魔攻[MATK], 0=固伤）
+var attack_value := 0              # 攻击数值/威力（状态技能为0）
+var attack_type := 0               # 攻击类型（状态技能为0）
 
 # ---- 连击 ----
 var hit_count := 1                  # 连击数（默认1，>1表示连击技能）
 var is_hit_combo := false           # 是否连击技能（默认false）
 
 # ---- 能耗 ----
-var pp_cost := 3                    # PP能耗（默认2，范围0-50）
+var pp_cost := 2                    # PP能耗
 
 # ---- 图标 ----
-var icon_path := "res://IMG/skill/Normal/attack/0_1_8.png"    # 技能图标图片地址
+var icon_path := "res://IMG/skill/Normal/status/0_3_5.png"    # 技能图标图片地址
 
 # ---- 命中与先手 ----
 var hit_rate := 100.00              # 命中率（默认100.00）
@@ -36,7 +36,7 @@ var priority := 0                   # 先手值（默认0）
 var hidden_priority := 0            # 隐藏先手判断（0=不先手判断，1=需根据对方释放的技能判断本技能是否先手）
 
 # ---- 应对与减伤 ----
-var bingo_skill_type = 0            # 1 = 应对攻击，0 = 无应对
+var bingo_skill_type = 0            # 1 = 应对攻击，2 = 应对防御，0 = 无应对
 var damage_reduction_rate = 0       # 减伤率（默认0，0-100范围，防御技能如70代表70%）
 
 # ---- 特殊效果 ----
@@ -48,17 +48,20 @@ var turn_end_special_id := 0        # 回合结束特殊处理代码ID（默认0
 var before_action_special_id := 0   # 回合内释放前特殊处理代码ID（默认0=无特殊处理）
 
 # ---- 增减益 ----
-var gain_energy := 0                # 获得能量（默认0，正数=获得，负数=扣除）
+var gain_energy := 0                # 获得能量
 var gain_hp := 0                    # 获得血量（默认0，正数=获得，负数=扣除）
-var gain_buff := []  
+var gain_buff := []
 # 获得 Buff（数组类型，每个元素为字典：target_stat=属性ID对应EnumPetBaseStats；num=层数；value=每层值；is_ratio=是否百分比）
-var gain_buff_bingo := []  
+var gain_buff_bingo := []
 # 应对成功后的 Buff（应对成功时替换 gain_buff 生效）
 
 # ---- 能力（Power） ----
-var gain_power := []  
+var gain_power := [
+	{"power_type": 2, "layer": 3, "value": 1, "is_ratio": false, "active_mode": 5},
+]
 # 获得 Power（数组类型，每个元素为字典：power_type=能力类型ID对应EnumFightPowerType；layer=层数；value=每层值；is_ratio=是否百分比；active_mode=生效模式）
-var gain_power_bingo := []  
+# 2=ComboCount连击数；layer=3层；value=1每层+1连击；active_mode=5=ThisPetAppear登场生效 → 直接叠加3层连击数
+var gain_power_bingo := []
 # 应对成功后的 Power（应对成功时替换 gain_power 生效）
 
 # ---- 印记 ----
@@ -69,19 +72,19 @@ var status_effects := []            # 异常状态（数组类型，每个元素
 
 # ---- 音效 ----
 var sound_effects := [
-	[0.0, "hit_powerful", 1.0],
+	[0.0, "power_up", 1.0],
 ]  # 音效数组（数组类型，每个元素为[播放时间点(float), 音效名称(string), 音量(float)]）
 
 # ---- 特效 ----
 var particle_effects := [
-	[0.0, "strike_powerful"],
+	[0.0, "buff_combo"],
 ]  # 特效数组（数组类型，每个元素为[播放时间点(float), 特效名称(string)]）
 
 # ---- 宠物动作 ----
 var pet_actions := [
-	[0.0, "attack_heavy"],
+	[0.0, "status_buff"],
 ]  # 宠物动作数组（数组类型，每个元素为[播放时间点(float), 动作名称(string)]）
 
 # ---- 描述 ----
-var main_description := ["挥出重棍猛击对手头部"]                    # 主描述（数组类型）
-var auxiliary_description := ["威力80的普通攻击，若本回合敌方切换精灵，该技能威力直接翻倍"]        # 辅助描述（数组类型）
+var main_description := ["活动筋骨，直接叠加3层连击数"]                    # 主描述（数组类型）
+var auxiliary_description := ["状态技能，使用时自身不进行攻击，连击层数离场后全部清零"]        # 辅助描述（数组类型）

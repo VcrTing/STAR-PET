@@ -60,7 +60,7 @@ public static class FightSkillJudge2Tool
     /// </summary>
     public static void SideAttackWhenOtherOneAttack(InsFightSkill sideSkill, EnumWho side)
     {
-        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(sideSkill);
+        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(sideSkill, side);
         EnumWho targetSide = side == EnumWho.My ? EnumWho.You : EnumWho.My;
 
         for (int h = 0; h < hitSkills.Length; h++)
@@ -85,7 +85,7 @@ public static class FightSkillJudge2Tool
         // side 是防御方，攻击方是对方
         EnumWho attackerSide = side == EnumWho.My ? EnumWho.You : EnumWho.My;
 
-        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(otherOneSkill);
+        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(otherOneSkill, attackerSide);
 
         for (int h = 0; h < hitSkills.Length; h++)
         {
@@ -107,7 +107,7 @@ public static class FightSkillJudge2Tool
         // side 是状态方（被攻击方），攻击方是对方
         EnumWho attackerSide = side == EnumWho.My ? EnumWho.You : EnumWho.My;
 
-        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(otherOneSkill);
+        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(otherOneSkill, attackerSide);
 
         for (int h = 0; h < hitSkills.Length; h++)
         {
@@ -145,7 +145,7 @@ public static class FightSkillJudge2Tool
                 ? FightLandMyStandPet.Instance?.FightPetData
                 : FightLandYouStandPet.Instance?.FightPetData);
 
-        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(otherOneSkill);
+        InsFightSkill[] hitSkills = FightSkillGenTool.GenerateHitCombo(otherOneSkill, attackerSide);
 
         for (int h = 0; h < hitSkills.Length; h++)
         {

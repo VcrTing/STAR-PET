@@ -1,8 +1,8 @@
 using Godot;
 
 /// <summary>
-/// 我方 Buff 集中管理类（单例）
-/// 负责展示当前我方宠物身上的所有 Buff
+/// 我方 Buff/Power 集中管理类（单例）
+/// 负责展示当前我方宠物身上的所有 Buff 与 Power（能力）
 /// </summary>
 public partial class VBoxViewBuffsContentMy : VBoxContainer
 {
@@ -17,6 +17,11 @@ public partial class VBoxViewBuffsContentMy : VBoxContainer
     private VBoxContainer _buffsContent;
 
     /// <summary>
+    /// Power 展示容器子节点
+    /// </summary>
+    private VBoxContainer _powersContent;
+
+    /// <summary>
     /// 当前展示 Buff 所属的精灵数据
     /// </summary>
     public InsFightPetData CurrentPet { get; set; }
@@ -26,19 +31,32 @@ public partial class VBoxViewBuffsContentMy : VBoxContainer
     /// </summary>
     private PackedScene _buffItemScene;
 
+    /// <summary>
+    /// h_box_power_view_item.tscn 场景资源（缓存）
+    /// </summary>
+    private PackedScene _powerItemScene;
+
     public override void _Ready()
     {
         // 注册单例
         Instance = this;
 
-        // 获取 BuffsContent 子节点
+        // 获取 BuffsContent / PowersContent 子节点
         _buffsContent = GetNode<VBoxContainer>("BuffsContent");
+        _powersContent = GetNode<VBoxContainer>("PowersContent");
 
         // 加载 Buff 展示项场景
         _buffItemScene = ResourceLoader.Load<PackedScene>("res://sceneui/fight/skills/buff/h_box_buff_view_item.tscn");
         if (_buffItemScene == null)
         {
             GD.PrintErr("❌ VBoxViewBuffsContentMy: h_box_buff_view_item.tscn 加载失败");
+        }
+
+        // 加载 Power 展示项场景
+        _powerItemScene = ResourceLoader.Load<PackedScene>("res://sceneui/fight/skills/power/h_box_power_view_item.tscn");
+        if (_powerItemScene == null)
+        {
+            GD.PrintErr("❌ VBoxViewBuffsContentMy: h_box_power_view_item.tscn 加载失败");
         }
     }
 
@@ -79,6 +97,46 @@ public partial class VBoxViewBuffsContentMy : VBoxContainer
 
             // 添加到 BuffsContent 中展示
             _buffsContent.AddChild(item);
+        }
+    }
+
+    /// <summary>
+    /// 更新 Power 列表视图
+    /// 清空原有内容，根据传入的 Power 数组重新生成展示项
+    /// </summary>
+    /// <param name="powers">要展示的 Power 数组</param>
+    public void UpdatePowers(InsFightPower[] powers)
+    {
+        if (_powersContent == null || _powerItemScene == null)
+            return;
+
+        // 1. 删掉 PowersContent 内所有子节点
+        foreach (Node child in _powersContent.GetChildren())
+        {
+            _powersContent.RemoveChild(child);
+            child.QueueFree();
+        }
+
+        if (powers == null || powers.Length == 0)
+            return;
+
+        // 2. 循环 InsFightPower[]，生成展示项
+        for (int i = 0; i < powers.Length; i++)
+        {
+            InsFightPower power = powers[i];
+            if (power == null)
+                continue;
+
+            // 实例化场景
+            HBoxPowerViewItem item = _powerItemScene.Instantiate<HBoxPowerViewItem>();
+            if (item == null)
+                continue;
+
+            // 更新视图
+            item.UpdatePowerView(power);
+
+            // 添加到 PowersContent 中展示
+            _powersContent.AddChild(item);
         }
     }
 }

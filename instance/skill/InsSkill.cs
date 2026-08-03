@@ -36,6 +36,8 @@ public class InsSkill
 	public int GainHp;                                           // 获得血量
 	public Godot.Collections.Array GainBuff = new();             // 获得 Buff
 	public Godot.Collections.Array GainBuffBingo = new();        // 应对成功后的 Buff
+	public Godot.Collections.Array GainPower = new();            // 获得 Power（能力）
+	public Godot.Collections.Array GainPowerBingo = new();       // 应对成功后的 Power（能力）
 	public Godot.Collections.Array Marks = new();                 // 印记
 	public Godot.Collections.Array StatusEffects = new();        // 异常状态
 	public Godot.Collections.Array SoundEffects = new();         // 音效
@@ -82,6 +84,8 @@ public class InsSkill
 			GainHp = res.Get("gain_hp").AsInt32(),
 			GainBuff = res.Get("gain_buff").AsGodotArray(),
 			GainBuffBingo = res.Get("gain_buff_bingo").AsGodotArray(),
+			GainPower = res.Get("gain_power").AsGodotArray(),
+			GainPowerBingo = res.Get("gain_power_bingo").AsGodotArray(),
 			Marks = res.Get("marks").AsGodotArray(),
 			StatusEffects = res.Get("status_effects").AsGodotArray(),
 			SoundEffects = res.Get("sound_effects").AsGodotArray(),
