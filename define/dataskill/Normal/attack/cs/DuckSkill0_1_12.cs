@@ -16,26 +16,6 @@ public partial class DuckSkill0_1_12 : Resource
     {
         GD.Print($"      [{index}] DuckSkill0_1_12.DoSkill | 技能：吞噬 | bingoSkillType={run.BingoSkillType}");
 
-        if (sideSkill?.Skill == null)
-            return;
-
-        // 击杀判定：CheckHp 阶段发现目标精灵 HP<=0 即视为击杀
-        // 注意：实际扣血在 DoDamage 阶段，DoSkill 早于扣血执行前调用，
-        // 因此通过 FightAliveHouse 判断目标是否在本回合死亡
-        EnumWho targetSide = run.Side == EnumWho.My ? EnumWho.You : EnumWho.My;
-
-        // 目标精灵当前血量
-        int targetHp = FightPetHpTool.GetCurrentHp(targetSide);
-        if (targetHp <= 0)
-        {
-            // 目标已被击杀（HP 归零）
-            int gainAmount = sideSkill.Skill.GainEnergy; // 6
-            if (gainAmount > 0)
-            {
-                FightPpTool.GainPp(run.Side, gainAmount, false, index);
-                GD.Print($"      [{index}] DuckSkill0_1_12.DoSkill | 吞噬成功击杀目标！自身额外获得 {gainAmount} 点能耗");
-            }
-        }
     }
 
     /// <summary>
@@ -62,7 +42,26 @@ public partial class DuckSkill0_1_12 : Resource
     /// </summary>
     public void EndSkill(int index, FightRunning run, InsFightSkill sideSkill, FightRunning[] sideRunnings)
     {
-        // 留空待实现
+        if (sideSkill?.Skill == null)
+            return;
+
+        // 击杀判定：CheckHp 阶段发现目标精灵 HP<=0 即视为击杀
+        // 注意：实际扣血在 DoDamage 阶段，DoSkill 早于扣血执行前调用，
+        // 因此通过 FightAliveHouse 判断目标是否在本回合死亡
+        EnumWho targetSide = run.Side == EnumWho.My ? EnumWho.You : EnumWho.My;
+
+        // 目标精灵当前血量
+        int targetHp = FightPetHpTool.GetCurrentHp(targetSide);
+        if (targetHp <= 0)
+        {
+            // 目标已被击杀（HP 归零）
+            int gainAmount = sideSkill.Skill.GainEnergy; // 6
+            if (gainAmount > 0)
+            {
+                FightPpTool.GainPp(run.Side, gainAmount, false, index);
+                GD.Print($"      [{index}] DuckSkill0_1_12.DoSkill | 吞噬成功击杀目标！自身额外获得 {gainAmount} 点能耗");
+            }
+        }
     }
 
     /// <summary>

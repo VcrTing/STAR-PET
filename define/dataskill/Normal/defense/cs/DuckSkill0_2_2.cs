@@ -48,6 +48,13 @@ public partial class DuckSkill0_2_2 : Resource
         if (sideSkill?.Skill == null)
             return;
 
+        // 已经生效完成
+        if (sideSkill.IsEffectActiveThisTurn)
+        {
+            // 重置先手值
+            FightLandMyStandPet.Instance.SetRoundPriorityIntervene(0);
+        }
+
         EnumWho side = run.Side;
         EnumFightRunningType bingoAttackType = side == EnumWho.My
             ? EnumFightRunningType.BingoAttackMy
@@ -70,6 +77,14 @@ public partial class DuckSkill0_2_2 : Resource
 
         // 成功抵挡 => 本回合特效生效（下回合先手值+1）；否则不生效
         sideSkill.IsEffectActiveThisTurn = bingoSuccess;
+
+        // 应对成功
+        
+        if (bingoSuccess)
+        {
+            // 先手值 + 1
+            FightLandMyStandPet.Instance.SetRoundPriorityIntervene(1);
+        }
 
         GD.Print($"      [{index}] DuckSkill0_2_2.EndSkill | 特意防守 | 本回合抵挡攻击={bingoSuccess} | IsEffectActiveThisTurn={sideSkill.IsEffectActiveThisTurn}");
     }

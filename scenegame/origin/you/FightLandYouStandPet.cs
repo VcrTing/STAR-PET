@@ -29,6 +29,11 @@ public partial class FightLandYouStandPet : Node2D
 		if (point != null) _spawnPosition = ToLocal(point.GlobalPosition);
 	}
 
+	/// <summary>
+	/// 本回合干预的先手值，用于干预本回合先手值判断
+	/// </summary>
+	private int _roundPriorityIntervene;
+
 	public override void _Process(double delta) { }
 
 	/// <summary>
@@ -45,6 +50,23 @@ public partial class FightLandYouStandPet : Node2D
 	}
 
 	/// <summary>
+	/// 设置本回合干预的先手值
+	/// </summary>
+	/// <param name="value">干预先手值</param>
+	public void SetRoundPriorityIntervene(int value)
+	{
+		_roundPriorityIntervene = value;
+	}
+
+	/// <summary>
+	/// 获取本回合干预的先手值
+	/// </summary>
+	public int GetRoundPriorityIntervene()
+	{
+		return _roundPriorityIntervene;
+	}
+
+	/// <summary>
 	/// 获取当前宠物速度值
 	/// 从 FinalStats 字典中读取 SPD，默认返回 50
 	/// </summary>
@@ -53,7 +75,7 @@ public partial class FightLandYouStandPet : Node2D
 		if (FightPetData?.FinalStats != null &&
 			FightPetData.FinalStats.TryGetValue(EnumPetBaseStats.SPD, out int speed))
 			return speed;
-		return 50;
+		return 5;
 	}
 
 	public void SwitchPet(InsFightPetData fightPetData)
@@ -71,6 +93,9 @@ public partial class FightLandYouStandPet : Node2D
 			var skills = fightPetData.FightSkills?.ToArray();
 			VBoxViewBuffsContentYou.Instance.UpdateSkills(skills);
 		}
+
+		// 重置先手值
+		SetRoundPriorityIntervene(0);
 	}
 
 	public override void _ExitTree()
