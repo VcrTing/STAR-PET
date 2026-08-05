@@ -295,25 +295,9 @@ public partial class FightCenterManger : Node2D
 			return;
 		}
 
-		// ── 我方精灵死亡 → 触发换宠信号 ──
-		if (FightAliveHouse.MyDiePets.Count > 0)
-		{
-			var myPet = FightLandMyStandPet.Instance?.FightPetData;
-			if (myPet == null || myPet.Hp <= 0)
-			{
-				GD.Print("  💀 [DoingDie] 我方精灵死亡，请求玩家换宠");
-				EmitSignal(SignalPetFainted, EnumWho.My.ToString(), FightCenterUtil.GetCurrentPlayerPetIndex());
-				_needPlayerFaintSwitch = true;
-				// 重置双方行动标记，避免上一回合残留的 _playerActedThisTurn=true
-				// 导致 TryExecute 在换宠流程中误判"双方已行动"而二次触发回合执行
-				_playerActedThisTurn = false;
-				_youActedThisTurn = false;
-				TransitionTo(FightState.PlayerTurn);
-				return;
-			}
-		}
-
-		// ── 敌方精灵死亡 → PVE 自动换宠 ──
+		// ── 敌方精灵死亡 → PVE 自动换宠（无需玩家交互，先处理）──
+		// ⚠ 必须先于"我方换宠"处理：原代码在我方死亡分支 return 会跳过敌方换宠，
+		//   导致敌方精灵倒下后不自动换新精灵上场的 BUG。
 		if (FightAliveHouse.YouDiePets.Count > 0)
 		{
 			if (FightGameInit.Instance != null && !FightGameInit.Instance.IsPvp)
@@ -328,6 +312,24 @@ public partial class FightCenterManger : Node2D
 			else
 			{
 				GD.Print("  💀 [DoingDie] PVP 敌方换宠暂未实现");
+			}
+		}
+
+		// ── 我方精灵死亡 → 触发换宠信号（需玩家交互，最后处理并 return 等待）──
+		if (FightAliveHouse.MyDiePets.Count > 0)
+		{
+			var myPet = FightLandMyStandPet.Instance?.FightPetData;
+			if (myPet == null || myPet.Hp <= 0)
+			{
+				GD.Print("  💀 [DoingDie] 我方精灵死亡，请求玩家换宠");
+				EmitSignal(SignalPetFainted, EnumWho.My.ToString(), FightCenterUtil.GetCurrentPlayerPetIndex());
+				_needPlayerFaintSwitch = true;
+				// 重置双方行动标记，避免上一回合残留的 _playerActedThisTurn=true
+				// 导致 TryExecute 在换宠流程中误判"双方已行动"而二次触发回合执行
+				_playerActedThisTurn = false;
+				_youActedThisTurn = false;
+				TransitionTo(FightState.PlayerTurn);
+				return;
 			}
 		}
 

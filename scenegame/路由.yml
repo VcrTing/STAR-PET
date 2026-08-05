@@ -1,3 +1,23 @@
+
+
+定义(根据系别分文件夹):
+  技能定义的地方: 
+    # res://define/dataskill
+  精灵定义的地方:
+    # res://define/datapet
+  精灵的各种定义，个体值、buff、power、天赋值、性格、分组、精灵特性:
+    # res://scripts/design
+  精灵读取 + 加载，技能读取 + 加载:
+    # res://scripts/toolfight
+  战斗界面 UI 存放地点:
+    # res://sceneui/fight
+
+战场:
+  战场初始化 + 战场入口 + 战场参数核心类:
+    # res://scenegame/fightcenter/FightGameInit.cs
+  战斗状态机 + 采集双方动作 + 准备执行 TurnAction:
+    # res://scenegame/fightcenter/FightCenterManger.cs
+    
 战斗代码流程:
   1. 执行鸭子 同步双方技能参数 RealtimeSync
   2. 排序 TurnAction
@@ -11,6 +31,28 @@
   10. 检测End，执行鸭子，EndSkill
   11. 收集死亡宠物，结束回合
 
+回合 TurnAction:
+  执行入口:
+    # res://scenegame/fightcenter/FightCenterManger.cs HandleExecuteTurn
+  动作执行，回合开始工作:
+    # res://scenegame/fightcenter/ation/FightExeAction.cs
+  动作优先级排序:
+    # res://scenegame/fightcenter/ation/FightExeAfter.cs
+  动作是执行技能 + 技能转为 FightRunning + 初步处理应对进行排序和分流:
+    # res://scenegame/fightcenter/tool/FightSkillJudgeTool.cs
+
+Fight Running:
+  fight running 执行入口类:
+    # res://scenegame/fightcenter/running/FightRunningExe.cs ExecuteAll
+  right running 储存仓库:
+    # res://scenegame/fightcenter/running/FightRunningHouse.cs
+  fight running 构建工具:
+    # res://scenegame/fightcenter/tool/running/FightRunningBuildTool.cs
+  running 执行入口:
+    # res://scenegame/fightcenter/tool/running/FightRunningExeTool.cs
+  系统 running 执行入口:
+    # res://scenegame/fightcenter/tool/running/FightRunningExeSysTool.cs
+
 技能计算:
   伤害计算公式:
     # res://scenegame/fightcenter/tool/ppndamage/FightDamageTool.cs CalcBasicDamage
@@ -18,13 +60,18 @@
     # res://scenegame/fightcenter/tool/ppndamage/FightPpTool.cs
   加入Buff的加成:
     # res://scenegame/fightcenter/tool/buff/FightBuffTool.cs
+  加入Power的加成:
+    # res://scenegame/fightcenter/tool/buff/FightBuffTool.cs
   计算结果返回使用:
     # res://scenegame/fightcenter/tool/inner/FightSkillJudge2Tool.cs
   技能生成连击技能:
     # res://scenegame/fightcenter/tool/FightSkillGenTool.cs
+  Buff 工具类:
+    # res://scripts/toolskill/inner/DevBuffTool.cs
+  Power 工具类:
+    # res://scripts/toolskill/inner/DevPowerTool.cs
 
 技能发起执行:
-  # res://scenegame/fightcenter/running/FightRunningExe.cs ExecuteMy聚能:
   执行状态技能——聚能:
     # res://scenegame/fightcenter/tool/skill/FightSkillStatusRunTool.cs ExecuteFocusEnergy
   执行系统技能——切换宠物:
@@ -37,23 +84,39 @@
     # res://scenegame/fightcenter/tool/running/FightRunningExeTool.cs
 
 技能鸭子模型:
-  调用外部Tool地点:
+  鸭子模型内方法调用外部Tool地点:
     # res://scenegame/fightcenter/tool/skill/*
   鸭子模型读取+执行:
     # res://scripts/dev/loader/DuckSkillLoader.cs
-  执行技能刷新的方法:
+  鸭子模型执行技能刷新的方法:
     # res://scenegame/fightcenter/tool/skill/FightSkillAsyncTool.cs
+
+战斗内存:
+  储存战斗死亡精灵:
+    # res://scenegame/fightcenter/life/FightAliveHouse.cs
+  储存战斗上回合应对 + 本回合应对:
+    # res://scenegame/fightcenter/life/FightBingoHouse.cs
 
 我的:
   玩家+背包:
     # res://scenegame/origin/my/PlayerLandMyStandPlayer.cs
   现在登场的宠物:
     # res://scenegame/origin/my/FightLandMyStandPet.cs
+  Buff 中心:
+    # res://scenegame/origin/my/FightMyStandBuffManager.cs
+  Power 中心:
+    # res://scenegame/origin/my/FightMyStandPowerManager.cs
 
-加成:
-  BUFF，对种族值影响:
-    # res://scripts/toolskill/inner/DevBuffTool.cs
+其他:
+  精灵死亡 + 是否存活的 工具类:
+    # res://scenegame/fightcenter/tool/life/FightPetLifeTool.cs
+  执行扣血 + 加血的 工具类:
+    # res://scenegame/fightcenter/tool/life/FightPetHpTool.cs
+  每回合同步 UI 的集中 工具类:
+    # res://scenegame/fightcenter/tool/ui/FightUiUpdateTool.cs
 
-回合动作:
-  动作优先级排序:
-    # res://scenegame/fightcenter/ation/FightExeAfter.cs
+PVE:
+  pve 战斗逻辑中心:
+    # res://scenegame/pve/FightPveRunner.cs
+  与野怪战斗时，野怪的大脑:
+    # res://scenegame/pve/AiWildMonster.cs

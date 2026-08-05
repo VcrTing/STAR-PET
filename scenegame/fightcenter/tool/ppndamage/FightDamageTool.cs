@@ -100,12 +100,12 @@ public static class FightDamageTool
 		Dictionary<EnumPetBaseStats, int> buffDef = FightBuffTool.CalculateBuffStats(defender);
 		FightBuffTool.MergeBuffStats(attackStats, buffAtk);
 		FightBuffTool.MergeBuffStats(defenderStats, buffDef);
-
+		/*
 		GD.Print($"[FightDamageTool] 攻击方 Buff 加成: {DictToString(buffAtk)}");
 		GD.Print($"[FightDamageTool] 防守方 Buff 加成: {DictToString(buffDef)}");
 		GD.Print($"[FightDamageTool] 攻击方叠加后: {DictToString(attackStats)}");
 		GD.Print($"[FightDamageTool] 防守方叠加后: {DictToString(defenderStats)}");
-
+		*/
 		return CalcBasicDamage(skill, attackStats, defenderStats, attacker.Level, defender.PetTypes, skill.IsSameType(attacker));
 	}
 

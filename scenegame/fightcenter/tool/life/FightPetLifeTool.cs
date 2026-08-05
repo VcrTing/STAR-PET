@@ -153,6 +153,11 @@ public static class FightPetLifeTool
     {
         var newDiePets = new List<InsFightPetData>();
 
+        // ★ 先清空死亡列表：确保 MyDiePets / YouDiePets 只保存本回合新死亡的精灵
+        //   修复：死亡记录跨回合累积导致 HandleDoingDie 误判该方也有死亡，
+        //   从而错误触发重复换宠（如敌方明明没死却再次换宠）
+        FightAliveHouse.Clear();
+
         // 我方：检查所有精灵，若在 aliveMyUuids 中（回合开始时活着）且现 Hp <= 0，则为本回合死亡
         var myFightPets = PlayerLandMyStandPlayer.Instance?.FightPets;
         if (myFightPets != null)
