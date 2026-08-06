@@ -38,6 +38,8 @@ public static class DevLoadSkillHouse
 		{ "0_1_10", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },  // 垂死反击
 		{ "0_1_11", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },  // 大师之力
 		{ "0_1_12", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },  // 吞噬
+		{ "0_1_13", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },  // 喊叫
+		{ "0_1_14", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.ATTACK } },  // 阻断
 		// 防御
 		{ "0_2_1", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.DEFENSE } },  // 防御
 		{ "0_2_2", new[] { (int)EnumPetType.Normal, (int)EnumSkillType.DEFENSE } },  // 特意防守

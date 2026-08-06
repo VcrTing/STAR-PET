@@ -46,6 +46,8 @@ Fight Running:
     # res://scenegame/fightcenter/running/FightRunningExe.cs ExecuteAll
   right running 储存仓库:
     # res://scenegame/fightcenter/running/FightRunningHouse.cs
+  running 类型定义，分My+You:
+    # res://scenegame/fightcenter/define/FightRunningTypeDesign.cs
   fight running 构建工具:
     # res://scenegame/fightcenter/tool/running/FightRunningBuildTool.cs
   running 执行入口:
@@ -82,6 +84,8 @@ Fight Running:
     # res://scripts/dev/load/DevLoadSkillHouse.cs
   执行:
     # res://scenegame/fightcenter/tool/running/FightRunningExeTool.cs
+  造成打断对方技能的实现:
+    # res://scenegame/fightcenter/running/FightRunningExe.cs BlockIntercept
 
 技能鸭子模型:
   鸭子模型内方法调用外部Tool地点:

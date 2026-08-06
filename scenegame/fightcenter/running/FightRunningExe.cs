@@ -27,9 +27,11 @@ public static class FightRunningExe
     {
         GD.Print($"[FightRunningExe] 开始执行 FightRunning，==================");
 
-        // 1. 清空上一次队列，将 CurrentRunArray 中所有有效阶段入队
+        // 1. 获取 CurrentRunArray 并通过"阻断打断"过滤（移除被阻断的 DoStatusXX 阶段）
+        FightRunning[] runnings = BlockIntercept(FightRunningHouse.CurrentRunArray);
+
+        // 2. 清空上一次队列，将过滤后的有效阶段入队
         _queue.Clear();
-        FightRunning[] runnings = FightRunningHouse.CurrentRunArray;
         for (int i = 0; i < runnings.Length; i++)
         {
             if (runnings[i] != null)
@@ -46,7 +48,7 @@ public static class FightRunningExe
         var aliveMyUuids = FightAliveHouse.GetAlivePetUuids(EnumWho.My);
         var aliveYouUuids = FightAliveHouse.GetAlivePetUuids(EnumWho.You);
 
-        // 2. 从队列中逐个弹出执行（index 为原始顺序编号，用于日志）
+        // 3. 从队列中逐个弹出执行（index 为原始顺序编号，用于日志）
         int index = 0;
         while (_queue.Count > 0)
         {
@@ -97,6 +99,54 @@ public static class FightRunningExe
         GD.Print($"[FightRunningExe] FightRunning 执行完毕，本回合死亡 {newDiePets.Count} 只精灵，==================");
         
         return newDiePets;
+    }
+
+    /// <summary>
+    /// 阻断打断过滤：
+    /// 扫描传入的 runnings 数组中任意 Running 是否应对了状态（BingoSkillType=STATUS），
+    /// 若应对了状态，不管敌我速度，将对方的 DoStatusXX 阶段置空（打断），
+    /// 返回过滤后的 runnings 数组。
+    /// </summary>
+    /// <param name="runnings">原始 FightRunning 数组</param>
+    /// <returns>过滤后的 FightRunning 数组（被阻断的 DoStatusXX 置为 null）</returns>
+    private static FightRunning[] BlockIntercept(FightRunning[] runnings)
+    {
+        if (runnings == null)
+            return runnings;
+
+        // 查找首个应对了状态（BingoSkillType=STATUS）的 Running
+        EnumFightRunningType? blockedDoStatusType = null;
+        EnumWho? blockSide = null;
+        for (int i = 0; i < runnings.Length; i++)
+        {
+            FightRunning r = runnings[i];
+            if (r != null && r.BingoSkillType == EnumSkillType.STATUS)
+            {
+                EnumWho otherSide = r.Side == EnumWho.My ? EnumWho.You : EnumWho.My;
+                blockedDoStatusType = otherSide == EnumWho.My
+                    ? EnumFightRunningType.DoStatusMy
+                    : EnumFightRunningType.DoStatusYou;
+                blockSide = r.Side;
+                break;
+            }
+        }
+
+        // 找到触发阻断的 Running，将对方 DoStatusXX 阶段置空
+        if (blockedDoStatusType.HasValue)
+        {
+            int removedCount = 0;
+            for (int i = 0; i < runnings.Length; i++)
+            {
+                if (runnings[i] != null && runnings[i].RunningType == blockedDoStatusType.Value)
+                {
+                    runnings[i] = null;
+                    removedCount++;
+                }
+            }
+            GD.Print($"      ⚡ {blockSide} 阻断应对状态 → 移除对方 {blockedDoStatusType.Value} × {removedCount}，对方状态技能被强行打断");
+        }
+
+        return runnings;
     }
 
     /// <summary>
